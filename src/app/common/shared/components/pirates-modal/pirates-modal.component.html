@@ -1,0 +1,13 @@
+<div class="modal-container">
+
+  <div style="float: left">
+    <h2 md-dialog-title>{{ data.name }}</h2>
+    <img src="{{ data.image }}">
+    <md-dialog-actions>
+      <button md-button md-raised-button [md-dialog-close]="true" color="warn">Dash</button>
+    </md-dialog-actions>
+  </div>
+
+  <md-dialog-content [innerHTML]="data.description"></md-dialog-content>
+
+</div>

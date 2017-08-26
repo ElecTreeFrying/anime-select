@@ -1,0 +1,34 @@
+<div class="main-content-inside" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500" (scrolled)="onScroll()" [scrollWindow]="false">
+
+  <div class="autocomplete-container mt-3 mb-0 ml-5 mr-5">
+    <md-input-container color="warn">
+      <input mdInput [mdAutocomplete]="pirates" [formControl]="pirateInputForm" placeholder="Search characters" (click)="onInputClick()" color="warn">
+    </md-input-container>
+  </div>
+
+  <md-autocomplete #pirates="mdAutocomplete">
+    <md-option *ngFor="let option of filteredPirates | async">
+      {{ option.attributes.name }}
+    </md-option>
+  </md-autocomplete>
+
+  <md-card class="mat-elevation-z7 mb-3 mt-3" *ngFor="let item of list">
+    <img md-card-image src="{{ item?.attributes?.image?.original }}" alt="{{ item?.attributes?.slug }}">
+    <md-card-title>{{ item?.attributes?.name }}</md-card-title>
+    <md-card-content>
+      <p [innerHTML]="item?.attributes?.description | shorten:30"></p>
+    </md-card-content>
+    <md-card-actions>
+      <button md-icon-button>
+        <md-icon aria-hidden="true">favorite</md-icon>
+      </button>
+      <button md-button md-raised-button class="float-right" (click)="openModal(item?.id)">More</button>
+    </md-card-actions>
+  </md-card>
+
+  <div class="spinner-container">
+    <dark-pirates-spinner *ngIf="!finished"></dark-pirates-spinner>
+    <dark-pirates-end-row *ngIf="finished"></dark-pirates-end-row>
+  </div>
+
+</div>
