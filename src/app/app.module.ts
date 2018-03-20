@@ -1,33 +1,27 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import 'hammerjs';
 
 import { AppRoutingModule } from './app-routing.module';
-import { MdCoreModule } from './common/md/md-core.module';
-import { AppComponent } from './app.component';
-import { PiratesModalComponent } from './common/shared/components/pirates-modal/pirates-modal.component';
+import { Material2Module } from './common/core/modules/material2.module';
 
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import 'hammerjs';
+import { AppComponent } from './app.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    PiratesModalComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
     AppRoutingModule,
-    MdCoreModule
+    Material2Module,
   ],
   providers: [],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    PiratesModalComponent
-  ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

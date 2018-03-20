@@ -1,111 +1,20 @@
-<md-sidenav-container>
+<mat-drawer-container>
+  <mat-drawer #start mode="over">
 
-  <md-sidenav #sideNav mode="over">
-    <md-accordion displayMode="flat" multi="true">
+    side-drawer-content
 
-      <md-expansion-panel class="home-panel">
-        <md-expansion-panel-header>
-          <mat-panel-title>Home</mat-panel-title>
-        </md-expansion-panel-header>
-        <div class="ml-4 home-panel-body">
-          <p routerLink="/" queryParamsHandling="merge" [queryParams]="{ enter: 0 }" style="cursor: pointer">Main Page</p>
-          <p routerLink="show" queryParamsHandling="merge" [queryParams]="{ enter: 1 }" style="cursor: pointer">Get Started</p>
-          <p [routerLink]="['show', 'about']" queryParamsHandling="merge" [queryParams]="{ enter: 2 }" style="cursor: pointer">About</p>
-        </div>
-      </md-expansion-panel>
+  </mat-drawer>
 
-      <md-expansion-panel class="characters-panel" (click)="onCharacterSelect()">
-        <md-expansion-panel-header>
-          <mat-panel-title>Characters</mat-panel-title>
-        </md-expansion-panel-header>
-        <div class="ml-4 home-panel-body">
-          <p (click)="onCharacterPage()" style="cursor: pointer">Go to characters page</p>
-        </div>
-        <div class="characters-panel-body">
-          <md-list dense>
-            <md-list-item class="mb-3" *ngFor="let item of list">
-              <img src="{{ item?.attributes?.image?.original }}" alt="{{ item?.attributes?.slug }}" style="object-fit: cover; width:45px; height:45px; border-radius:50%">
-              <h6 class="ml-3">{{ item.attributes.name }}</h6>
-            </md-list-item>
-          </md-list>
-        </div>
-      </md-expansion-panel>
-
-      <md-expansion-panel class="app-panel">
-        <md-expansion-panel-header>
-          <mat-panel-title>App</mat-panel-title>
-        </md-expansion-panel-header>
-        <div class="ml-4 home-panel-body">
-          <p [routerLink]="['show', 'app-c']" queryParamsHandling="merge" [queryParams]="{ enter: 2 }" style="cursor: pointer">App Directory</p>
-          <p (click)="onCharacterPage()" style="cursor: pointer">Characters Page</p>
-          <p><a href="https://github.com/" target="_blank">Repository</a></p>
-        </div>
-      </md-expansion-panel>
-
-      <md-expansion-panel class="contacts-panel">
-        <md-expansion-panel-header>
-          <mat-panel-title>Contact</mat-panel-title>
-        </md-expansion-panel-header>
-        <div class="ml-4 home-panel-body">
-          <p [routerLink]="['show', 'contact']" queryParamsHandling="merge" [queryParams]="{ enter: 2 }" style="cursor: pointer">Contacts Directory</p>
-          <p><a href="https://www.facebook.com/" target="_blank">Facebook</a></p>
-          <p><a href="https://twitter.com/" target="_blank">Twitter</a></p>
-          <p><a href="https://github.com/" target="_blank">Github</a></p>
-        </div>
-      </md-expansion-panel>
-
-    </md-accordion>
-  </md-sidenav>
-
-  <div class="main-content-wrapper">
-
-    <md-toolbar>
-      <button md-icon-button (click)="sideNav.toggle()">
-        <md-icon aria-hidden="true">menu</md-icon>
+  <div>
+    <mat-toolbar>
+      <button mat-icon-button (click)="start.toggle()">
+        <mat-icon>menu</mat-icon>
       </button>
-      <a (click)="onClickHeader()">
-        <span class="ml-3">Elec Tree Frying</span>
-      </a>
-      <button md-icon-button class="ml-auto">
-        <md-icon aria-hidden="true" [mdMenuTriggerFor]="settings">settings</md-icon>
-      </button>
-      <md-menu #settings="mdMenu" [overlapTrigger]="false">
-        <button md-menu-item>Yaw</button>
-      </md-menu>
-    </md-toolbar>
+      <span class="ml-3">One Piece API</span>
+    </mat-toolbar>
 
-    <div class="main-content pt-0 pb-0">
-      <div class="main-page-content" *ngIf="show">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-6 p-0 col1">
-              <img class="mat-elevation-z8" src="https://2.bp.blogspot.com/-pXLrurbZlQk/WSm57siu-XI/AAAAAAAABCo/HoT3sNdXqtkFOGVzAYVsIQxR1FoifL6wwCLcB/s640/thumb-1920-606263.jpg">
-            </div>
-            <div class="col col2">
-              <h4>Synopsis</h4>
-              <p>
-                22 years ago, the Pirate King, Gol D. Roger, was executed. However, before his death he revealed to everyone that his treasure, the One Piece, was hidden at the end of the Grand Line. This inspired people to become pirates and sail toward the treasure, beginning the Great Age of Pirates. Twelve years later, a young boy named Monkey D. Luffy dreamed of finding the One Piece, but lost the ability to swim after eating a Devil Fruit giving him the ability to stretch his body like rubber. He was given a straw hat by the pirate Shanks, who would later go on to become a Yonko, one of the four most powerful pirates in the world, on the agreement that he would return the hat once he became a pirate and surpassed Shanks.
-              </p>
-              <button md-raised-button color="warn" (click)="modeDetails()">More Details</button>
-              <button md-raised-button color="primary" (click)="onNextPage()">Get started</button>
-            </div>
-          </div>
-        </div>
-        <!-- <button style="margin:auto" md-raised-button color="primary" (click)="onNextPage()">Next Page</button> -->
-      </div>
+    <div drawer-content>
       <router-outlet></router-outlet>
     </div>
-
-    <md-toolbar>
-      <span class="ml-2 mr-auto">Angular Material Demo App</span>
-      <button md-icon-button>
-        <md-icon aria-hidden="true" [routerLink]="['show', 'app-c', 'character-details']" queryParamsHandling="merge" [queryParams]="{ enter: 3 }">person</md-icon>
-      </button>
-      <button md-icon-button (click)="onCharacterPage()">
-        <md-icon aria-hidden="true">whatshot</md-icon>
-      </button>
-    </md-toolbar>
-
   </div>
-
-</md-sidenav-container>
+</mat-drawer-container>

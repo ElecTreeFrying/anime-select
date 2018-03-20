@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "elec-darker"
+    "name": "weakmat"
   },
   "apps": [
     {
@@ -17,10 +17,8 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
-      "prefix": "dark",
+      "prefix": "app",
       "styles": [
-        "../node_modules/bootstrap/dist/css/bootstrap.min.css",
-        "../node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
         "styles.scss"
       ],
       "scripts": [],

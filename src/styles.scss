@@ -1,25 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import '~bootstrap/scss/bootstrap.scss';
+// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+// @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
+// @import '~@angular/material/prebuilt-themes/purple-green.css';
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,300');
+@import url('https://fonts.googleapis.com/css?family=Material+Icons');
+@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+
+// preference default material2
 html, body {
   font-family: Roboto, Arial, sans-serif;
   margin: 0;
   height: 100%;
 }
 
-button:focus {
+// removes button border onFocus
+*:focus, button:focus {
   outline: none;
 }
 
-.mat-icon:focus {
-  outline: none;
+// removes input arrows
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-button {
-  a {
-    color: inherit;
-  }
-  a:hover {
-    text-decoration: none;
-    color: inherit;
-  }
+// removes input arrows
+input[type="number"] {
+  -moz-appearance: textfield;
 }
