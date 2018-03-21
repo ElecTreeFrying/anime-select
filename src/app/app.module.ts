@@ -9,6 +9,8 @@ import { Material2Module } from './common/core/modules/material2.module';
 
 import { AppComponent } from './app.component';
 
+import { SharedService } from './common/core/services/shared.service';
+
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     Material2Module,
   ],
-  providers: [],
+  providers: [
+    SharedService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -19,13 +19,49 @@ export class DashboardResolver implements Resolve<any> {
           this.arr.push(response['data']);
         }, (e) => {
         }, () => {
-          this.arr.forEach((el) => el.forEach((el2) => this.newArr.push(el2)))
+          this.loopG();
+          // this.arr.forEach((el) => el.forEach((el2) => this.newArr.push(el2)))
           resolve(this.newArr);
         });
       }
     );
 
     return promise.then((data: any) => data);
+  }
+
+  // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
+
+  loopZ() {
+    this.arr.map((el) => {
+      el.map((el2) => {
+        this.newArr.push(el2)
+      })
+    })
+  }
+
+
+  loopG() {
+    this.arr.map(async (el) => {
+      await Promise.all(el.map((el2) => {
+        this.newArr.push(el2)
+      }))
+    })
+  }
+
+  async loopD() {
+    await this.arr.map(async (el) => {
+      await Promise.all(el.map((el2) => {
+        this.newArr.push(el2)
+      }))
+    })
+  }
+
+  async loop() {
+    await Promise.all(this.arr.map(async (el) => {
+        await Promise.all(this.arr.map(async (el2) => {
+          await this.newArr.push(el2);
+        }))
+    }));
   }
 
 }

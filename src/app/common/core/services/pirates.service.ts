@@ -47,4 +47,8 @@ export class PiratesService {
 
   }
 
+  getRelatedLinks(link: string) {
+    return this.http.get(link);
+  }
+
 }

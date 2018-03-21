@@ -19,7 +19,7 @@ import { DashboardResolver } from './dashboard.resolver';
     CommonModule,
     DashboardRoutingModule,
     Material2Module,
-    InfiniteScrollModule
+    InfiniteScrollModule,
   ],
   declarations: [
     DashboardComponent,

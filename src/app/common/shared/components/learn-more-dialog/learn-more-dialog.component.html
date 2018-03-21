@@ -1,3 +1,25 @@
-<p>
-  learn-more-dialog works!
-</p>
+<div mat-dialog-container data-scrollbar>
+  <div class="row">
+    <div class="col-4" [ngStyle]="{'background': black}">
+      <p class="text-center">
+        <img src="{{ data?.attributes?.image?.original }}" class="img-fluid" alt="{{ data?.attributes?.names?.en }}">
+      </p>
+      <h2 class="text-center mt-3 ">{{ data?.attributes?.names?.en }} <br>({{ data?.attributes?.names?.ja_jp }})</h2>
+
+      <br>
+
+      <p>asd</p>
+      <p>asd</p>
+
+    </div>
+    <div class="col">
+      <p>
+        Other names:
+        <span *ngFor="let item of data?.attributes?.otherNames">
+          {{ item }},
+        </span>
+      </p>
+      <div [innerHTML]="data?.attributes?.description"></div>
+    </div>
+  </div>
+</div>

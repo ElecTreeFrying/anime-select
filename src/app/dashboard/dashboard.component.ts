@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { MatDialog, MatDialogRef } from '@angular/material';
 
 import { PiratesService } from '../common/core/services/pirates.service';
 import { SharedService } from '../common/core/services/shared.service';
+
+import { LearnMoreDialogComponent } from '../common/shared/components/learn-more-dialog/learn-more-dialog.component';
 
 
 @Component({
@@ -12,6 +14,8 @@ import { SharedService } from '../common/core/services/shared.service';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+
+  learnMoreDialogComponentRef: MatDialogRef<LearnMoreDialogComponent>;
 
   reactivePirates: any;
 
@@ -22,7 +26,8 @@ export class DashboardComponent implements OnInit {
   isLoadAutocomplete: boolean = true;
   isDisabled: boolean = true;
 
-  constructor(private router: Router, private route: ActivatedRoute, private piratesService: PiratesService, private sharedService: SharedService) { }
+
+  constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private piratesService: PiratesService, private sharedService: SharedService) { }
 
   ngOnInit() {
     this.piratesService.getPirates(`${405}`).subscribe((response) => {
@@ -34,14 +39,19 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['u1'], { relativeTo: this.route });
 
     this.sharedService.autocompleteChanged.subscribe((response) => {
-      setTimeout(() => this.isShowAutocomplete = this.sharedService.autocompleteChanged.observers.length, 50);
+      setTimeout(() => {
+        this.isShowAutocomplete = this.sharedService.autocompleteChanged.observers.length
+      }, 50);
     });
 
     this.sharedService.piratesChanged.subscribe((response) => {
-      setTimeout(() => this.pirates = response, 50);
+      setTimeout(() => {
+        if (response.length < 375) this.pirates = response;
+      }, 50);
     });
 
-    setTimeout(() => { this.isDisabled = false }, 8000);
+    // setTimeout(() => { this.isDisabled = false }, 8000);
+    setTimeout(() => { this.isDisabled = false }, 50);
   }
 
   loadAutocomplete() {
@@ -49,6 +59,7 @@ export class DashboardComponent implements OnInit {
   }
 
   onScroll() {
+    console.log('scrolled');
     if (this.counter <= 880 ) {
       this.piratesService.getPirates(`${this.counter}`).subscribe((response) => {
         this.pirates = this.pirates.concat(response['data']);
@@ -59,6 +70,15 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
+  onDialog(pirate: any) {
+    const config = {
+      data: {
+        id: pirate['id'],
+        attributes: pirate['attributes'],
+        relationships: pirate['relationships']
+      }
+    };
+    this.dialog.open(LearnMoreDialogComponent, config);
+  }
 
 }

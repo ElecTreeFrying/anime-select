@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+
+import { SharedService } from './common/core/services/shared.service';
 
 
 @Component({
@@ -7,13 +9,16 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute, private sharedService: SharedService) {}
 
   ngOnInit() {
     this.router.navigate(['dashboard']);
-    console.log('fucker');
+  }
+
+  ngAfterViewInit() {
+    // this.sharedService.initScrollbar();
   }
 
 }
