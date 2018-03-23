@@ -1,12 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+// import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs';
 
 
 @Injectable()
 export class PiratesService {
 
+  // relatedMediaChanged = new Subject<any>();
+  relatedMedia = [];
+
   constructor(private http: HttpClient) { }
+
+  // set setRelatedMedia(relatedMedia: any) {
+  setRelatedMedia(relatedMedia: any) {
+    this.relatedMedia = relatedMedia.slice(0);
+  }
+
+  // get getRelatedMedia() {
+  getRelatedMedia() {
+    return this.relatedMedia;
+  }
+
+  // setRelatedMedia(media: any) {
+  //   this.relatedMediaChanged.next(media);
+  //   this.relatedMediaChanged.next(media);
+  // }
 
   getPirates(link: string) {
     return this.http.get(`https://kitsu.io/api/edge/characters?page%5Blimit%5D=15&page%5Boffset%5D=${link}`);
@@ -45,10 +64,6 @@ export class PiratesService {
       this.http.get(`https://kitsu.io/api/edge/characters?page%5Blimit%5D=15&page%5Boffset%5D=880`)
     )
 
-  }
-
-  getRelatedLinks(link: string) {
-    return this.http.get(link);
   }
 
 }

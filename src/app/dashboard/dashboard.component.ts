@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material';
+import { ShortenPipe } from 'ngx-pipes';
 
 import { PiratesService } from '../common/core/services/pirates.service';
 import { SharedService } from '../common/core/services/shared.service';
@@ -51,7 +52,7 @@ export class DashboardComponent implements OnInit {
     });
 
     // setTimeout(() => { this.isDisabled = false }, 8000);
-    setTimeout(() => { this.isDisabled = false }, 50);
+    setTimeout(() => { this.isDisabled = false }, 5000);
   }
 
   loadAutocomplete() {

@@ -1,0 +1,44 @@
+<div *ngIf="false">
+  abbreviatedTitles []
+  ageRating
+  ageRatingGuide
+  averageRating
+  canonocalTitle
+  endDate
+  popularityRank
+  posterImage [] tiny small medium large original
+  ratingFrequencies 2-20
+  ratingRank
+  showType
+  startDate
+  status
+  subType
+  synopsis
+  titles en en_jp ja_jp
+</div>
+
+
+<button mat-raised-button *ngIf="isMovie" (click)="showType = 'movie'">MOVIE</button>
+<button mat-raised-button *ngIf="isSpacial" (click)="showType = 'special'">SPECIALS</button>
+<button mat-raised-button *ngIf="isOva" (click)="showType = 'OVA'">OVA</button>
+<button mat-raised-button *ngIf="isTv" (click)="showType = 'TV'">TV</button>\
+
+<h5 *ngIf="isShowContent"><br>No published media content found.</h5>
+
+<div *ngFor="let media of medias | unique">
+  <div class="row mt-4 mb-5" *ngIf="media?.data?.attributes?.showType === showType">
+    <div class="col">
+      <img src="{{ media?.data?.attributes?.posterImage?.large }}" class="img-fluid" alt="{{ media?.data?.attributes?.canonocalTitle }}">
+    </div>
+    <div class="col">
+      {{ media?.data?.attributes?.a }}
+      <p>{{ media?.data?.attributes?.canonicalTitle }}</p>
+      <small>
+        <span><strong>Release date:</strong> {{ media?.data?.attributes?.startDate }}</span><br>
+        <span><strong>Status:</strong> {{ media?.data?.attributes?.status }}</span><br><br>
+      </small>
+      <small><strong>Synopsis</strong></small><br>
+      <small>{{ media?.data?.attributes?.synopsis | shorten: 150: '...'  }} <span class="fake-link" (click)="onReadMore(media)">Read more.</span></small>
+    </div>
+  </div>
+</div>

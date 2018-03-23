@@ -4,7 +4,7 @@
   <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn">
     <mat-option *ngFor="let pirate of reactivePirates | async" [value]="pirate?.attributes?.names?.en">
       <span>{{ pirate?.attributes?.names?.en }}</span>
-      <span class="demo-secondary-text"> ({{pirate?.attributes?.names?.ja_jp}}) </span>
+      <span class="demo-secondary-text" *ngIf="pirate?.attributes?.names?.ja_jp"> ({{pirate?.attributes?.names?.ja_jp}}) </span>
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

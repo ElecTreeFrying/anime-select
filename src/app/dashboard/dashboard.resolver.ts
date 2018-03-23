@@ -29,6 +29,7 @@ export class DashboardResolver implements Resolve<any> {
     return promise.then((data: any) => data);
   }
 
+  // https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
   // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
 
   loopZ() {

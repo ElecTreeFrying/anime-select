@@ -6,6 +6,8 @@ import 'hammerjs';
 
 import { AppRoutingModule } from './app-routing.module';
 import { Material2Module } from './common/core/modules/material2.module';
+import { NgPipesModule } from 'ngx-pipes';
+import 'angular2-navigate-with-data';
 
 import { AppComponent } from './app.component';
 
@@ -22,6 +24,7 @@ import { SharedService } from './common/core/services/shared.service';
     HttpClientModule,
     AppRoutingModule,
     Material2Module,
+    NgPipesModule,
   ],
   providers: [
     SharedService

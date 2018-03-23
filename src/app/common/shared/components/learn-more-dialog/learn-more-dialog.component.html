@@ -1,15 +1,11 @@
 <div mat-dialog-container data-scrollbar>
   <div class="row">
     <div class="col-4" [ngStyle]="{'background': black}">
+
       <p class="text-center">
         <img src="{{ data?.attributes?.image?.original }}" class="img-fluid" alt="{{ data?.attributes?.names?.en }}">
       </p>
-      <h2 class="text-center mt-3 ">{{ data?.attributes?.names?.en }} <br>({{ data?.attributes?.names?.ja_jp }})</h2>
-
-      <br>
-
-      <p>asd</p>
-      <p>asd</p>
+      <h2 class="text-center mt-3 ">{{ data?.attributes?.names?.en }} <br><span *ngIf="data?.attributes?.names?.ja_jp">({{ data?.attributes?.names?.ja_jp }})</span></h2>
 
     </div>
     <div class="col">
@@ -20,6 +16,16 @@
         </span>
       </p>
       <div [innerHTML]="data?.attributes?.description"></div>
+      <hr>
+      <h1>Related Media</h1>
+      <p>Related media with {{ data?.attributes?.names?.en }}</p>
+
+      <div class="d-flex">
+        <mat-progress-spinner mode="indeterminate" [color]="'warn'" class="mt-3 ml-auto mr-auto" *ngIf="!isShow"></mat-progress-spinner>
+      </div>
+      <div *ngIf="isShow">
+        <app-other-media></app-other-media>
+      </div>
     </div>
   </div>
 </div>
