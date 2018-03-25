@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-media',
@@ -7,9 +10,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MediaComponent implements OnInit {
 
-  constructor() { }
+  media: any;
+
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
+
+    this.media = this.router.getNavigatedData()['data'];
+
+  }
+
+  onBack() {
+    this.router.navigateByData({
+      url: ['dashboard'],
+      data: null,
+      extras: {
+        queryParams: {
+          refresh: false
+        }
+      }
+    });
   }
 
 }

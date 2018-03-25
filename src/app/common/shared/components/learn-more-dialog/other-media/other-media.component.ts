@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PiratesService } from '../../../../core/services/pirates.service';
-import { ShortenPipe } from 'ngx-pipes';
+import { MatDialog } from '@angular/material';
 import * as _ from 'lodash';
+
+import { PiratesService } from '../../../../core/services/pirates.service';
+
+import { ShortenPipe } from 'ngx-pipes';
 
 
 @Component({
@@ -20,7 +23,7 @@ export class OtherMediaComponent implements OnInit {
   isOva: boolean = false;
   isShowContent: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, private piratesService: PiratesService) { }
+  constructor(private router: Router, private dialog: MatDialog, private route: ActivatedRoute, private piratesService: PiratesService) { }
 
   ngOnInit() {
     // this.medias = this.piratesService.getRelatedMedia;
@@ -51,15 +54,12 @@ export class OtherMediaComponent implements OnInit {
   }
 
   onReadMore(media: string) {
-    // this.router.navigateByData({
-    //   url: ['1'],
-    //   data: media,
-    //   extras: {
-    //     relativeTo: this.route
-    //   }
-    // });
+    this.router.navigateByData({
+      url: ['media'],
+      data: media
+    });
 
-    console.log(media);
+    this.dialog.closeAll();
   }
 
 }

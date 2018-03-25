@@ -14,11 +14,31 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(private router: Router, private route: ActivatedRoute, private sharedService: SharedService) {}
 
   ngOnInit() {
-    this.router.navigate(['dashboard']);
+    this.router.navigateByData({
+      url: ['dashboard'],
+      data: null,
+      extras: {
+        queryParams: {
+          refresh: false
+        }
+      }
+    });
   }
 
   ngAfterViewInit() {
     // this.sharedService.initScrollbar();
+  }
+
+  onRefreshList() {
+    this.router.navigateByData({
+      url: ['dashboard'],
+      data: null,
+      extras: {
+        queryParams: {
+          refresh: true
+        }
+      }
+    });
   }
 
 }

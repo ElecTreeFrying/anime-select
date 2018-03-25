@@ -4,7 +4,7 @@ import { MediaModule } from './media/media.module';
 
 const routes: Routes = [
   { path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule' },
-  { path: 'media/:slugName/:id/:status', loadChildren: './media/media.module#MediaModule' },
+  { path: 'media', loadChildren: './media/media.module#MediaModule' },
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 <div mat-dialog-container data-scrollbar>
   <div class="row">
-    <div class="col-4" [ngStyle]="{'background': black}">
+    <div class="col-4">
 
       <p class="text-center">
         <img src="{{ data?.attributes?.image?.original }}" class="img-fluid" alt="{{ data?.attributes?.names?.en }}">
@@ -9,7 +9,7 @@
 
     </div>
     <div class="col">
-      <p>
+      <p *ngIf="data?.attributes?.otherNames">
         Other names:
         <span *ngFor="let item of data?.attributes?.otherNames">
           {{ item }},

@@ -6,11 +6,14 @@
   </mat-drawer>
 
   <div>
-    <mat-toolbar>
+    <mat-toolbar class="d-flex">
       <button mat-icon-button (click)="start.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
       <span class="ml-3">One Piece API</span>
+      <button mat-icon-button [mat-menu-trigger-for]="posXMenuOverlay" class="ml-auto">
+        <mat-icon>more_vert</mat-icon>
+      </button>
     </mat-toolbar>
 
     <div drawer-content data-scrollbar>
@@ -18,3 +21,10 @@
     </div>
   </div>
 </mat-drawer-container>
+
+<mat-menu xPosition="before" [overlapTrigger]="false" #posXMenuOverlay="matMenu">
+  <button mat-menu-item (click)="onRefreshList()">
+    <mat-icon>refresh</mat-icon>
+    Refresh list
+  </button>
+</mat-menu>

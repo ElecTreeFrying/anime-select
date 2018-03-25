@@ -31,17 +31,41 @@ export class DashboardComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute, private dialog: MatDialog, private piratesService: PiratesService, private sharedService: SharedService) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe((response) => {
+      if (response['refresh'] === 'true') {
+        this.isLoadAutocomplete = true;
+        setTimeout(() => this.isLoadAutocomplete = false, 50);
+        this.piratesService.getPirates(`${405}`).subscribe((response) => {
+          this.pirates = response['data'];
+        });
+
+        this.router.navigateByData({
+          url: ['dashboard'],
+          data: null,
+          extras: { queryParams: { refresh: false } }
+        });
+      }
+    });
+
     this.piratesService.getPirates(`${405}`).subscribe((response) => {
       this.pirates = response['data'];
     });
 
     this.counter = 420;
 
-    this.router.navigate(['u1'], { relativeTo: this.route });
+    this.router.navigateByData({
+      url: ['u1'],
+      data: null,
+      extras: {
+        queryParamsHandling: 'merge',
+        relativeTo: this.route
+      }
+    });
 
     this.sharedService.autocompleteChanged.subscribe((response) => {
       setTimeout(() => {
-        this.isShowAutocomplete = this.sharedService.autocompleteChanged.observers.length
+        this.isShowAutocomplete = this.sharedService.autocompleteChanged.observers.length;
+        console.log(this.isShowAutocomplete);
       }, 50);
     });
 
@@ -52,7 +76,9 @@ export class DashboardComponent implements OnInit {
     });
 
     // setTimeout(() => { this.isDisabled = false }, 8000);
-    setTimeout(() => { this.isDisabled = false }, 5000);
+    setTimeout(() => { this.isDisabled = false }, 50);
+    this.isLoadAutocomplete = true;
+    setTimeout(() => this.isLoadAutocomplete = false, 50);
   }
 
   loadAutocomplete() {

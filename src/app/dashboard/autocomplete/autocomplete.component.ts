@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { startWith } from 'rxjs/operators/startWith';
 import { map } from 'rxjs/operators/map';
+import * as _ from 'lodash';
 
 import { SharedService } from '../../common/core/services/shared.service';
 
@@ -49,7 +50,9 @@ export class AutocompleteComponent implements OnInit {
 
   private _filter(pirates: any[], val: string = '') {
     const filterValue = val.toLowerCase();
-    return pirates.filter(pirate => pirate.attributes.names.en.toLowerCase().startsWith(filterValue));
+    const filtered = pirates.filter(pirate => pirate.attributes.names.en.toLowerCase().startsWith(filterValue));
+    const uniq = _.uniqWith(filtered, _.isEqual);
+    return uniq;
   }
 
 }
