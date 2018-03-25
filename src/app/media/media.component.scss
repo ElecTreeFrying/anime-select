@@ -1,24 +1,28 @@
-.head {
-  margin-top: 35px;
-}
+.wrapper {
+  height: 100%;
+  overflow-y: auto;
 
-.mat-icon-button {
-  margin-left: 55px;
-  margin-bottom: 25px;
-}
-
-[data-left] {
-  [data-en] {
-    margin-top: 10px;
+  .head {
+    margin-top: 35px;
   }
-  .img-fluid {
-    width: 400px;
-  }
-}
 
-[data-right] {
-  text-indent: inherit;
-  [data-status] {
-    font-size: 1.15em;
+  .mat-icon-button {
+    margin-bottom: 50px;
+  }
+
+  [data-left] {
+    [data-en] {
+      margin-top: 10px;
+    }
+    .img-fluid {
+      width: 400px;
+    }
+  }
+
+  [data-right] {
+    text-indent: inherit;
+    [data-status] {
+      font-size: 1.15em;
+    }
   }
 }

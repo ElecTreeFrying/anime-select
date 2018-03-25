@@ -1,14 +1,15 @@
 <div mat-dialog-container data-scrollbar>
   <div class="row">
-    <div class="col-4">
+    <div class="col-12 col-sm-12 col-xs-4 col-md-4 col-lg-4 col-xl-4">
 
       <p class="text-center">
         <img src="{{ data?.attributes?.image?.original }}" class="img-fluid" alt="{{ data?.attributes?.names?.en }}">
       </p>
       <h2 class="text-center mt-3 ">{{ data?.attributes?.names?.en }} <br><span *ngIf="data?.attributes?.names?.ja_jp">({{ data?.attributes?.names?.ja_jp }})</span></h2>
 
+      <br><br>
     </div>
-    <div class="col">
+    <div class="col-12 col-sm-12 col-xs-8 col-md-8 col-lg-8 col-xl-8">
       <p *ngIf="data?.attributes?.otherNames">
         Other names:
         <span *ngFor="let item of data?.attributes?.otherNames">

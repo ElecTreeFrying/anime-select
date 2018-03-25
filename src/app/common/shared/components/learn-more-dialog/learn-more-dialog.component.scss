@@ -1,6 +1,6 @@
 [mat-dialog-container] {
   overflow-y: auto;
-  width: 750px;
+  max-width: 750px;
   max-height: 80vh;
   .row {
     width: 100%;

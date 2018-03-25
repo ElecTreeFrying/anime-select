@@ -1,33 +1,37 @@
-<div class="container">
-  <div class="head"></div>
-  <div class="row">
-    <div class="col">
-      <button mat-icon-button (click)="onBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
-      <br>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col" data-left *ngIf="media?.attributes">
-      <div class="d-flex">
-        <div class="m-auto">
-          <img src="{{ media?.attributes?.posterImage?.large }}" class="img-fluid m-auto" alt="{{ media?.attributes?.titles?.en }}">
-        </div>
+<div class="wrapper">
+  <div class="container">
+    <div class="head"></div>
+    <div class="row">
+      <div class="col-12 col-md-6">
+        <button mat-icon-button (click)="onBack()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+        <br>
       </div>
-
-      <h2 class="text-center" data-en>{{ media?.attributes?.canonicalTitle }}</h2>
-      <h4 class="text-center" data-jp>({{ media?.attributes?.titles?.ja_jp }})</h4>
     </div>
-    <div class="col" data-right *ngIf="media?.attributes">
-      <p data-status>{{ media?.attributes?.showType }}: {{ media?.attributes?.startDate }} ({{ media?.attributes?.status }})</p>
-      <p data-status>{{ media?.attributes?.ageRating }} - {{ media?.attributes?.ageRatingGuide }}</p>
-      <p data-status>Synopsis {{ media?.attributes?.synopsis }}</p>
-      <p data-others>Other titles:
-        <span *ngFor="let title of media?.attributes?.abbreviatedTitles">
-          <span>{{ title }}, </span>
-        </span><br><br>
-        <span>Populatrity rank: {{ media?.attributes?.popularityRank }}</span><br>
-        <span>Rating rank: {{ media?.attributes?.ratingRank }}</span>
-      </p>
+    <div class="row">
+      <div class="col-12 col-md-6" data-left *ngIf="media?.attributes">
+        <div class="d-flex">
+          <div class="m-auto">
+            <img src="{{ media?.attributes?.posterImage?.large }}" class="img-fluid m-auto" alt="{{ media?.attributes?.titles?.en }}">
+          </div>
+        </div>
+
+        <h2 class="text-center" data-en>{{ media?.attributes?.canonicalTitle }}</h2>
+        <h4 class="text-center" data-jp>({{ media?.attributes?.titles?.ja_jp }})</h4>
+        <br><br>
+      </div>
+      <div class="col-12 col-md-6" data-right *ngIf="media?.attributes">
+        <p data-status>{{ media?.attributes?.showType }}: {{ media?.attributes?.startDate }} ({{ media?.attributes?.status }})</p>
+        <p data-status>{{ media?.attributes?.ageRating }} - {{ media?.attributes?.ageRatingGuide }}</p>
+        <p data-status>Synopsis {{ media?.attributes?.synopsis }}</p>
+        <p data-others>Other titles:
+          <span *ngFor="let title of media?.attributes?.abbreviatedTitles">
+            <span>{{ title }}, </span>
+          </span><br><br>
+          <span>Populatrity rank: {{ media?.attributes?.popularityRank }}</span><br>
+          <span>Rating rank: {{ media?.attributes?.ratingRank }}</span>
+        </p>
+        <br><br>
+      </div>
     </div>
   </div>
 </div>
