@@ -10,13 +10,17 @@ import { NgPipesModule } from 'ngx-pipes';
 import 'angular2-navigate-with-data';
 
 import { AppComponent } from './app.component';
+import { NoticeComponent } from './common/shared/components/notice/notice.component';
+import { ShowDetailsComponent } from './common/shared/components/show-details/show-details.component';
 
 import { SharedService } from './common/core/services/shared.service';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NoticeComponent,
+    ShowDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,6 +32,10 @@ import { SharedService } from './common/core/services/shared.service';
   ],
   providers: [
     SharedService
+  ],
+  entryComponents: [
+    NoticeComponent,
+    ShowDetailsComponent,
   ],
   bootstrap: [AppComponent]
 })

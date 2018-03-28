@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { forkJoin } from "rxjs/observable/forkJoin";
+import * as _ from 'lodash';
 
 import { PiratesService } from '../common/core/services/pirates.service';
 
@@ -8,61 +10,50 @@ export class DashboardResolver implements Resolve<any> {
 
   constructor(private piratesService: PiratesService) { }
 
-  arr = [];
-  newArr = [];
+  piratesArr = new Array(25);
+  piratesObs = [];
+  piratesNew = [];
+
+  bufferArr = new Array(25);
 
   resolve(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
     const promise = new Promise(
       (resolve, reject) => {
-        this.piratesService.getAllPirates().subscribe((response) => {
-          this.arr.push(response['data']);
-        }, (e) => {
-        }, () => {
-          this.loopG();
-          // this.arr.forEach((el) => el.forEach((el2) => this.newArr.push(el2)))
-          resolve(this.newArr);
+
+        this.piratesArr = _.fill(this.piratesArr, 0);
+
+        let observable = null;
+        let link = 405;
+        this.piratesArr.forEach((el, i) => {
+          if (i < 1) {
+            observable = this.piratesService.getPirates(String(link))
+            this.piratesObs.push(observable);
+            link = 420;
+          } else {
+            observable = this.piratesService.getPirates(String(link))
+            this.piratesObs.push(observable);
+            link += 20;
+          }
+        })
+
+        forkJoin(this.piratesObs).subscribe((response) => {
+          this.obsLoop(response);
+          resolve(this.piratesNew)
         });
+
       }
     );
 
     return promise.then((data: any) => data);
   }
 
-  // https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
-  // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
-
-  loopZ() {
-    this.arr.map((el) => {
-      el.map((el2) => {
-        this.newArr.push(el2)
+  obsLoop(array: any) {
+    array.forEach((el) => {
+      el.data.forEach((el2) => {
+        this.piratesNew.push(el2)
       })
     })
-  }
-
-
-  loopG() {
-    this.arr.map(async (el) => {
-      await Promise.all(el.map((el2) => {
-        this.newArr.push(el2)
-      }))
-    })
-  }
-
-  async loopD() {
-    await this.arr.map(async (el) => {
-      await Promise.all(el.map((el2) => {
-        this.newArr.push(el2)
-      }))
-    })
-  }
-
-  async loop() {
-    await Promise.all(this.arr.map(async (el) => {
-        await Promise.all(this.arr.map(async (el2) => {
-          await this.newArr.push(el2);
-        }))
-    }));
   }
 
 }

@@ -1,13 +1,10 @@
-<div class="wrapper" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500" (scrolled)="onScroll()" [scrollWindow]="false">
-  <div class="container" data-scrollbar>
+<div class="wrapper">
+  <div class="container">
     <div class="row">
       <div class="col-12">
 
         <div class="d-flex">
           <div class="m-auto">
-            <div *ngIf="isLoadAutocomplete">
-              <button mat-raised-button (click)="loadAutocomplete()" [disabled]="isDisabled" class="mt-4">LOAD AUTOCOMPLETE</button>
-            </div>
             <div *ngIf="!isLoadAutocomplete">
               <mat-progress-spinner mode="indeterminate" [color]="'warn'" class="mt-3" *ngIf="isShowAutocomplete !== 1 && isShowAutocomplete < 1"></mat-progress-spinner>
             </div>
@@ -41,7 +38,9 @@
         </div>
         <div class="row" *ngIf="isShow">
           <div class="col">
+
             <dark-pirates-spinner></dark-pirates-spinner>
+
           </div>
         </div>
       </div>

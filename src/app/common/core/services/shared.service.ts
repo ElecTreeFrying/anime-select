@@ -3,7 +3,6 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import Scrollbar from 'smooth-scrollbar';
-import OverscrollPlugin from 'smooth-scrollbar/plugins/overscroll';
 
 
 @Injectable()
@@ -29,19 +28,16 @@ export class SharedService {
   }
 
   initScrollbar() {
-    Scrollbar.use(OverscrollPlugin)
-
-    const scrollbar = Scrollbar.initAll({
-      damping: 0.1,
-      thumbMinSize: 10,
-      renderByPixels: true,
-      alwaysShowTracks: false,
-      continuousScrolling: true,
-      wheelEventTarget: null,
-      plugins: { }
-    });
-
-
+    // return Scrollbar.initAll({
+    //   damping: 0.1,
+    //   thumbMinSize: 10,
+    //   renderByPixels: true,
+    //   alwaysShowTracks: false,
+    //   continuousScrolling: true,
+    //   wheelEventTarget: null,
+    //   plugins: { }
+    // });
+    return Scrollbar.initAll();
   }
 
 }

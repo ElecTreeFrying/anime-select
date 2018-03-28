@@ -1,3 +1,8 @@
+[svgIcon="one_piece"],
+[svgIcon="one_piece2"] {
+  transform: translateY(-7px);
+}
+
 .mat-drawer-container {
   .mat-drawer {
     width: 300px;
@@ -5,5 +10,20 @@
 
   [drawer-content] {
     height: calc(100vh - 64px);
+
+    [data-scrolltop] {
+      position: absolute;
+      width: 95%;
+      .button-container {
+        height: calc(100vh - 64px);
+        display: flex;
+        padding-bottom: 5vh;
+        .mat-fab {
+          z-index: 1;
+          margin-top: auto;
+          margin-left: auto;
+        }
+      }
+    }
   }
 }

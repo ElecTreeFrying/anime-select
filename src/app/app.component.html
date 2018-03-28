@@ -16,7 +16,13 @@
       </button>
     </mat-toolbar>
 
+
     <div drawer-content data-scrollbar>
+      <div data-scrolltop *ngIf="isShowFab" [ngStyle]="{ 'padding-top': statusOffset + 'px'}">
+        <div class="button-container">
+          <button mat-fab color="primary" (click)="onScrollTop()"><mat-icon>keyboard_arrow_up</mat-icon></button>
+        </div>
+      </div>
       <router-outlet></router-outlet>
     </div>
   </div>
@@ -26,5 +32,10 @@
   <button mat-menu-item (click)="onRefreshList()">
     <mat-icon>refresh</mat-icon>
     Refresh list
+  </button>
+  <button mat-menu-item (click)="displayDetails()">
+    <!-- <mat-icon svgIcon="one_piece"></mat-icon> -->
+    <mat-icon svgIcon="one_piece2"></mat-icon>
+    One Piece
   </button>
 </mat-menu>

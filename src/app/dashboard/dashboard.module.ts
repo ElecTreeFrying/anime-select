@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { Material2Module } from '../common/core/modules/material2.module';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgPipesModule } from 'ngx-pipes';
 
 import { DashboardComponent } from './dashboard.component';
@@ -14,6 +13,7 @@ import { OtherMediaComponent } from '../common/shared/components/learn-more-dial
 import { PiratesService } from '../common/core/services/pirates.service';
 import { SharedService } from '../common/core/services/shared.service';
 import { DashboardResolver } from './dashboard.resolver';
+import { MediaComponent } from '../common/shared/components/media/media.component';
 
 
 @NgModule({
@@ -21,7 +21,6 @@ import { DashboardResolver } from './dashboard.resolver';
     CommonModule,
     DashboardRoutingModule,
     Material2Module,
-    InfiniteScrollModule,
     NgPipesModule,
   ],
   declarations: [
@@ -29,6 +28,7 @@ import { DashboardResolver } from './dashboard.resolver';
     PiratesSpinnerComponent,
     LearnMoreDialogComponent,
     OtherMediaComponent,
+    MediaComponent,
   ],
   providers: [
     PiratesService,
@@ -38,6 +38,7 @@ import { DashboardResolver } from './dashboard.resolver';
   entryComponents: [
     LearnMoreDialogComponent,
     OtherMediaComponent,
+    MediaComponent,
   ]
 })
 export class DashboardModule { }
