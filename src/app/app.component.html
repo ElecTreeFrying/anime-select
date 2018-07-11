@@ -1,41 +1,19 @@
-<mat-drawer-container>
-  <mat-drawer #start mode="over">
+<div id="wrapper">
 
-    side-drawer-content
+  <mat-toolbar>
+    <div class="wrap">
+      <mat-toolbar>
+        <span>ng2</span>
+      </mat-toolbar>
+    </div>
+  </mat-toolbar>
 
-  </mat-drawer>
+  <div id="content">
+    <div class="wrap">
 
-  <div>
-    <mat-toolbar class="d-flex" [ngStyle]="{ 'height': '64px' }">
-      <button mat-icon-button (click)="start.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span class="ml-3">One Piece API</span>
-      <button mat-icon-button [mat-menu-trigger-for]="posXMenuOverlay" class="ml-auto">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-    </mat-toolbar>
-
-
-    <div drawer-content data-scrollbar>
-      <div data-scrolltop *ngIf="isShowFab" [ngStyle]="{ 'padding-top': statusOffset + 'px'}">
-        <div class="button-container">
-          <button mat-fab color="primary" (click)="onScrollTop()"><mat-icon>keyboard_arrow_up</mat-icon></button>
-        </div>
-      </div>
       <router-outlet></router-outlet>
+
     </div>
   </div>
-</mat-drawer-container>
 
-<mat-menu xPosition="before" [overlapTrigger]="false" #posXMenuOverlay="matMenu">
-  <button mat-menu-item (click)="onRefreshList()">
-    <mat-icon>refresh</mat-icon>
-    Refresh list
-  </button>
-  <button mat-menu-item (click)="displayDetails()">
-    <!-- <mat-icon svgIcon="one_piece"></mat-icon> -->
-    <mat-icon svgIcon="one_piece2"></mat-icon>
-    One Piece
-  </button>
-</mat-menu>
+</div>
