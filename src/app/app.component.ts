@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
+import { SharedService } from './common/core/service/shared.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,10 +10,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private shared: SharedService
+  ) {}
 
   ngOnInit() {
     setTimeout(() => { this.router.navigate(['p'], { relativeTo: this.route }); }, 350);
+
+    this.shared.initScrollbar();
   }
 
 }

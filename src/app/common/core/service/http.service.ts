@@ -7,8 +7,6 @@ import { map } from 'rxjs/operators'
 })
 export class HttpService {
 
-
-
   constructor(private http: HttpClient) { }
 
   getPirates(next: string = 'https://kitsu.io/api/edge/characters?page%5Blimit%5D=20&page%5Boffset%5D=405') {

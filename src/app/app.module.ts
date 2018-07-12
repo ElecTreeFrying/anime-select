@@ -7,6 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 
+import { SharedService } from './common/core/service/shared.service';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -19,6 +21,9 @@ import { AppComponent } from './app.component';
   ],
   bootstrap: [
     AppComponent
+  ],
+  providers: [
+    SharedService
   ]
 })
 export class AppModule { }
