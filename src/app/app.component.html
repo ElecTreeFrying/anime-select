@@ -3,12 +3,17 @@
   <mat-toolbar>
     <div class="wrap">
       <mat-toolbar>
-        <span>ng2</span>
+        <mat-icon svgIcon="onePiece"></mat-icon>
+        <span>One Piece</span>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
       </mat-toolbar>
     </div>
   </mat-toolbar>
 
-  <div id="content" data-scrollbar>
+  <div id="content" #content data-simplebar>
     <div class="wrap">
 
       <router-outlet></router-outlet>
@@ -17,3 +22,20 @@
   </div>
 
 </div>
+
+
+<div id="scrollup" *ngIf="scrollTop > 490">
+  <button mat-fab color="primary" [ngClass]="{ 'animated': isMouseOver, 'tada': isMouseOver }"
+    (click)="scrollToTop()" (mouseenter)="onMouseenter()" (mouseleave)="onMouseleave()">
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+</div>
+
+<mat-menu #menu="matMenu" [overlapTrigger]="false" xPosition="before">
+  <button mat-menu-item>
+    Refresh list
+  </button>
+  <button mat-menu-item>
+    Load all pirates
+  </button>
+</mat-menu>

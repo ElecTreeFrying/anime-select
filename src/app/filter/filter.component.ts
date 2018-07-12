@@ -17,6 +17,7 @@ export class FilterComponent implements OnInit {
   reactivePirates: any;
 
   pirates: any[] = [];
+  onePiece = [];
 
   constructor(
     private router: Router,
@@ -41,6 +42,7 @@ export class FilterComponent implements OnInit {
       );
 
     this.reactivePirates.subscribe((response) => {
+      // this.onePiece = response;
       this.shared.setAutocomplete = response;
     });
   }
@@ -55,9 +57,7 @@ export class FilterComponent implements OnInit {
 
   private _filter(pirates: any[], val: string = '') {
     const filterValue = val.toLowerCase();
-    const filtered = pirates.filter(pirate => pirate.attributes.names.en.toLowerCase().includes(filterValue));
-    const uniq = _.uniqWith(filtered, _.isEqual);
-    return uniq;
+    return pirates.filter(pirate => pirate.attributes.names.en.toLowerCase().includes(filterValue));
   }
 
 }

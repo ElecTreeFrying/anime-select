@@ -5,6 +5,8 @@ import {
   MatAutocompleteModule,
   MatOptionModule,
   MatSelectModule,
+  MatIconModule,
+  MatButtonModule,
 } from '@angular/material';
 
 @NgModule({
@@ -14,6 +16,8 @@ import {
     MatAutocompleteModule,
     MatOptionModule,
     MatSelectModule,
+    MatIconModule,
+    MatButtonModule,
   ]
 })
 export class FilterMaterialModule { }

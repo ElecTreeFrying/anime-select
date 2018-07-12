@@ -12,4 +12,10 @@
     </mat-card-content>
   </mat-card>
 
+  <div id="loading" *ngIf="isEnd">
+    <div *ngIf="isConcatinated">
+      <app-loading-box></app-loading-box>
+    </div>
+  </div>
+
 </div>

@@ -3,6 +3,7 @@ import {
   MatCardModule,
   MatButtonModule,
   MatIconModule,
+  MatDialogModule,
 } from '@angular/material';
 
 @NgModule({
@@ -10,6 +11,7 @@ import {
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
   ]
 })
 export class PiratesMaterialModule { }

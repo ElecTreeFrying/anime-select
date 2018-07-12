@@ -11,12 +11,43 @@
     .wrap {
       padding: 0;
     }
+
+    .wrap > .mat-toolbar {
+      > span,
+      > .mat-icon {
+        margin-right: 10px;
+        cursor: pointer;
+      }
+
+      > .mat-icon-button {
+        margin-left: auto;
+      }
+    }
   }
 
   #content {
     padding-top: 64px;
     height: 100vh;
     overflow-y: auto;
+  }
+}
+
+#scrollup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  overflow: hidden;
+
+  .mat-fab {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    margin-left: auto;
+    margin-bottom: 50px;
+    margin-right: 50px;
   }
 }
 

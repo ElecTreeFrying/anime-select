@@ -1,15 +1,12 @@
 #wrapper {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
-  margin-bottom: 100px;
-
+  justify-content: space-around;
+  // margin-bottom: 100px;
   > .mat-card:hover {
-
     #shadow {
       z-index: 2;
     }
-
   }
 
   > .mat-card {
@@ -29,10 +26,10 @@
       position: absolute;
       background: black;
       opacity: 0.6;
-      top: 0%;
-      left: 0%;
-      right: 0%;
-      bottom: 0%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       z-index: -1;
 
       p {
@@ -48,13 +45,15 @@
       }
     }
   }
+
+  > #loading {
+    flex-basis: 100%;
+    margin-bottom: 50px;
+  }
 }
 
-
 @media (max-width: 479px) {
-
   #wrapper {
     justify-content: space-around;
   }
-
 }

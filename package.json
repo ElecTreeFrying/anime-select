@@ -23,15 +23,14 @@
     "@angular/platform-browser": "^6.0.3",
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
-    "angularfire2": "^5.0.0-rc.11",
+    "animate.css": "^3.6.1",
     "bootstrap": "^4.1.1",
     "core-js": "^2.5.4",
-    "firebase": "^5.2.0",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.10",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.2.1",
-    "smooth-scrollbar": "^8.3.0",
+    "simplebar": "^2.6.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
