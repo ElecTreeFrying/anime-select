@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
+import { MediaComponent } from '../media/media.component';
+
 @Component({
   selector: 'app-pirate',
   templateUrl: './pirate.component.html',
@@ -14,7 +16,10 @@ export class PirateComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.data);
+  }
+
+  onMedia() {
+    this.dialog.open(MediaComponent, { data: this.data.relationships.castings.links.related });
   }
 
 }

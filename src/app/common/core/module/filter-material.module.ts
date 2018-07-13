@@ -7,6 +7,7 @@ import {
   MatSelectModule,
   MatIconModule,
   MatButtonModule,
+  MatTooltipModule,
 } from '@angular/material';
 
 @NgModule({
@@ -18,6 +19,7 @@ import {
     MatSelectModule,
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
   ]
 })
 export class FilterMaterialModule { }

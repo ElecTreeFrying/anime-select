@@ -7,6 +7,7 @@ import { PiratesMaterialModule } from '../common/core/module/pirates-material.mo
 import { PiratesComponent } from './pirates.component';
 import { LoadingBoxComponent } from './loading-box/loading-box.component';
 import { PirateComponent } from '../common/shared/component/pirate/pirate.component';
+import { MediaComponent } from '../common/shared/component/media/media.component';
 
 import { HttpService } from '../common/core/service/http.service';
 
@@ -20,10 +21,12 @@ import { HttpService } from '../common/core/service/http.service';
   declarations: [
     PiratesComponent,
     LoadingBoxComponent,
-    PirateComponent
+    PirateComponent,
+    MediaComponent
   ],
   entryComponents: [
-    PirateComponent
+    PirateComponent,
+    MediaComponent
   ],
   providers: [
     HttpService

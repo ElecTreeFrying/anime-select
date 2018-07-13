@@ -32,6 +32,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => { this.router.navigate(['p'], { relativeTo: this.route }); }, 350);
+    this.shared.setLoadPiratesChanged = false;
 
     this.el = new SimpleBar(this.content.nativeElement);
     this.scrollElement = this.el.getScrollElement();
@@ -40,10 +41,27 @@ export class AppComponent implements OnInit {
       this.scrollTop = status.srcElement.scrollTop;
       const scrollHeight = status.srcElement.scrollHeight;
 
-      const isScroll = scrollHeight - this.scrollTop === clientHeight;
+      const isScroll =
+         scrollHeight - Math.ceil(this.scrollTop) === clientHeight + 2
+        || scrollHeight - Math.ceil(this.scrollTop) === clientHeight + 1
+        || scrollHeight - Math.ceil(this.scrollTop) === clientHeight
+        || scrollHeight - Math.ceil(this.scrollTop) === clientHeight - 1
+        || scrollHeight - Math.ceil(this.scrollTop) === clientHeight - 2
+        || scrollHeight - Math.ceil(this.scrollTop) === clientHeight - 3
+        || scrollHeight - Math.ceil(this.scrollTop) === clientHeight - 4
+        || scrollHeight - Math.ceil(this.scrollTop) === clientHeight - 5;
 
       this.shared.setScroll = { isScroll, num: this.scrollTop };
     });
+  }
+
+  onRefresh() {
+    this.router.navigate(['/'], { relativeTo: this.route });
+    setTimeout(() => { this.router.navigate(['/p/f'], { relativeTo: this.route }); }, 500);
+  }
+
+  onLoadPirates() {
+    this.shared.setLoadPiratesChanged = true;
   }
 
   onMouseenter() {
@@ -64,7 +82,7 @@ export class AppComponent implements OnInit {
     let scrollMargin = 0;
 
     let scrollInterval = setInterval( () => {
-      if ( scrollHeight - scrollMargin !> 1 ) {
+      if ( scrollHeight - scrollMargin !> 50 ) {
         scrollCount = scrollCount + 1;
         scrollMargin = cosParameter - cosParameter * Math.cos( scrollCount * scrollStep );
         this.scrollElement.scrollTop = ( scrollHeight - scrollMargin );

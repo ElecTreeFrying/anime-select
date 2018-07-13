@@ -1,10 +1,6 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
-import { map, switchMap } from 'rxjs/operators'
 import * as _ from 'lodash';
-
-import { forkJoin } from "rxjs/observable/forkJoin";
 
 import { HttpService } from '../common/core/service/http.service';
 import { SharedService } from '../common/core/service/shared.service';
@@ -16,11 +12,12 @@ import { PirateComponent } from '../common/shared/component/pirate/pirate.compon
   templateUrl: './pirates.component.html',
   styleUrls: ['./pirates.component.scss']
 })
-export class PiratesComponent implements OnInit, AfterViewInit {
+export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dialogRef: MatDialogRef<PirateComponent>;
 
   pirates = [];
+  allPirates = [];
   next: string = '';
   offsetHeight: number = 0;
 
@@ -32,6 +29,7 @@ export class PiratesComponent implements OnInit, AfterViewInit {
 
   isConcatinated: boolean = true;
   isEnd: boolean = true;
+  isLoadAll: boolean = false;
 
   ngOnInit() {
     this.http.getPirates().subscribe((response: any[]) => {
@@ -39,13 +37,26 @@ export class PiratesComponent implements OnInit, AfterViewInit {
       this.pirates = response;
       this.shared.setPirates = response;
       this.isConcatinated = false;
+      this.isLoadAll = false;
+      // this.onLaunch(response[5]);
     });
 
     this.shared.autocompleteChanged.subscribe((response: any[]) => {
-      this.pirates = _.uniq(response, 'id');
+
+      !this.isLoadAll
+        ? this.pirates = _.uniq(response, 'id')
+        : this.allPirates = _.uniq(response, 'id')
+
     });
 
-    // this.start();
+    this.shared.loadPiratesChanged.subscribe((response: boolean) => {
+
+      this.isLoadAll = response;
+      response ? this.start().then(() => {
+        this.shared.setPirates = this.allPirates
+      }) : 0;
+
+    });
   }
 
   ngAfterViewInit() {
@@ -53,6 +64,10 @@ export class PiratesComponent implements OnInit, AfterViewInit {
       this.pirates.filter(e => e.id > 890).length > 0 ?  (this.isEnd = false) : 0
       response.isScroll && !this.isConcatinated ? this.onScroll() : 0;
     });
+  }
+
+  ngOnDestroy() {
+    this.isLoadAll = false;
   }
 
   onScroll() {
@@ -82,7 +97,7 @@ export class PiratesComponent implements OnInit, AfterViewInit {
   async start() {
     this.http.getPirates().subscribe((response: any[]) => {
       this.next = response[0].links.next;
-      this.pirates = response;
+      this.allPirates = response;
       this.shared.setPirates = response;
     });
 
@@ -91,9 +106,9 @@ export class PiratesComponent implements OnInit, AfterViewInit {
         this.http.getPirates(this.next).subscribe((response) => {
           let buffer = [];
           this.next = response[0].links.next;
-          buffer = this.pirates.concat(response).filter(e => e.id < 901);
-          this.pirates = _.uniqBy(buffer, 'id');
-          this.shared.setPirates = this.pirates;
+          buffer = this.allPirates.concat(response).filter(e => e.id < 901);
+          this.allPirates = _.uniqBy(buffer, 'id');
+          // this.shared.setPirates = this.allPirates;
         });
       });
     };

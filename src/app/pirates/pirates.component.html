@@ -1,16 +1,32 @@
 <div id="wrapper">
 
-  <mat-card *ngFor="let pirate of pirates">
-    <mat-card-content>
-      <div id="shadow">
-        <p>{{ pirate?.attributes?.names?.en }}</p>
-        <button mat-icon-button (click)="onLaunch(pirate)">
-          <mat-icon>launch</mat-icon>
-        </button>
-      </div>
-      <img src="{{ pirate?.attributes?.image?.original }}" alt="">
-    </mat-card-content>
-  </mat-card>
+  <div *ngIf="!isLoadAll">
+    <mat-card *ngFor="let pirate of pirates">
+      <mat-card-content>
+        <div id="shadow">
+          <p>{{ pirate?.attributes?.names?.en }}</p>
+          <button mat-icon-button (click)="onLaunch(pirate)">
+            <mat-icon>launch</mat-icon>
+          </button>
+        </div>
+        <img src="{{ pirate?.attributes?.image?.original }}" alt="">
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div  *ngIf="isLoadAll">
+    <mat-card *ngFor="let pirate of allPirates">
+      <mat-card-content>
+        <div id="shadow">
+          <p>{{ pirate?.attributes?.names?.en }}</p>
+          <button mat-icon-button (click)="onLaunch(pirate)">
+            <mat-icon>launch</mat-icon>
+          </button>
+        </div>
+        <img src="{{ pirate?.attributes?.image?.original }}" alt="">
+      </mat-card-content>
+    </mat-card>
+  </div>
 
   <div id="loading" *ngIf="isEnd">
     <div *ngIf="isConcatinated">

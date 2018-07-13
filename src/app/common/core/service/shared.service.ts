@@ -10,6 +10,7 @@ export class SharedService {
 
   piratesChanged = new Subject();
   autocompleteChanged = new Subject();
+  loadPiratesChanged = new Subject();
 
   constructor() { }
 
@@ -23,6 +24,10 @@ export class SharedService {
 
   set setAutocomplete(change: any) {
     this.autocompleteChanged.next(change);
+  }
+
+  set setLoadPiratesChanged(change: any) {
+    this.loadPiratesChanged.next(change);
   }
 
 }

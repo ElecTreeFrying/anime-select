@@ -19,6 +19,8 @@ export class FilterComponent implements OnInit {
   pirates: any[] = [];
   onePiece = [];
 
+  isShow: boolean = false;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -44,6 +46,10 @@ export class FilterComponent implements OnInit {
     this.reactivePirates.subscribe((response) => {
       // this.onePiece = response;
       this.shared.setAutocomplete = response;
+    });
+
+    this.pirateCtrl.valueChanges.subscribe((response) => {
+      this.isShow = response.length > 0;
     });
   }
 

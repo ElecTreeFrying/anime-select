@@ -32,10 +32,10 @@
 </div>
 
 <mat-menu #menu="matMenu" [overlapTrigger]="false" xPosition="before">
-  <button mat-menu-item>
+  <button mat-menu-item (click)="onRefresh()">
     Refresh list
   </button>
-  <button mat-menu-item>
+  <button mat-menu-item (click)="onLoadPirates()">
     Load all pirates
   </button>
 </mat-menu>

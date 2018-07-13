@@ -1,0 +1,48 @@
+#divider {
+  margin: 15px 0;
+}
+
+#wrapper {
+  width: 550px;
+  height: 80vh;
+  overflow-y: auto;
+  margin: -24px;
+
+  #head {
+    margin: 24px;
+
+    .mat-raised-button {
+      margin: 0 4px;
+      width: 23%;
+    }
+  }
+
+  #media {
+    > div {
+      margin: 24px 32px;
+
+      > h5 {
+        text-align: center;
+      }
+
+      #head-content {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        margin-bottom: 12px;
+
+        #poster {
+          width: 200px;
+          height: 283.63px;
+          flex: 0 0;
+        }
+
+        #more {
+          flex: 1 0;
+          padding-left: 8px;
+        }
+      }
+
+    }
+  }
+}
