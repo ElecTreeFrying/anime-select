@@ -33,9 +33,11 @@
 
 <mat-menu #menu="matMenu" [overlapTrigger]="false" xPosition="before">
   <button mat-menu-item (click)="onRefresh()">
+    <mat-icon>refresh</mat-icon>
     Refresh list
   </button>
   <button mat-menu-item (click)="onLoadPirates()">
+    <mat-icon>cached</mat-icon>
     Load all pirates
   </button>
 </mat-menu>

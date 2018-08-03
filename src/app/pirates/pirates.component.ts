@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
+import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'lodash';
 
 import { HttpService } from '../common/core/service/http.service';
@@ -31,8 +32,14 @@ export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
   isEnd: boolean = true;
   isLoadAll: boolean = false;
 
+  obsPirateInit: Subscription;
+  obsAutocomplete: Subscription;
+  obsLoadPirates: Subscription;
+  obsScroll: Subscription;
+  obsScrollLoad: Subscription;
+
   ngOnInit() {
-    this.http.getPirates().subscribe((response: any[]) => {
+    this.obsPirateInit = this.http.getPirates().subscribe((response: any[]) => {
       this.next = response[0].links.next;
       this.pirates = response;
       this.shared.setPirates = response;
@@ -41,7 +48,7 @@ export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
       // this.onLaunch(response[5]);
     });
 
-    this.shared.autocompleteChanged.subscribe((response: any[]) => {
+    this.obsAutocomplete = this.shared.autocompleteChanged.subscribe((response: any[]) => {
 
       !this.isLoadAll
         ? this.pirates = _.uniq(response, 'id')
@@ -49,7 +56,7 @@ export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     });
 
-    this.shared.loadPiratesChanged.subscribe((response: boolean) => {
+    this.obsLoadPirates = this.shared.loadPiratesChanged.subscribe((response: boolean) => {
 
       this.isLoadAll = response;
       response ? this.start().then(() => {
@@ -60,7 +67,7 @@ export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.shared.scrollChanged.subscribe((response: any) => {
+    this.obsScroll = this.shared.scrollChanged.subscribe((response: any) => {
       this.pirates.filter(e => e.id > 890).length > 0 ?  (this.isEnd = false) : 0
       response.isScroll && !this.isConcatinated ? this.onScroll() : 0;
     });
@@ -68,11 +75,12 @@ export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.isLoadAll = false;
+    this.normalize();
   }
 
   onScroll() {
     this.isConcatinated = true;
-    this.http.getPirates(this.next).subscribe((response) => {
+    this.obsScrollLoad = this.http.getPirates(this.next).subscribe((response) => {
       this.next = response[0].links.next;
       this.pirates = this.pirates.concat(response).filter(e => e.id < 901);
       this.shared.setPirates = this.pirates;
@@ -114,6 +122,16 @@ export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     await this.asyncForEach(_.fill(new Array(100), ''), control);
+  }
+
+  private normalize() {
+    this.pirates = [];
+    this.allPirates = [];
+    this.obsPirateInit !== undefined ? this.obsPirateInit.unsubscribe() : 0;
+    this.obsAutocomplete !== undefined ? this.obsAutocomplete.unsubscribe() : 0;
+    this.obsLoadPirates !== undefined ? this.obsLoadPirates.unsubscribe() : 0;
+    this.obsScroll !== undefined ? this.obsScroll.unsubscribe() : 0;
+    this.obsScrollLoad !== undefined ? this.obsScrollLoad.unsubscribe() : 0;
   }
 
 }
