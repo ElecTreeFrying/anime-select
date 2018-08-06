@@ -15,7 +15,7 @@
   </div>
 
   <div  *ngIf="isLoadAll">
-    <mat-card *ngFor="let pirate of allPirates">
+    <mat-card *ngFor="let pirate of allPirates | uniq">
       <mat-card-content>
         <div id="shadow">
           <p>{{ pirate?.attributes?.names?.en }}</p>
@@ -29,7 +29,7 @@
   </div>
 
   <div id="loading" *ngIf="isEnd">
-    <div *ngIf="isConcatinated">
+    <div *ngIf="isConcatinated || isLoadingAll">
       <app-loading-box></app-loading-box>
     </div>
   </div>

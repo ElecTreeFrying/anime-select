@@ -20,6 +20,7 @@ export class FilterComponent implements OnInit {
   onePiece = [];
 
   isShow: boolean = false;
+  counter: number = 0;
 
   constructor(
     private router: Router,
@@ -30,6 +31,7 @@ export class FilterComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => { this.router.navigate(['f'], { relativeTo: this.route }); }, 350);
     this.pirateCtrl = new FormControl(null);
+    this.shared.setLoadingAllPiratesChanged = false;
 
     this.shared.piratesChanged.subscribe((response) => {
       this.pirates = this.pirates.concat(response);
@@ -50,6 +52,20 @@ export class FilterComponent implements OnInit {
 
     this.pirateCtrl.valueChanges.subscribe((response) => {
       this.isShow = response.length > 0;
+    });
+
+    this.shared.loadingAllPiratesChanged.subscribe((response) => {
+
+      response ? (() => {
+        this.pirateCtrl.disable();
+        if (this.counter !== 0) return;
+        this.shared.snackbar('Loading all chararacters. Please wait');
+        this.counter++;
+      })() : (() => {
+        this.pirateCtrl.enable();
+        this.shared.closeAllSnackbar();
+        this.counter = 0;
+      })();
     });
   }
 

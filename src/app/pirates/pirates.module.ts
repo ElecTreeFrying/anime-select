@@ -11,6 +11,7 @@ import { MediaComponent } from '../common/shared/component/media/media.component
 
 import { HttpService } from '../common/core/service/http.service';
 
+import { UniqPipe } from '../common/shared/pipe/uniq.pipe';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { HttpService } from '../common/core/service/http.service';
     PiratesComponent,
     LoadingBoxComponent,
     PirateComponent,
-    MediaComponent
+    MediaComponent,
+    UniqPipe
   ],
   entryComponents: [
     PirateComponent,
