@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   scrollElement: any = undefined;
   scrollTop: number = 0;
   isMouseOver: boolean = false;
+  isDisable: boolean = true;
 
   constructor(
     private router: Router,
@@ -53,9 +54,15 @@ export class AppComponent implements OnInit {
 
       this.shared.setScroll = { isScroll, num: this.scrollTop };
     });
+
+    this.shared.piratesChanged.subscribe((response) => {
+
+      this.isDisable = false;
+    });
   }
 
   onRefresh() {
+    this.shared.setLoadPiratesChanged = false;
     this.router.navigate(['/'], { relativeTo: this.route });
     setTimeout(() => { this.router.navigate(['/p/f'], { relativeTo: this.route }); }, 500);
   }

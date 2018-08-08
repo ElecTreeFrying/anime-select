@@ -112,9 +112,10 @@ export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.next = 'https://kitsu.io/api/edge/characters?page%5Blimit%5D=20&page%5Boffset%5D=405';
 
     let control = async (num, i, arr) => {
-      if (watch) return;
+      if (watch || !this.isLoadAll) return;
       await this.waitFor(1000).then(() => {
         this.http.getPirates(this.next).subscribe((response: any[]) => {
+          if (watch || !this.isLoadAll) return;
           if (watch) return;
           let buffer = [];
           this.next = response[0].links.next;
@@ -129,7 +130,7 @@ export class PiratesComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     };
 
-    await this.asyncForEach(_.fill(new Array(100), ''), control);
+    await this.asyncForEach(_.fill(new Array(25), ''), control);
   }
 
   private normalize() {

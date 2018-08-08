@@ -51,6 +51,7 @@ export class FilterComponent implements OnInit {
     });
 
     this.pirateCtrl.valueChanges.subscribe((response) => {
+      if (response === null) return;
       this.isShow = response.length > 0;
     });
 
