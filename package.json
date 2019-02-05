@@ -27,7 +27,7 @@
     "bootstrap": "^4.1.1",
     "core-js": "^2.5.4",
     "hammerjs": "^2.0.8",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.11",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.2.1",
     "simplebar": "^2.6.1",
