@@ -1,13 +1,16 @@
 html, body {
   margin: 0;
   height: 100%;
-  color: antiquewhite;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: rgb(48, 48, 48);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.mat-typography {
+  color: antiquewhite;
+  background-color: rgb(48, 48, 48);
 }
 
 h1, h2, h3, h4, h5, h6 {
