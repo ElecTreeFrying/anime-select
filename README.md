@@ -1,23 +1,27 @@
+# OnePieceCharacters
 
-# Angular Material One Piece Demo featuring [kitsu.io](https://kitsu.io) API
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.0.
 
-> Angular Material demo app, Infinite scroll, Filter One Piece Pirates, Load all Pirates, Pirates Biographies and related Media, Specials, TV and Movies.
+## Development server
 
-## Preview
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-[demo](https://ng2-op-api.firebaseapp.com)
+## Code scaffolding
 
-<img src="https://goo.gl/XTC1T5" alt="demo page" style=""/>
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
+## Build
 
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-<br>
-<br>
-<br>
+## Running unit tests
 
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-#### Like my app? star or fork this repo 🙏
+## Running end-to-end tests
 
-## License
+Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-MIT
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
