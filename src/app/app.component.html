@@ -1,1 +1,28 @@
-<router-outlet></router-outlet>
+
+<cdk-virtual-scroll-viewport 
+  class="scrollable-viewport"
+  itemSize="50"
+  #scroll>
+
+  <mat-toolbar class="toolbar">
+    <div class="wrap">
+      <span>One Piece Characters</span>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <div class="main" [ngStyle]="{ 'padding-bottom': exists ? '0' : '50px' }">
+    <router-outlet></router-outlet>
+    <app-loading-box *ngIf="isLoading" (event)="exists = $event"></app-loading-box>
+  </div>
+
+</cdk-virtual-scroll-viewport>
+
+
+<mat-menu #menu="matMenu" xPosition="before">
+  <button mat-menu-item (click)="refresh()">Refresh List</button>
+  <button mat-menu-item (click)="loadAll()">Load all</button>
+  <button mat-menu-item>Help</button>
+</mat-menu>

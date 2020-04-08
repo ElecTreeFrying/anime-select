@@ -1,0 +1,31 @@
+.scrollable-viewport {
+  overflow: auto;
+  z-index: 200;
+  height: 100vh;
+  width: 100vw;
+  
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    .wrap {
+      display: flex;
+    }
+
+    span {
+      transform: translateY(3px);
+      cursor: pointer;
+    }
+
+    .mat-icon-button {
+      margin-left: auto;
+    }
+  }
+
+  .main {
+    z-index: 0;
+  }
+}
+
+

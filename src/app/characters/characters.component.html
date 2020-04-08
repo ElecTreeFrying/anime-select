@@ -1,0 +1,29 @@
+
+<div class="autocomplete wrap">
+
+  <form (ngSubmit)="onSubmit()" [formGroup]="filter">
+    
+    <mat-form-field color="accent">
+      <mat-label>Search characters</mat-label>
+      <input matInput type="text" autocomplete="off" formControlName="field">
+    </mat-form-field>
+
+  </form>
+
+</div>
+
+<div class="content wrap">
+
+  <mat-card *ngFor="let character of characters">
+  
+    <img mat-card-image src="{{ character?.id | idToImage }}" alt="{{ character?.name }}">
+
+    <mat-card-content>
+      
+      <p>{{ character?.name }}</p>
+  
+    </mat-card-content>
+  
+  </mat-card>
+
+</div>
