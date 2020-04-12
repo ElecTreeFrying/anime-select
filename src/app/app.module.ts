@@ -10,17 +10,25 @@ import { AppMaterialModule } from './_common/material/app-material.module';
 import { LoadingBoxComponentModule } from './_common/modules/loading-box-component.module';
 
 import { AppComponent } from './app.component';
+import { AboutComponent } from './_components/about/about.component';
 import { ScrollTopDirective } from './_common/directives/scroll-top.directive';
 import { KeyboardDefaultsDirective } from './_common/directives/keyboard-defaults.directive';
+import { RelationshipPipe } from './_common/pipes/relationship.pipe';
+import { StringHelperPipe } from './_common/pipes/string-helper.pipe';
 
 import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
     AppComponent,
-    // LoadingBoxComponent,
+    AboutComponent,
     ScrollTopDirective,
-    KeyboardDefaultsDirective
+    KeyboardDefaultsDirective,
+    RelationshipPipe,
+    StringHelperPipe
+  ],
+  entryComponents: [
+    AboutComponent,
   ],
   imports: [
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { CharacterComponent } from '../_components/character/character.component';
 
 import { ApiService } from '../_common/services/api.service';

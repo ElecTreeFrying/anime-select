@@ -25,6 +25,22 @@
 </div>
 
 <mat-menu #menu="matMenu" xPosition="before">
+  <button mat-menu-item [matMenuTriggerFor]="actions">
+    <mat-icon>build</mat-icon>
+    <span>Actions</span>
+  </button>
+  <button mat-menu-item (click)="scrollTo(false)">
+    <mat-icon>arrow_downward</mat-icon>
+    <span>Scroll to bottom</span>
+  </button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="about()">
+    <mat-icon>info</mat-icon>
+    <span>About</span>
+  </button>
+</mat-menu>
+
+<mat-menu #actions="matMenu">
   <button mat-menu-item (click)="refresh()">
     <mat-icon>refresh</mat-icon>
     <span>Refresh</span>
@@ -32,10 +48,6 @@
   <button mat-menu-item (click)="loadAll()">
     <mat-icon>cached</mat-icon>
     <span>Load all</span>
-  </button>
-  <button mat-menu-item (click)="scrollTo(false)">
-    <mat-icon>arrow_downward</mat-icon>
-    <span>Scroll to bottom</span>
   </button>
 </mat-menu>
 

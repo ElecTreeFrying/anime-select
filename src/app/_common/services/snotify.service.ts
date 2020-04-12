@@ -149,9 +149,10 @@ export class SnotifyService {
     timeout: 5000,
     position: SnotifyPosition.leftBottom,
     type: _type
-  }) {
+  }, title: string = undefined) {
 
     this.snotify.create({
+      title,
       body: text,
       config
     })

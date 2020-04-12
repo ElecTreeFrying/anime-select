@@ -1,0 +1,134 @@
+
+<div class="dialog">
+
+  <div class="dialog-details">
+
+    <div class="highlight" matRipple>
+      <p class="text key">AVE. Rating</p>
+      <p class="text value">{{ about?.averageRating }}%</p>
+    </div>
+
+    <div class="highlight" matRipple>
+      <p class="text key">Popularity rank</p>
+      <p class="text value">#{{ about?.popularityRank }}</p>
+    </div>
+
+    <div class="highlight" matRipple>
+      <p class="text key">Rating rank</p>
+      <p class="text value">#{{ about?.ratingRank }}</p>
+    </div>
+
+    <div class="highlight" matRipple>
+      <p class="text key">Age rating</p>
+      <p class="text value">"{{ about?.ageRating | uppercase }}"</p>
+    </div>
+
+    <div class="highlight" matRipple>
+      <p class="text key">Age rating guide</p>
+      <p class="text value">{{ about?.ageRatingGuide }}</p>
+    </div>
+    
+  </div>
+
+  <div class="dialog-preview">
+
+    <img [src]="about?.posterImage?.original" [alt]="about?.slug">
+
+    <div class="highlight">
+      <span class="text key"><strong>Status: </strong></span>
+      <span class="text value">{{ about?.status === 'current' ? 'Currently Airing' : 'Finished Airing' }}</span>
+      <div class="spacer"></div>
+      <span class="text key"><strong>Start date: </strong></span>
+      <span class="text value">{{ about?.startDate }}</span>
+      <div class="spacer"></div>
+      <span class="text key"><strong>Show type: </strong></span>
+      <span class="text value">{{ about?.subtype }}</span>
+      <div class="spacer"></div>
+      <span class="text key"><strong>Episode length: </strong></span>
+      <span class="text value">{{ about?.episodeLength }} mins</span>
+    </div>
+
+  </div>
+
+  <div class="dialog-info" data-simplebar>
+    
+    <div class="title">
+      <p class="en">{{ about?.titles?.en_jp }}</p>
+      <p class="int">{{ about?.titles?.ja_jp }}</p>
+      <p class="head">Synopsis</p>
+      <p class="synopsis">{{ about?.synopsis }}</p>
+    </div>
+
+    <div class="black">
+
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Genre</mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <mat-chip-list>
+              <mat-chip *ngFor="let genre of (about?.relationships | relationship: 'genres' | async)">
+                {{ genre | async }}
+              </mat-chip>
+            </mat-chip-list>
+          </ng-template>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Categories</mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <mat-chip-list>
+              <mat-chip 
+                matTooltip="click for more details"
+                *ngFor="let category of (about?.relationships | relationship: 'categories' | async)"
+                (click)="_category(category)">
+                {{ (category | async)?.title }}
+              </mat-chip>
+            </mat-chip-list>
+          </ng-template>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Episodes</mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <div class="episodes" *ngFor="let episode of (about?.relationships | relationship: 'episodes' | async)">
+              <button mat-stroked-button>
+                <span *ngIf="(episode | async)?.number">#</span>
+                <span>{{ (episode | async)?.number }}</span>
+              </button>
+            </div>
+          </ng-template>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Media Productions</mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <div class="media-productions" matRipple *ngFor="let prod of (about?.relationships | relationship: 'productions' | async)">
+              <p><strong>{{ (prod | async)?.role | stringHelper: 'camelcase' }}</strong></p>
+              <p>{{ (prod | async)?.name }}</p>
+            </div>
+          </ng-template>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Staff</mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <div *ngFor="let staff of (about?.relationships | relationship: 'staff' | async)">
+              <span><strong>{{ (staff | async)?.role }}</strong></span><br>
+              <span>{{ (staff | async)?.name }}</span>
+              <br><br>
+            </div>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </div>
+
+  </div>
+
+</div>

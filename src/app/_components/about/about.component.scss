@@ -1,0 +1,143 @@
+
+// GLOBAL
+
+.tooltip {
+  background: #800000;
+}
+
+
+// STYLES
+
+.dialog {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  margin: -24px;
+  width: 707px;
+  height: 665px;
+}
+
+.dialog-details {
+  flex: 1 0 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  padding: 24px 24px 0 24px;
+  margin-bottom: 20px;
+
+  .highlight {
+    border: 1px solid #8A8A8A;
+    border-radius: 4px;
+    padding: 12px 19px;
+    cursor: pointer;
+
+    .text {
+      text-align: center;
+      margin: 0;
+    }
+
+    .key {
+      color: #B6B6B6;
+    }
+
+    .value {
+      font-size: 1.2em;
+    }
+  }
+}
+
+.dialog-preview {
+  flex: 0 1;
+  padding: 0 0 0 24px;
+  
+  img {
+    border-radius: 4px;
+    border: 3px solid black;
+    width: 250px;
+  }
+
+  .highlight {
+    border: 1px solid #8A8A8A;
+    border-radius: 4px;
+    padding: 12px 12px;
+    margin-top: 8px;
+
+    .spacer {
+      display: block;
+      margin: 6px 0;
+    }
+  }
+}
+
+.dialog-info {
+  flex: 1 0;
+  padding-left: 20px;
+  height: 553px;
+  
+  .title {
+    padding-right: 24px;
+    margin-bottom: 16px;
+
+    .en {
+      margin: 0;
+      font-size: 1.5em;
+      text-align: center;
+    }
+    
+    .int {
+      margin: 0;
+      text-align: center;
+      margin-top: 8px;
+    }
+  
+    .head {
+      margin-top: 16px;
+      font-size: 1.2em;
+      text-align: left;
+      font-weight: 500;
+    }
+  
+    .synopsis {
+      margin-top: 12px;
+    }
+  }
+
+
+  .black {
+    padding: 0 24px 24px 0;
+
+    .mat-chip {
+      cursor: pointer;
+    }
+    
+    .episodes {
+      display: inline-block;
+
+      .mat-stroked-button {
+        margin: 0 8px 8px 0;
+      }
+    }
+    
+    .media-productions {
+      display: inline-block;
+      border: 1px solid #8A8A8A;
+      border-radius: 4px;
+      padding: 8px 16px;
+      margin: 0 4px;
+      transform: translateX(-4px);
+      cursor: pointer;
+      
+      p { 
+        margin: 0;
+        text-align: center; 
+      }
+    }
+  }
+}
+
+
+
+.bb {
+  border: 1px solid red;
+}

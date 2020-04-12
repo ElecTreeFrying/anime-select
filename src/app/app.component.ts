@@ -1,8 +1,11 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import easyScroll from 'easy-scroll';
+
+import { AboutComponent } from './_components/about/about.component';
 
 import { ApiService } from './_common/services/api.service';
 import { SharedService } from './_common/services/shared.service';
@@ -30,6 +33,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     iconRegistry: MatIconRegistry, sanitizer: DomSanitizer,
     private cd: ChangeDetectorRef,
+    private dialog: MatDialog,
     private api: ApiService,
     private shared: SharedService,
     private snotify: SnotifyService
@@ -52,8 +56,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.isLoadingAll = false;
     });
   }
-
+  
   ngAfterViewInit() {
+
+    this.about();
 
     this.scroll.elementScrolled().subscribe((res: Event) => {
       const target = <HTMLElement>res.target;
@@ -152,6 +158,14 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.isLoadingAll = false;
       }, (25 - this.count) * 500);
     } 
+  }
+
+  about() {
+    this.dialog.open(AboutComponent, {
+      closeOnNavigation: true,
+      autoFocus: false,
+      hasBackdrop: true
+    })
   }
 
   loadCharacters() {
