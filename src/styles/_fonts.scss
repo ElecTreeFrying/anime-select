@@ -1,5 +1,3 @@
-@import '~bootstrap/scss/bootstrap.scss';
-
 @import '~@angular/material/theming';
 @include mat-core();
 $dark-primary: mat-palette($mat-blue-grey);

@@ -1,28 +1,41 @@
 
-<cdk-virtual-scroll-viewport 
-  class="scrollable-viewport"
-  itemSize="50"
-  #scroll>
+<cdk-virtual-scroll-viewport class="scrollable-viewport" itemSize="50" keyboardDefaults #scroll>
 
   <mat-toolbar class="toolbar">
     <div class="wrap">
-      <span>One Piece Characters</span>
+      <span (click)="scrollTo(true)">One Piece</span>
       <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
     </div>
   </mat-toolbar>
 
-  <div class="main" [ngStyle]="{ 'padding-bottom': exists ? '0' : '50px' }">
+  <div class="main" [ngStyle]="{ 'padding-bottom': isLoading ? '0' : '50px' }">
     <router-outlet></router-outlet>
     <app-loading-box *ngIf="isLoading" (event)="exists = $event"></app-loading-box>
   </div>
 
 </cdk-virtual-scroll-viewport>
 
+<div class="scroll-top">
+  <button mat-fab color="primary" *ngIf="isShow" #fab [scrollTop]="fab" [scrollEl]="scroll" (reveal)="reveal($event)" (click)="scrollTo(true)">
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+</div>
 
 <mat-menu #menu="matMenu" xPosition="before">
-  <button mat-menu-item (click)="refresh()">Refresh List</button>
-  <button mat-menu-item (click)="loadAll()">Load all</button>
-  <button mat-menu-item>Help</button>
+  <button mat-menu-item (click)="refresh()">
+    <mat-icon>refresh</mat-icon>
+    <span>Refresh</span>
+  </button>
+  <button mat-menu-item (click)="loadAll()">
+    <mat-icon>cached</mat-icon>
+    <span>Load all</span>
+  </button>
+  <button mat-menu-item (click)="scrollTo(false)">
+    <mat-icon>arrow_downward</mat-icon>
+    <span>Scroll to bottom</span>
+  </button>
 </mat-menu>
+
+<ng-snotify></ng-snotify>

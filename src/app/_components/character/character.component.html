@@ -1,0 +1,155 @@
+
+<div class="empty" *ngIf="!data?.slug">
+  <app-loading-box></app-loading-box>
+</div>
+
+<div class="dialog" *ngIf="data?.slug">
+  
+  <div class="dialog-preview" #preview>
+    
+    <img [src]="data?.id | idToImage" [alt]="data?.slug">
+    <p class="heading en">{{ data?.names?.en }}</p>
+    <p class="heading int">({{ data?.names?.ja_jp }})</p>
+
+    <div class="body" *ngIf="otherNamesExists">
+      <p class="text"><strong>Other names</strong></p>
+      <span class="names" *ngFor="let name of data?.otherNames; let isLast = last">
+        <em>{{ name }}<span *ngIf="!isLast">,&nbsp;</span></em>
+      </span>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="media">
+      <button mat-stroked-button
+        [ngClass]="{ 'selected': route === 'character' }" 
+        (click)="route = 'character'">
+        Character
+      </button>
+      <button mat-stroked-button
+        *ngIf="(media | async) | filterSubtype: 'movie': true"
+        [ngClass]="{ 'selected': route === 'movie' }" 
+        (click)="route = 'movie'">
+        Movie
+      </button>
+      <button mat-stroked-button
+        *ngIf="(media | async) | filterSubtype: 'OVA': true"
+        [ngClass]="{ 'selected': route === 'OVA' }" 
+        (click)="route = 'OVA'">
+        OVA
+      </button>
+      <button mat-stroked-button
+        *ngIf="(media | async) | filterSubtype: 'special': true"
+        [ngClass]="{ 'selected': route === 'special' }" 
+        (click)="route = 'special'">
+        Special
+      </button>
+      <button mat-stroked-button
+        *ngIf="(media | async) | filterSubtype: 'oneshot': true"
+        [ngClass]="{ 'selected': route === 'oneshot' }" 
+        (click)="route = 'oneshot'">
+        One
+         shot</button>
+      <button mat-stroked-button
+        *ngIf="(media | async) | filterSubtype: 'TV': true"
+        [ngClass]="{ 'selected': route === 'TV' }" 
+        (click)="route = 'TV'">
+        TV
+      </button>
+      <button mat-stroked-button
+        *ngIf="(media | async) | filterSubtype: 'manga': true"
+        [ngClass]="{ 'selected': route === 'manga' }" 
+        (click)="route = 'manga'">
+        Manga
+      </button>
+      <button mat-stroked-button
+        *ngIf="(media | async) | filterSubtype: 'novel': true"
+        [ngClass]="{ 'selected': route === 'novel' }" 
+        (click)="route = 'novel'">
+        Novel
+      </button>
+      <div class="loading" *ngIf="(media | async)?.length === 0">
+        <app-loading-box></app-loading-box>
+      </div>
+    </div>
+  
+  </div>
+  
+  <div class="dialog-content" data-simplebar data-simplebar-auto-hide="false">
+
+    <div class="character" *ngIf="route === 'character'">
+      <span [innerHtml]="data?.description"></span>
+    </div>
+
+    <div *ngIf="route !== 'character' && route !== 'media'">
+
+      <div *ngFor="let anime of (media | async) | filterSubtype: route; let i = index; let isLast = last">
+        <div class="anime">
+        
+          <div class="preview">
+            <img [src]="anime?.posterImage?.original" [alt]="anime?.slug">
+            <button mat-stroked-button (click)="moreDetails(anime, 'media')">More details</button>
+          </div>
+    
+          <div class="content">
+
+            <p class="en">{{ anime?.titles?.en_jp }}</p>
+            <p class="int">
+              <span *ngIf="anime?.titles?.ja_jp">(</span>
+              <span>{{ anime?.titles?.ja_jp }}</span>
+              <span *ngIf="anime?.titles?.ja_jp">)</span>
+            </p>
+
+            <p *ngIf="stringLength[i] === 250" (click)="stringLength[i] = -1">
+              {{ anime?.synopsis | sliceString: stringLength[i] }} 
+              <span class="link" (click)="stringLength[i] = -1" *ngIf="anime?.synopsis.length > 250"> read more</span>
+            </p>
+            <p *ngIf="stringLength[i] !== 250" (click)="stringLength[i] = 250">
+              {{ anime?.synopsis | sliceString: stringLength[i] }} 
+              <span class="link" (click)="stringLength[i] = 250"> collapse</span>
+            </p>
+          </div>
+          
+        </div>
+        <mat-divider *ngIf="!isLast"></mat-divider>
+      </div>
+    </div>
+
+    <div class="selected-media" *ngIf="route === 'media'">
+
+      <div class="preview">
+        <img [src]="selectedMedia?.posterImage?.original" [alt]="selectedMedia?.slug">
+      </div>
+
+      <div class="content">
+
+        <p class="en">{{ selectedMedia?.titles?.en_jp }}</p>
+        <p class="int">
+          <span *ngIf="selectedMedia?.titles?.ja_jp">(</span>
+          <span>{{ selectedMedia?.titles?.ja_jp }}</span>
+          <span *ngIf="selectedMedia?.titles?.ja_jp">)</span>
+        </p>
+
+        <p><strong>Rating rank: </strong><span>#{{ selectedMedia?.ratingRank }} </span></p>
+        <p><strong>Popularity rank: </strong><span>#{{ selectedMedia?.popularityRank }} </span></p>
+        <p><strong>Rating: </strong><span>{{ selectedMedia?.averageRating }}</span></p>
+        <p><strong>Status: </strong><span>{{ selectedMedia?.status }}</span></p>
+        <p><strong>Rating guide: </strong><span>{{ selectedMedia?.ageRating }} - {{ selectedMedia?.ageRatingGuide }}</span></p>
+        <!-- <p><strong>Duration: </strong><span>{{ selectedMedia?.totalLength }} mins</span></p> -->
+        <p><strong>Release date: </strong><span>{{ selectedMedia?.startDate }}</span></p>
+        
+      </div>
+      
+      <div class="synopsis">
+        <p>{{ selectedMedia?.synopsis }}</p>
+      </div>
+
+      <div class="action">
+        <button mat-stroked-button (click)="route = previous">Back to previous</button>
+      </div>
+
+    </div>
+    
+  </div>
+
+</div>

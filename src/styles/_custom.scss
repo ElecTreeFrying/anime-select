@@ -18,8 +18,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 *:focus, 
-button:focus, 
-.mat-icon-button:focus {
+.mat-fab:focus, 
+.mat-icon-button:focus,
+.mat-raised-button:focus,
+.mat-stroked-button:focus,
+.mat-menu-item:focus {
   outline: none;
 }
 

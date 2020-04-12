@@ -1,3 +1,15 @@
+
+.scroll-top {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 500;
+  
+  .mat-fab {
+    margin: 0 67px 50px 0;
+  }
+}
+
 .scrollable-viewport {
   overflow: auto;
   z-index: 200;

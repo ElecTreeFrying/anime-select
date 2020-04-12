@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, flatMap } from 'rxjs/operators'
-import { BehaviorSubject } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators'
+import { BehaviorSubject, Observable } from 'rxjs';
+import { sortBy, uniqBy } from 'lodash';
+
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +19,8 @@ export class ApiService {
   refresh = this.refreshSource.asObservable();
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private shared: SharedService
   ) { }
 
   get id() { return this._id; }
@@ -31,7 +35,93 @@ export class ApiService {
     }
   }
 
-  pirate(option: { next: boolean }) {
+  character(id: number) {
+    return this.http.get(`https://kitsu.io/api/edge/characters/${id}`).pipe(
+      map((res) => res['data']),
+      map((res) => {
+        delete res['attributes']['createdAt']
+        delete res['attributes']['updatedAt']
+        delete res['attributes']['image']
+        delete res['attributes']['malId']
+        return { 
+          id,
+          ...res['attributes'], 
+          manga: res['relationships']['castings']['links']['self'], 
+          anime: res['relationships']['mediaCharacters']['links']['self'] 
+        };
+      })
+    );
+  }
+
+  manga(character: Observable<any>) {
+    return character.pipe(
+      mergeMap((res) => {
+        return this.http.get(res['manga']).pipe(
+          map((d) => {
+            return sortBy(d['data'].map((a) => {
+              a['id'] = +a['id'];
+              return a;
+            }), [ 'id' ])
+          }),
+          map((d) => d.map((e) => 
+            this.http.get(`https://kitsu.io/api/edge/castings/${e['id']}/media`) )),
+          map((manga) => ({ ...res, manga }))
+        )
+      }),
+    )
+  }
+
+  anime(character: Observable<any>) {
+    return character.pipe(
+      mergeMap((res) => {
+        return this.http.get(res['anime']).pipe(
+          map((d) => {
+            return sortBy(d['data'].map((a) => {
+              a['id'] = +a['id'];
+              return a;
+            }), [ 'id' ]).reverse()
+          }), 
+          map((d) => d.map((e) =>
+            this.http.get(`https://kitsu.io/api/edge/media-characters/${e['id']}/media`))),
+          map((anime) => ({ ...res, anime }))
+        )
+      }),
+    )
+  }
+
+  media(docs: Observable<any>[]) {
+
+    const length = docs.length;
+    let count = 0;
+    let media = []
+
+    const observable = new Observable((subscriber) => {
+      docs.forEach((media) => subscriber.next(media));
+      subscriber.complete();
+    });
+
+    const pipe = observable.pipe(
+      mergeMap((e: any) => e),
+      map(e => e['data'])
+    ).subscribe((res) => {
+      count++;
+      res = { ...res['attributes'], relationships: res['relationships'] };
+      media.push(res);
+      if (count === length) {
+        
+        media = uniqBy(media.map((e) => {
+          e['key'] = e['titles']['en_jp'];
+          return e
+        }), 'key')
+
+        this.shared.updatedMediaSelection = media;
+        pipe.unsubscribe();
+      }
+    });
+    
+  }
+
+  characters(option: { next: boolean }) {
    
     if (option.next) {
       const id = this.id + 20;

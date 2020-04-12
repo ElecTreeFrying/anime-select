@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule, MatMenu } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
@@ -12,7 +12,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
-
+    
     ScrollingModule
   ]
 })
