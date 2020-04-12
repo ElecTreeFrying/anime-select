@@ -27,6 +27,8 @@
 // preview
 .dialog-preview {
   font-family: 'Rubik', sans-serif;
+  max-height: 665px;
+  overflow: hidden;
 
   img {
     border-radius: 4px;
@@ -62,15 +64,27 @@
 
   .media {
     display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
+    flex-flow: row;
     width: 225px;
 
     .mat-stroked-button {
       width: 100%;
     }
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }    
   }
 
+  .loading {
+    position: absolute;
+    transform: translateY(20px);
+    z-index: 500;
+    margin: -50px 0;
+    width: 225px;
+  }
 }
 
 // content
@@ -79,7 +93,8 @@
   padding: 24px 24px 24px 20px;
   display: flex;
   flex-flow: row wrap;
-  max-height: 811px + 48px;
+  // max-height: 742px + 48px;
+  max-height: 665px + 48px;
 
   width: 30vw;
   min-width: 500px;

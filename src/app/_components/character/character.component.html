@@ -5,7 +5,7 @@
 
 <div class="dialog" *ngIf="data?.slug">
   
-  <div class="dialog-preview" #preview>
+  <div class="dialog-preview">
     
     <img [src]="data?.id | idToImage" [alt]="data?.slug">
     <p class="heading en">{{ data?.names?.en }}</p>
@@ -22,55 +22,67 @@
 
     <div class="media">
       <button mat-stroked-button
+        *ngIf="(media | async)?.length === 0"
         [ngClass]="{ 'selected': route === 'character' }" 
         (click)="route = 'character'">
         Character
       </button>
-      <button mat-stroked-button
-        *ngIf="(media | async) | filterSubtype: 'movie': true"
-        [ngClass]="{ 'selected': route === 'movie' }" 
-        (click)="route = 'movie'">
-        Movie
-      </button>
-      <button mat-stroked-button
-        *ngIf="(media | async) | filterSubtype: 'OVA': true"
-        [ngClass]="{ 'selected': route === 'OVA' }" 
-        (click)="route = 'OVA'">
-        OVA
-      </button>
-      <button mat-stroked-button
-        *ngIf="(media | async) | filterSubtype: 'special': true"
-        [ngClass]="{ 'selected': route === 'special' }" 
-        (click)="route = 'special'">
-        Special
-      </button>
-      <button mat-stroked-button
-        *ngIf="(media | async) | filterSubtype: 'oneshot': true"
-        [ngClass]="{ 'selected': route === 'oneshot' }" 
-        (click)="route = 'oneshot'">
-        One
-         shot</button>
-      <button mat-stroked-button
-        *ngIf="(media | async) | filterSubtype: 'TV': true"
-        [ngClass]="{ 'selected': route === 'TV' }" 
-        (click)="route = 'TV'">
-        TV
-      </button>
-      <button mat-stroked-button
-        *ngIf="(media | async) | filterSubtype: 'manga': true"
-        [ngClass]="{ 'selected': route === 'manga' }" 
-        (click)="route = 'manga'">
-        Manga
-      </button>
-      <button mat-stroked-button
-        *ngIf="(media | async) | filterSubtype: 'novel': true"
-        [ngClass]="{ 'selected': route === 'novel' }" 
-        (click)="route = 'novel'">
-        Novel
-      </button>
-      <div class="loading" *ngIf="(media | async)?.length === 0">
-        <app-loading-box></app-loading-box>
+      <div>
+        <button mat-stroked-button
+          *ngIf="(media | async) | filterSubtype: 'movie': true"
+          [ngClass]="{ 'selected': route === 'character' }" 
+          (click)="route = 'character'">
+          Character
+        </button>
+        <button mat-stroked-button
+          *ngIf="(media | async) | filterSubtype: 'movie': true"
+          [ngClass]="{ 'selected': route === 'movie' }" 
+          (click)="route = 'movie'">
+          Movie
+        </button>
+        <button mat-stroked-button
+          *ngIf="(media | async) | filterSubtype: 'OVA': true"
+          [ngClass]="{ 'selected': route === 'OVA' }" 
+          (click)="route = 'OVA'">
+          OVA
+        </button>
+        <button mat-stroked-button
+          *ngIf="(media | async) | filterSubtype: 'special': true"
+          [ngClass]="{ 'selected': route === 'special' }" 
+          (click)="route = 'special'">
+          Special
+        </button>
       </div>
+      <div>
+        <button mat-stroked-button
+          *ngIf="(media | async) | filterSubtype: 'oneshot': true"
+          [ngClass]="{ 'selected': route === 'oneshot' }" 
+          (click)="route = 'oneshot'">
+          One
+           shot</button>
+        <button mat-stroked-button
+          *ngIf="(media | async) | filterSubtype: 'TV': true"
+          [ngClass]="{ 'selected': route === 'TV' }" 
+          (click)="route = 'TV'">
+          TV
+        </button>
+        <button mat-stroked-button
+          *ngIf="(media | async) | filterSubtype: 'manga': true"
+          [ngClass]="{ 'selected': route === 'manga' }" 
+          (click)="route = 'manga'">
+          Manga
+        </button>
+        <button mat-stroked-button
+          *ngIf="(media | async) | filterSubtype: 'novel': true"
+          [ngClass]="{ 'selected': route === 'novel' }" 
+          (click)="route = 'novel'">
+          Novel
+        </button>
+      </div>
+    </div>
+
+    <div class="loading" *ngIf="(media | async)?.length === 0">
+      <app-loading-box></app-loading-box>
     </div>
   
   </div>
