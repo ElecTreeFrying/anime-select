@@ -106,7 +106,7 @@
             </p>
             <p *ngIf="stringLength[i] !== 250" (click)="stringLength[i] = 250">
               {{ anime?.synopsis | sliceString: stringLength[i] }} 
-              <span class="link" (click)="stringLength[i] = 250"> collapse</span>
+              <span class="link" (click)="stringLength[i] = 250" *ngIf="anime?.synopsis.length > 250"> collapse</span>
             </p>
           </div>
           
