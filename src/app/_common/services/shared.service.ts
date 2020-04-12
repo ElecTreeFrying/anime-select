@@ -24,6 +24,9 @@ export class SharedService {
   character = this.characterSource.asObservable().pipe( mergeMap(r => r) );
   media = this.mediaSource.asObservable();
 
+  private _episodePrev: any;
+  private _staffPrev: any;
+
   interval: any;
   timeout: any;
   subscription: Subscription;
@@ -52,6 +55,22 @@ export class SharedService {
 
   set updatedMediaSelection(data: any[]) {
     this.mediaSource.next(data);
+  }
+
+  get episodePrev() {
+    return this._episodePrev;
+  }
+
+  set episodePrev(prev: any) {
+    this._episodePrev = prev;
+  }
+
+  get staffPrev() {
+    return this._staffPrev;
+  }
+
+  set staffPrev(prev: any) {
+    this._staffPrev = prev;
   }
 
 }

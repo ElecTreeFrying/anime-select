@@ -25,8 +25,6 @@ export class RelationshipPipe implements PipeTransform {
       return this.productions(link);   
     } else if (relationship === 'episodes') {
       return this.episodes(link);   
-    } else if (relationship === 'animeStaff') {
-      return this.animeStaff(link);   
     }
   }
 
@@ -86,7 +84,7 @@ export class RelationshipPipe implements PipeTransform {
         })
       }),
       map((staff) => {
-        return staff.slice(0, 5).map((data) => {
+        return staff.map((data) => {
           return data.pipe(
             mergeMap((e) => {
               const role = e['data']['attributes']['role']
@@ -138,36 +136,10 @@ export class RelationshipPipe implements PipeTransform {
         })
       }),
       map((episode) => {
-        return episode.slice(0, 5).map((data) => {
+        return episode.map((data) => {
           return data.pipe(
             map(e => e['data']['attributes'])
           );
-        })
-      })
-    );
-  }
-
-  animeStaff(link: string) {
-    return this.http.get(link).pipe(
-      map((animeStaff) => animeStaff['data']),
-      map((data) => data.map(e => +e['id'])),
-      map((data) => {
-        return data.map((id: number) => {
-          return this.http.get(`https://kitsu.io/api/edge/anime-staff/${id}`)
-        })
-      }),
-      map((animeStaff) => {
-        return animeStaff.map((data) => {
-          return data.pipe(
-            mergeMap((e) => {
-              const role = e['data']['attributes']['role']
-              const link = e['data']['relationships']['person']['links']['related'];
-              return this.http.get(link).pipe( 
-                map(e => e['data']['attributes']['name']),
-                map((name) => ({ name, role })) 
-              )
-            })
-          )
         })
       })
     );

@@ -112,10 +112,34 @@
     }
     
     .episodes {
-      display: inline-block;
+      display: flex;
+      flex-flow: row wrap;
+      align-content: space-between;
+    }
+
+
+    .episode .mat-stroked-button {
+      margin: 0 8px 8px 0;
+      width: 77.25px;
+    }
+
+    .episode.more, .staff.more {
+      display: inline;
+      width: 100%;
 
       .mat-stroked-button {
-        margin: 0 8px 8px 0;
+        width: 100%;
+        margin: 0;
+
+        &:nth-child(1) {
+          width: 166px;
+          margin: 0 4.5px 9px 0;
+        } 
+        
+        &:nth-child(2) {
+          width: 166px;
+          margin: 0 0 9px 4.5px;
+        }
       }
     }
     
@@ -136,8 +160,31 @@
   }
 }
 
+.episode-data {
+  padding-right: 24px;
 
+  .title p {
+    font-size: 1.3em;
+  }
 
-.bb {
-  border: 1px solid red;
+  .preview img {
+    width: 200px;
+    border-radius: 4px;
+    border: 3px solid black;
+    margin-bottom: 16px;
+  }
+
+  .details {
+    margin: 0;
+  }
+
+  .head {
+    margin-top: 20px;
+    font-size: 1.1em;
+  }
+
+  .mat-stroked-button {
+    width: 100%;
+  }
+
 }

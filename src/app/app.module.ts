@@ -12,9 +12,9 @@ import { LoadingBoxComponentModule } from './_common/modules/loading-box-compone
 import { AppComponent } from './app.component';
 import { AboutComponent } from './_components/about/about.component';
 import { ScrollTopDirective } from './_common/directives/scroll-top.directive';
-import { KeyboardDefaultsDirective } from './_common/directives/keyboard-defaults.directive';
 import { RelationshipPipe } from './_common/pipes/relationship.pipe';
 import { StringHelperPipe } from './_common/pipes/string-helper.pipe';
+import { LoadMorePipe } from './_common/pipes/load-more.pipe';
 
 import { environment } from '../environments/environment';
 
@@ -23,9 +23,9 @@ import { environment } from '../environments/environment';
     AppComponent,
     AboutComponent,
     ScrollTopDirective,
-    KeyboardDefaultsDirective,
     RelationshipPipe,
-    StringHelperPipe
+    StringHelperPipe,
+    LoadMorePipe
   ],
   entryComponents: [
     AboutComponent,

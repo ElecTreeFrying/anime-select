@@ -50,82 +50,121 @@
 
   </div>
 
-  <div class="dialog-info" data-simplebar>
+  <div class="dialog-info" data-simplebar #simplebar>
     
-    <div class="title">
-      <p class="en">{{ about?.titles?.en_jp }}</p>
-      <p class="int">{{ about?.titles?.ja_jp }}</p>
-      <p class="head">Synopsis</p>
-      <p class="synopsis">{{ about?.synopsis }}</p>
+    <div class="content-data" *ngIf="!isEpisode">
+      <div class="title" *ngIf="true">
+        <p class="en">{{ about?.titles?.en_jp }}</p>
+        <p class="int">{{ about?.titles?.ja_jp }}</p>
+        <p class="head">Synopsis</p>
+        <p class="synopsis">{{ about?.synopsis }}</p>
+      </div>
+  
+      <div class="black">
+  
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header (click)="resetLoadMore()">
+              <mat-panel-title>Genre</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <mat-chip-list>
+                <mat-chip *ngFor="let genre of (about?.relationships | relationship: 'genres' | async)">
+                  {{ genre | async }}
+                </mat-chip>
+              </mat-chip-list>
+            </ng-template>
+          </mat-expansion-panel>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header (click)="resetLoadMore()">
+              <mat-panel-title>Categories</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <mat-chip-list>
+                <mat-chip 
+                  matTooltip="click for more details"
+                  *ngFor="let category of (about?.relationships | relationship: 'categories' | async)"
+                  (click)="_category(category)">
+                  {{ (category | async)?.title }}
+                </mat-chip>
+              </mat-chip-list>
+            </ng-template>
+          </mat-expansion-panel>
+          <mat-expansion-panel #episodes>
+            <mat-expansion-panel-header (click)="resetLoadMore(true)">
+              <mat-panel-title>Episodes</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <div class="episodes" *ngIf="isEpisodeOpen">
+                <div class="episode" *ngFor="let episode of (about?.relationships | relationship: 'episodes' | async | loadMore: episodeCount: 'episodes'); let i = index">
+                  <button mat-stroked-button (click)="openEpisode(episode)">
+                    <span>#{{ i + 1 }}</span>
+                  </button>
+                </div>
+              </div>
+              <div class="spacer"></div>
+              <div class="episode more">
+                <button mat-stroked-button (click)="moreEpisode(true)">Load more</button>
+                <button mat-stroked-button (click)="moreEpisode(false)">Load less</button>
+                <button mat-stroked-button (click)="episodes.close(); resetLoadMore()">Collapse panel</button>
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header (click)="resetLoadMore()">
+              <mat-panel-title>Media Productions</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <div class="media-productions" matRipple *ngFor="let prod of (about?.relationships | relationship: 'productions' | async)">
+                <p><strong>{{ (prod | async)?.role | stringHelper: 'camelcase' }}</strong></p>
+                <p>{{ (prod | async)?.name }}</p>
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+          <mat-expansion-panel #staff>
+            <mat-expansion-panel-header (click)="resetLoadMore(true)">
+              <mat-panel-title>Staff</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <div class="staffs" *ngIf="isStaffOpen">
+                <div class="staff" *ngFor="let staff of (about?.relationships | relationship: 'staff' | async | loadMore: staffCount: 'staff')">
+                  <span><strong>{{ (staff | async)?.role }}</strong></span><br>
+                  <span>{{ (staff | async)?.name }}</span>
+                  <br><br>
+                </div>
+              </div>
+              <div class="spacer"></div>
+              <div class="staff more">
+                <button mat-stroked-button (click)="moreStaff(true)">Load more</button>
+                <button mat-stroked-button (click)="moreStaff(false)">Load less</button>
+                <button mat-stroked-button (click)="staff.close(); resetLoadMore()">Collapse panel</button>
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+  
+      </div>
     </div>
 
-    <div class="black">
+    <div class="episode-data" *ngIf="isEpisode">
 
-      <mat-accordion>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Genre</mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-template matExpansionPanelContent>
-            <mat-chip-list>
-              <mat-chip *ngFor="let genre of (about?.relationships | relationship: 'genres' | async)">
-                {{ genre | async }}
-              </mat-chip>
-            </mat-chip-list>
-          </ng-template>
-        </mat-expansion-panel>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Categories</mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-template matExpansionPanelContent>
-            <mat-chip-list>
-              <mat-chip 
-                matTooltip="click for more details"
-                *ngFor="let category of (about?.relationships | relationship: 'categories' | async)"
-                (click)="_category(category)">
-                {{ (category | async)?.title }}
-              </mat-chip>
-            </mat-chip-list>
-          </ng-template>
-        </mat-expansion-panel>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Episodes</mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-template matExpansionPanelContent>
-            <div class="episodes" *ngFor="let episode of (about?.relationships | relationship: 'episodes' | async)">
-              <button mat-stroked-button>
-                <span *ngIf="(episode | async)?.number">#</span>
-                <span>{{ (episode | async)?.number }}</span>
-              </button>
-            </div>
-          </ng-template>
-        </mat-expansion-panel>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Media Productions</mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-template matExpansionPanelContent>
-            <div class="media-productions" matRipple *ngFor="let prod of (about?.relationships | relationship: 'productions' | async)">
-              <p><strong>{{ (prod | async)?.role | stringHelper: 'camelcase' }}</strong></p>
-              <p>{{ (prod | async)?.name }}</p>
-            </div>
-          </ng-template>
-        </mat-expansion-panel>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>Staff</mat-panel-title>
-          </mat-expansion-panel-header>
-          <ng-template matExpansionPanelContent>
-            <div *ngFor="let staff of (about?.relationships | relationship: 'staff' | async)">
-              <span><strong>{{ (staff | async)?.role }}</strong></span><br>
-              <span>{{ (staff | async)?.name }}</span>
-              <br><br>
-            </div>
-          </ng-template>
-        </mat-expansion-panel>
-      </mat-accordion>
+      <div class="title" *ngIf="(episode | async) !== null">
+        <p>{{ (episode | async)?.canonicalTitle }}</p>
+        <p>( {{ (episode | async)?.titles?.ja_jp }} )</p>
+      </div>
+
+      <div class="preview" *ngIf="(episode | async) !== null">
+        <img [src]="(episode | async)?.thumbnail?.original">
+      </div>
+
+      <div class="synopsis" *ngIf="(episode | async) !== null">
+        <p class="details"><strong>Episode: </strong>#{{ (episode | async)?.number }}</p>
+        <p class="details"><strong>Air date: </strong>{{ (episode | async)?.airdate }}</p>
+        <p class="head">Synopsis</p>
+        <p class="context">{{ (episode | async)?.synopsis }}</p>
+      </div>
+
+      <button mat-stroked-button (click)="isEpisode = false">Back to previous</button>
 
     </div>
 
