@@ -6,28 +6,6 @@ import Simplebar from 'simplebar';
 import { SharedService, ABOUT } from '../../_common/services/shared.service';
 import { SnotifyService } from '../../_common/services/snotify.service';
 
-const DUMMY = {
-  "createdAt": "2013-03-26T08:42:37.271Z",
-  "updatedAt": "2018-11-27T20:44:42.560Z",
-  "titles": {
-    "en_jp": "Zettai Zetsumei! Moujuutsukai Mohji VS Luffy!",
-    "en_us": "Desperate Situation! Beast Tamer Mohji vs. Luffy!",
-    "ja_jp": "絶体絶命!猛獣使いモージvsルフィ!"
-  },
-  "canonicalTitle": "Desperate Situation! Beast Tamer Mohji vs. Luffy!",
-  "seasonNumber": 1,
-  "number": 6,
-  "relativeNumber": 6,
-  "synopsis": "Mohji and Richie show up for revenge after Buggy's humiliating defeat in the previous episode, and Luffy meets a small dog guarding his master's store, even though he knows that he is long dead. ",
-  "airdate": "1999-12-29",
-  "length": 24,
-  "thumbnail": {
-    "original": "https://media.kitsu.io/episodes/thumbnails/103487/original.jpg?1541203547",
-    "meta": {
-      "dimensions": {}
-    }
-  }
-}
 
 @Component({
   selector: 'app-about',
@@ -99,7 +77,6 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     
     if (option && (this.episodeCount === -1)) {
       this.episodeCount = increment; return; }
-
   }
 
   moreStaff(option: boolean) {
@@ -112,7 +89,6 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     const lowest = 5;
     const increment = 10;
     const highestValid = Math.floor(highest/increment)*increment;
-
 
     if (option && (this.staffCount !== -1) && (this.staffCount < highestValid)) {
       this.staffCount = this.staffCount === lowest ? increment : (this.staffCount + increment); return; }
@@ -131,7 +107,6 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     
     if (option && (this.staffCount === -1)) {
       this.staffCount = increment; return; }
-
   }
 
   resetLoadMore(option: boolean = false) {
