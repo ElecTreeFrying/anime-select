@@ -1,4 +1,6 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import easyScroll from 'easy-scroll';
 
@@ -26,11 +28,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   scrollValue: number;
 
   constructor(
+    iconRegistry: MatIconRegistry, sanitizer: DomSanitizer,
     private cd: ChangeDetectorRef,
     private api: ApiService,
     private shared: SharedService,
     private snotify: SnotifyService
-  ) {}
+  ) {
+    iconRegistry.addSvgIcon('logo', sanitizer.bypassSecurityTrustResourceUrl('../assets/onepiece.svg'));
+  }
 
   ngOnInit() {
     this.isScrolling = false;
