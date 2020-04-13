@@ -12,6 +12,7 @@ Angular Material demo app.
 # Features
 
 - Search character(s)
+- Load all characters
 - Scroll to bottom
 - Scroll to top
 - Character details and more
