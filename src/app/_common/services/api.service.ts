@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, mergeMap, distinct, toArray, last, take, first } from 'rxjs/operators'
+import { map, mergeMap, distinct, toArray } from 'rxjs/operators'
 import { BehaviorSubject, Observable } from 'rxjs';
-import { sortBy, uniqBy } from 'lodash';
+import { sortBy } from 'lodash';
 
 import { SharedService } from './shared.service';
-import { dispatch } from 'rxjs/internal/observable/range';
 
 @Injectable({
   providedIn: 'root'
@@ -127,6 +126,31 @@ export class ApiService {
         )
       )
     )
+  }
+
+  fileNameCount: number;
+
+  _characters(option: { next: boolean }) {
+
+    let link;
+
+    if (option.next) {
+      const id = this.id + 20;
+      this.id = id < 901 ? id : this.id;
+      link = `assets/load-speed/${this.fileNameCount}.json`;
+      this.fileNameCount++;
+    } else {
+      this.fileNameCount = 0;
+      link = `assets/load-speed/${this.fileNameCount}.json`;
+      this.fileNameCount++;
+    }
+
+    return { data: this.http.get(link), id: this.id };
+  }
+
+  get _freshLoad() {
+    this.id = 405;
+    return this.http.get('assets/load-speed/0.json');
   }
 
 }

@@ -32,7 +32,7 @@
 
   <div class="dialog-preview">
 
-    <img [src]="about?.posterImage?.original" [alt]="about?.slug">
+    <img [src]="about?.image" [alt]="about?.slug">
 
     <div class="highlight">
       <span class="text key"><strong>Status: </strong></span>
@@ -54,7 +54,7 @@
     
     <div class="content-data" *ngIf="!isEpisode">
       <div class="title" *ngIf="true">
-        <p class="en">{{ about?.titles?.en_jp }}</p>
+        <p class="en">{{ about?.canonicalTitle }}</p>
         <p class="int">{{ about?.titles?.ja_jp }}</p>
         <p class="head">Synopsis</p>
         <p class="synopsis">{{ about?.synopsis }}</p>

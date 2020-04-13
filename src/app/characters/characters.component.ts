@@ -33,7 +33,7 @@ export class CharactersComponent implements OnInit {
     this.snotify.loadInitialCharacters();
     this.shared.updatedLoadingInitialSelection = false;
     
-    this.api.characters({ next: false }).data.subscribe((res) => {
+    this.api._characters({ next: false }).data.subscribe((res: any) => {
       this.characters = res;
       this._characters = res;
       this.filter.get('field').enable();
@@ -66,14 +66,14 @@ export class CharactersComponent implements OnInit {
 
   selectCharacter(character: any) {
     this.dialog.open(CharacterComponent, { 
-      data: character,
       disableClose: false,
-      hasBackdrop: true 
+      hasBackdrop: true,
+      id: character.id
     });
   }
 
   freshLoad() {
-    this.api.freshLoad.subscribe((res) => {
+    this.api._freshLoad.subscribe((res: any) => {
       this.characters = res; 
       this._characters = res; 
       this.cd.detectChanges();
@@ -83,9 +83,9 @@ export class CharactersComponent implements OnInit {
   }
 
   loadNewCharacters() {
-    const load = this.api.characters({ next: true });
+    const load = this.api._characters({ next: true });
 
-    load.data.subscribe((load) => {
+    load.data.subscribe((load: any) => {
       
       if (load.id >= 885) return;
       this.characters = this.characters.concat(load);

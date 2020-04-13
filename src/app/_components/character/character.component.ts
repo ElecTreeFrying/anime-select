@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, Inject, ChangeDetectorRef } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 
 import { ApiService } from '../../_common/services/api.service';
@@ -16,15 +16,18 @@ export class CharacterComponent implements OnInit, OnDestroy {
   _character: Subscription;
   _media: Subscription;
 
+  data: any
+
   otherNamesExists: boolean;
   route: string;
   media: Observable<any[]>;
   selectedMedia: any;
   stringLength: any[];
 
+  
   constructor(
+    private ref: MatDialogRef<CharacterComponent>,
     private cd: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: any,
     private api: ApiService,
     private shared: SharedService
   ) { }
@@ -48,7 +51,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
 
   setDetails() {
 
-    this._character = this.api.character(this.data['id']).subscribe((res) => {
+    this._character = this.api.character(+this.ref.id).subscribe((res) => {
       this.otherNamesExists = res['otherNames'].length > 0
       const media = [ ...res['manga'], ...res['anime'] ];
       this.api.media(media);
@@ -65,6 +68,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
     this.route = route;
     this.selectedMedia = media;
     this.cd.detectChanges();
+    console.log(media);
   }
 
 }
