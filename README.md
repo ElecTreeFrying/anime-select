@@ -3,10 +3,9 @@
 
 Angular Material demo app.
 
-[demo 1], [demo 2]
+[demo]
 
-[demo 1]: https://anime-select.firebaseapp.com/
-[demo 2]: https://anime-select.firebaseapp.com/
+[demo]: https://anime-select.web.app/
 
 ![alt-text](src/assets/preview.png "Hover text")
 
