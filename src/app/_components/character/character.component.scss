@@ -93,8 +93,8 @@
   padding: 24px 24px 24px 20px;
   display: flex;
   flex-flow: row wrap;
-  // max-height: 742px + 48px;
-  max-height: 665px + 48px;
+  // max-height: 665px + 48px;
+  height: 665px + 48px;
 
   width: 30vw;
   min-width: 500px;
@@ -134,8 +134,9 @@
       font-size: 1.5em;
     }
 
-    .int {
-
+    .head {
+      font-size: 1.1em;
+      margin-top: 16px;
     }
 
     .link {
@@ -184,6 +185,11 @@
   .synopsis {
     flex-basis: 100%;
     margin-top: 8px;
+
+    .head {
+      font-size: 1.3em;
+      margin-top: 16px;
+    }
   }
 
   .action {

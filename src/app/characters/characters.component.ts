@@ -62,16 +62,13 @@ export class CharactersComponent implements OnInit {
         this.characters = this._characters;
       }
     });
-
-    // this.selectCharacter({id: 411, name: "Luffy Monkey D."});
   }
 
   selectCharacter(character: any) {
-    this.dialog.open(CharacterComponent, {
+    this.dialog.open(CharacterComponent, { 
       data: character,
-      closeOnNavigation: true,
-      autoFocus: false,
-      hasBackdrop: true
+      disableClose: false,
+      hasBackdrop: true 
     });
   }
 
@@ -96,6 +93,10 @@ export class CharactersComponent implements OnInit {
       this.cd.detectChanges();
       this.shared.updatedLoadCountSelection = this.characters.length;
     });
+  }
+
+  trackByID(index: number, item: any) {
+    return item ? item.id : null;
   }
 
 }

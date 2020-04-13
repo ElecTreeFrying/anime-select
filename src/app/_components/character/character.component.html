@@ -112,6 +112,8 @@
               <span *ngIf="anime?.titles?.ja_jp">)</span>
             </p>
 
+            <p class="head">Synopsis</p>
+
             <p *ngIf="stringLength[i] === 250" (click)="stringLength[i] = -1">
               {{ anime?.synopsis | sliceString: stringLength[i] }} 
               <span class="link" (click)="stringLength[i] = -1" *ngIf="anime?.synopsis.length > 250"> read more</span>
@@ -153,6 +155,9 @@
       </div>
       
       <div class="synopsis">
+
+        <p class="head">Synopsis</p>
+
         <p>{{ selectedMedia?.synopsis }}</p>
       </div>
 

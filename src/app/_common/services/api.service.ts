@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, mergeMap } from 'rxjs/operators'
+import { map, mergeMap, distinct, toArray, last, take, first } from 'rxjs/operators'
 import { BehaviorSubject, Observable } from 'rxjs';
 import { sortBy, uniqBy } from 'lodash';
 
 import { SharedService } from './shared.service';
+import { dispatch } from 'rxjs/internal/observable/range';
 
 @Injectable({
   providedIn: 'root'
@@ -39,22 +40,13 @@ export class ApiService {
     return this.http.get(`https://kitsu.io/api/edge/characters/${id}`).pipe(
       map((res) => res['data']),
       map((res) => {
-        delete res['attributes']['createdAt']
-        delete res['attributes']['updatedAt']
-        delete res['attributes']['image']
-        delete res['attributes']['malId']
         return { 
           id,
           ...res['attributes'], 
           manga: res['relationships']['castings']['links']['self'], 
           anime: res['relationships']['mediaCharacters']['links']['self'] 
         };
-      })
-    );
-  }
-
-  manga(character: Observable<any>) {
-    return character.pipe(
+      }),
       mergeMap((res) => {
         return this.http.get(res['manga']).pipe(
           map((d) => {
@@ -65,14 +57,9 @@ export class ApiService {
           }),
           map((d) => d.map((e) => 
             this.http.get(`https://kitsu.io/api/edge/castings/${e['id']}/media`) )),
-          map((manga) => ({ ...res, manga }))
+          map((manga) => ({ ...res, manga })),
         )
       }),
-    )
-  }
-
-  anime(character: Observable<any>) {
-    return character.pipe(
       mergeMap((res) => {
         return this.http.get(res['anime']).pipe(
           map((d) => {
@@ -83,17 +70,13 @@ export class ApiService {
           }), 
           map((d) => d.map((e) =>
             this.http.get(`https://kitsu.io/api/edge/media-characters/${e['id']}/media`))),
-          map((anime) => ({ ...res, anime }))
+          map((anime) => ({ ...res, anime })),
         )
-      }),
-    )
+      })
+    );
   }
 
   media(docs: Observable<any>[]) {
-
-    const length = docs.length;
-    let count = 0;
-    let media = []
 
     const observable = new Observable((subscriber) => {
       docs.forEach((media) => subscriber.next(media));
@@ -102,21 +85,13 @@ export class ApiService {
 
     const pipe = observable.pipe(
       mergeMap((e: any) => e),
-      map(e => e['data'])
-    ).subscribe((res) => {
-      count++;
-      res = { ...res['attributes'], relationships: res['relationships'] };
-      media.push(res);
-      if (count === length) {
-        
-        media = uniqBy(media.map((e) => {
-          e['key'] = e['titles']['en_jp'];
-          return e
-        }), 'key')
-
-        this.shared.updatedMediaSelection = media;
-        pipe.unsubscribe();
-      }
+      map(e => e['data']),
+      distinct(e => e['attributes']['canonicalTitle']),
+      toArray()
+    ).subscribe((data) => {
+      this.shared.updatedMediaSelection = data.map((res) => 
+        ({ ...res['attributes'], relationships: res['relationships'] }))
+      pipe.unsubscribe();
     });
     
   }

@@ -14,14 +14,12 @@ export class LoadMorePipe implements PipeTransform {
   transform(value: any[], length: number, array: string): any[] {
 
     if (value === null) return;
-
     
     if (array === 'episodes') {
       return this.episodes(value, length);
     } else if (array === 'staff') {
       return this.staff(value, length);
     }
-    
   }
   
   episodes(value: any[], length: number) {
