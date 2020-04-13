@@ -64,17 +64,20 @@
 
   .media {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row;
     width: 225px;
-    
+
+    .individual {
+      flex: 1 0 100%;
+    }
+
     .mat-stroked-button {
-      flex: 1 1 50%;
-
+      width: 100%;
     }
 
-    .mat-stroked-button:last-child {
-      width: 112.5px;
-    }
+    > div {
+      width: 100%;
+    }    
   }
 
   .loading {
@@ -92,6 +95,7 @@
   padding: 24px 24px 24px 20px;
   display: flex;
   flex-flow: row wrap;
+  // max-height: 665px + 48px;
   height: 665px + 48px;
 
   width: 30vw;
