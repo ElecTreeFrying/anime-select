@@ -54,7 +54,7 @@ export class SearchComponent implements OnInit, OnDestroy {
       this.searchNext();
     });
     
-    this.shared.resetSearch.subscribe((res) => {
+    this.subscriptions['resetSearch'] = this.shared.resetSearch.subscribe((res) => {
       if (res !== 1) return;
       if (this.anime.length > 0) {
         this.snotify._notify('Reset complete', 'success');
@@ -70,6 +70,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.shared.updatedSelectRouteSSelection = '';
 
     this.subscriptions['loadMore'] ? this.subscriptions['loadMore'].unsubscribe() : 0;
+    this.subscriptions['resetSearch'] ? this.subscriptions['resetSearch'].unsubscribe() : 0;
     this.subscriptions['_anime'] ? this.subscriptions['_anime'].unsubscribe() : 0;
     this.subscriptions['searchNext'] ? this.subscriptions['searchNext'].unsubscribe() : 0;
   }

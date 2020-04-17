@@ -11,6 +11,15 @@ const routes: Routes = [
   }, { 
     path: 'search', 
     loadChildren: () => import('./search/search.module').then(m => m.SearchModule) 
+  }, { 
+    path: 'about', 
+    loadChildren: () => import('./about-us/about-us.module').then(m => m.AboutUsModule) 
+  }, { 
+    path: 'contact', 
+    loadChildren: () => import('./contact-us/contact-us.module').then(m => m.ContactUsModule) 
+  }, { 
+    path: 'report-issue', 
+    loadChildren: () => import('./report-issue/report-issue.module').then(m => m.ReportIssueModule) 
   }
 ];
 
