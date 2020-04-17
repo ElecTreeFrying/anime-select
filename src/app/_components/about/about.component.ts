@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SnotifyPosition } from 'ng-snotify';
 import Simplebar from 'simplebar';
@@ -23,6 +24,8 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   episode: any;
   isShowHeader: boolean;
   isEpisode: boolean;
+  mediaTypeString: string;
+  mediaType: string;
 
   episodeCount: number;
   isEpisodeOpen: boolean;
@@ -31,11 +34,17 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   stringLength: number;
 
   constructor(
+    private route: ActivatedRoute,
     private shared: SharedService,
     private snotify: SnotifyService
   ) { }
 
   ngOnInit(): void {
+
+    const queryParams = this.route.snapshot.queryParams;
+    const type = Object.keys(queryParams)[0];
+    this.mediaType = type;
+    this.mediaTypeString = type === 'anime' ? 'Episodes' : 'Chapters';
 
     if (this.shared.anime) {
       const about = this.shared.anime;

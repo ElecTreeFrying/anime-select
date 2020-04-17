@@ -15,7 +15,7 @@
       <button mat-button *ngIf="anime" routerLink="/search">Search anime</button>
       <div class="vertical" *ngIf="anime"></div>
       <button mat-button *ngIf="anime" (click)="about()">About</button>
-      <button mat-icon-button [matMenuTriggerFor]="menu" (click)="isMenuOpened = true" *ngIf="anime">
+      <button mat-icon-button [matMenuTriggerFor]="menu" (click)="isMenuOpened = true" *ngIf="anime || isSelectRoute === 'search'">
         <mat-icon *ngIf="!isMenuOpened">arrow_drop_down</mat-icon>
         <mat-icon *ngIf="isMenuOpened">arrow_drop_up</mat-icon>
       </button>
@@ -50,9 +50,10 @@
 <mat-menu #menu="matMenu" xPosition="before" (closed)="this.isMenuOpened = false">
   <button mat-menu-item (click)="refresh()">
     <mat-icon>refresh</mat-icon>
-    <span>Refresh</span>
+    <span *ngIf="anime">Refresh</span>
+    <span *ngIf="!anime">Reset</span>
   </button>
-  <button mat-menu-item (click)="loadAll()">
+  <button mat-menu-item *ngIf="anime" (click)="loadAll()">
     <mat-icon>cached</mat-icon>
     <span>Load all</span>
   </button>

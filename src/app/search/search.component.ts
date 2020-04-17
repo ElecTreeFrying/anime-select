@@ -22,7 +22,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   @ViewChild('overlay') public component: TemplateRef<any>; 
 
   overlayRef: OverlayRef;
-  
+  subscriptions = {};
+
   anime: any[];
   text: string;
   next: string;
@@ -42,20 +43,32 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.anime = [];
+    this.text = '';
     this.searchSelection = 'anime';
     this.shared.mangaType = this.searchSelection;
     this.shared.updatedSelectRouteSSelection = 'search';
     this.shared.updatedLoadMoreSelection = -1;
 
-    this.shared.loadMore.subscribe((res) => {
+    this.subscriptions['loadMore'] = this.shared.loadMore.subscribe((res) => {
       if (res !== 1) return;
       this.searchNext();
+    });
+    
+    this.shared.resetSearch.subscribe((res) => {
+      if (res !== 1) return;
+      this.anime = [];
+      this.text = '';
+      this.shared.updatedLoadMoreSelection = -1;
     });
   }
   
   ngOnDestroy() {
     this.overlayRef === undefined ? 0 : this.overlayRef.detach();
     this.shared.updatedSelectRouteSSelection = '';
+
+    this.subscriptions['loadMore'] ? this.subscriptions['loadMore'].unsubscribe() : 0;
+    this.subscriptions['_anime'] ? this.subscriptions['_anime'].unsubscribe() : 0;
+    this.subscriptions['searchNext'] ? this.subscriptions['searchNext'].unsubscribe() : 0;
   }
 
   selectAnime(anime: any) {
@@ -64,11 +77,15 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   searchAnime() {
+    if (this.text === '') {
+      return this.snotify._notify('Empty search fields.', 'error');
+    }
+
     this._anime = this.search.searchStart(this.text, this.searchSelection);
     this.snotify.searchNotify();
     this.shared.updatedSearchCharacterSelection = 1;
     
-    this._anime.subscribe((res) => {
+    this.subscriptions['_anime'] = this._anime.subscribe((res) => {
       this.anime = res.data;
       this.next = res.next;
       this.shared.updatedLoadMoreSelection = 2;
@@ -79,7 +96,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchNext() {
     
     console.log(this.next, this.searchSelection);
-    this.search.searchNext(this.next, this.searchSelection).subscribe((res) => {
+    this.subscriptions['searchNext'] = this.search.searchNext(this.next, this.searchSelection).subscribe((res) => {
       this.anime = this.anime.concat(res.data);
       this.next = res.next;
       this.shared.updatedLoadingMoreSelection = 2;

@@ -30,7 +30,7 @@
     
   </div>
 
-  <div class="dialog-preview">
+  <div class="dialog-preview" [ngStyle]="{ 'height': '508px + 28px' + mediaType === 'anime' ? '' : ' - 26px' }">
 
     <img
       [defaultImage]="'assets/images/no-image.png'" 
@@ -54,14 +54,14 @@
       <div class="spacer"></div>
       <span class="text key"><strong>Show type: </strong></span>
       <span class="text value">{{ about?.subtype }}</span>
-      <div class="spacer"></div>
-      <span class="text key"><strong>Episode length: </strong></span>
-      <span class="text value">{{ about?.episodeLength }} mins</span>
+      <div class="spacer" *ngIf="mediaType === 'anime'"></div>
+      <span class="text key" *ngIf="mediaType === 'anime'"><strong>Episode length: </strong></span>
+      <span class="text value" *ngIf="mediaType === 'anime'">{{ about?.episodeLength }} mins</span>
     </div>
 
   </div>
 
-  <div class="dialog-info" data-simplebar #simplebar>
+  <div class="dialog-info" [ngStyle]="{ 'height': '508px + 28px' + mediaType === 'anime' ? '' : ' - 26px' }" data-simplebar #simplebar>
     
     <mat-divider class="header" *ngIf="isShowHeader"></mat-divider>
 
@@ -110,7 +110,7 @@
           </mat-expansion-panel>
           <mat-expansion-panel #episodes>
             <mat-expansion-panel-header (click)="resetLoadMore(true)">
-              <mat-panel-title>Episodes</mat-panel-title>
+              <mat-panel-title>{{ mediaTypeString }}</mat-panel-title>
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
               <div class="episodes" *ngIf="isEpisodeOpen">
@@ -181,8 +181,16 @@
       </div>
 
       <div class="synopsis" *ngIf="(episode | async) !== null">
-        <p class="details"><strong>Episode: </strong>#{{ (episode | async)?.number }}</p>
-        <p class="details"><strong>Air date: </strong>{{ (episode | async)?.airdate | animeDate }}</p>
+        <p class="details">
+          <strong *ngIf="mediaType === 'anime'">Episode: </strong>
+          <strong *ngIf="mediaType !== 'anime'">Chapter: </strong>
+          <span>#{{ (episode | async)?.number }}</span>
+        </p>
+        <p class="details">
+          <strong *ngIf="mediaType === 'anime'">Air date: </strong>
+          <strong *ngIf="mediaType !== 'anime'">Release date: </strong>
+          <span>{{ (episode | async)?.airdate | animeDate }}</span>
+        </p>
         <p class="head" *ngIf="(episode | async)?.synopsis">Synopsis</p>
         <p class="context">{{ (episode | async)?.synopsis }}</p>
       </div>

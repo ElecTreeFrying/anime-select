@@ -155,7 +155,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   scrollTo(option: boolean) {
-    if (this.isScrolling) return;
+    if (this.isScrolling && this.isSelectRoute !== 'search') return;
 
     this.isScrolling = true;
     easyScroll({
@@ -178,6 +178,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   refresh() {
     if (this.isLoadingAll) return;
+
+    if (this.isSelectRoute === 'search') {
+      return this.shared.updatedResetSourceSelection = 1;
+    }
 
     this.shared.count = 0;
     this.isLoadingAll = false;

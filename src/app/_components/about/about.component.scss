@@ -50,7 +50,7 @@
 
 .dialog-preview {
   flex: 0 1;
-  height: 508px + 28px;
+  // height: 508px + 28px - 26px;
   padding: 0 0 24px 24px;
   
   img {
@@ -100,7 +100,7 @@
 .dialog-info {
   flex: 1 0;
   padding-left: 20px;
-  height: 508px + 28px;
+  // height: 508px + 28px - 26px;
   
   .header {
     position: sticky;
