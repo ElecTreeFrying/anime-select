@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { SnotifyPosition } from 'ng-snotify';
 import Simplebar from 'simplebar';
 
-import { SharedService, ABOUT } from '../../_common/services/shared.service';
+import { SharedService } from '../../_common/services/shared.service';
 import { SnotifyService } from '../../_common/services/snotify.service';
 
 
@@ -21,12 +21,14 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   _item: Subscription
   about: any;
   episode: any;
-  isEpisode: boolean
+  isShowHeader: boolean;
+  isEpisode: boolean;
 
   episodeCount: number;
   isEpisodeOpen: boolean;
   staffCount: number;
   isStaffOpen: boolean;
+  stringLength: number;
 
   constructor(
     private shared: SharedService,
@@ -34,14 +36,36 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.about = ABOUT;
+
+    if (this.shared.anime) {
+      const about = this.shared.anime;
+      about['synopsis'] = about['synopsis']
+        .replace("\r\n", '<br><br>')
+        .replace(".\r\n", '.<br><br>');
+      this.about = about;
+    } else {
+      const session = sessionStorage.getItem('anime');
+      const parse = JSON.parse(session);
+      parse['synopsis'] = parse['synopsis']
+        .replace("\r\n", '<br><br>')
+        .replace(".\r\n", '.<br><br>');
+      this.about = parse;
+
+      console.log(parse);
+    }
+
+    this.isShowHeader = false;
     this.isEpisode = false;
     this.episodeCount = -1;
     this.staffCount = -1;
+    this.stringLength = this.about?.synopsis.length < 500 ? -2 : 500;
   }
 
   ngAfterViewInit() {
     this._simplebar = new Simplebar(this.simplebar.nativeElement)
+    this._simplebar.getScrollElement().addEventListener('scroll', (scroll) => {
+      this.isShowHeader = scroll.target.scrollTop !== 0; 
+    });
   }
 
   ngOnDestroy() {
@@ -125,7 +149,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     this._item = item.subscribe((res) => {
 
       this.snotify._notify(res.description, 'simple', {
-        bodyMaxLength: 10000,
+        bodyMaxLength: 200,
         closeOnClick: true,
         pauseOnHover: true,
         position: SnotifyPosition.leftTop,

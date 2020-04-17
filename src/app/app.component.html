@@ -1,46 +1,53 @@
 
 <cdk-virtual-scroll-viewport class="scrollable-viewport" itemSize="50" keyboardDefaults #scroll>
 
-  <mat-toolbar class="toolbar">
+  <mat-toolbar class="toolbar" #toolbar>
     <div class="wrap">
-      <mat-icon svgIcon="logo"></mat-icon>
-      <span (click)="scrollTo(true)">One Piece</span>
-      <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>more_vert</mat-icon>
+      <div class="title" matRipple routerLink="/">
+        <mat-icon>whatshot</mat-icon>
+        <span class="text"(click)="scrollTo(true)">Anime Select</span>
+      </div>
+      <div class="break"></div>
+      <button mat-button *ngIf="isSelectRoute === 'select'" routerLink="/search">Search anime</button>
+      <button mat-button *ngIf="isSelectRoute === 'search'" routerLink="/">Home</button>
+      <button mat-button *ngIf="anime" routerLink="/">Home</button>
+      <div class="vertical" *ngIf="anime"></div>
+      <button mat-button *ngIf="anime" routerLink="/search">Search anime</button>
+      <div class="vertical" *ngIf="anime"></div>
+      <button mat-button *ngIf="anime" (click)="about()">About</button>
+      <button mat-icon-button [matMenuTriggerFor]="menu" (click)="isMenuOpened = true" *ngIf="anime">
+        <mat-icon *ngIf="!isMenuOpened">arrow_drop_down</mat-icon>
+        <mat-icon *ngIf="isMenuOpened">arrow_drop_up</mat-icon>
       </button>
     </div>
   </mat-toolbar>
 
-  <div class="main" [ngStyle]="{ 'padding-bottom': isLoading ? '0' : '50px' }">
-    <router-outlet></router-outlet>
-    <app-loading-box *ngIf="isLoading" (event)="exists = $event"></app-loading-box>
+
+  <div class="main">
+    <div [ngStyle]="{ 'min-height': 'calc(100vh - ' + toolbarHeight + 'px - 200px)' }">
+      <router-outlet></router-outlet>
+    </div>
+    <div *ngIf="!isMaxCharacters">
+      <app-loading-box *ngIf="isLoading && (isSelectRoute === '' || isSelectRoute === 'loop')" (event)="exists = $event"></app-loading-box>
+    </div>
+    <app-footer></app-footer>
   </div>
 
 </cdk-virtual-scroll-viewport>
 
-<div class="scroll-top">
-  <button mat-fab color="primary" *ngIf="isShow" #fab [scrollTop]="fab" [scrollEl]="scroll" (reveal)="reveal($event)" (click)="scrollTo(true)">
+<div class="scroll-top" *ngIf="anime">
+  <button mat-fab color="primary" *ngIf="isShowScrollTop" #fab [scrollTop]="fab" [scrollEl]="scroll" option="false" (reveal)="reveal($event)" (click)="scrollTo(true)">
     <mat-icon>arrow_upward</mat-icon>
   </button>
 </div>
 
-<mat-menu #menu="matMenu" xPosition="before">
-  <button mat-menu-item [matMenuTriggerFor]="actions">
-    <mat-icon>build</mat-icon>
-    <span>Actions</span>
+<div class="scroll-top" *ngIf="isSelectRoute === 'search'">
+  <button mat-raised-button color="primary" *ngIf="isShowLoadMore" #fab [scrollTop]="fab" [scrollEl]="scroll" option="true" (click)="loadMore()">
+    <span>Load more</span>
   </button>
-  <button mat-menu-item (click)="scrollTo(false)">
-    <mat-icon>arrow_downward</mat-icon>
-    <span>Scroll to bottom</span>
-  </button>
-  <mat-divider></mat-divider>
-  <button mat-menu-item (click)="about()">
-    <mat-icon>info</mat-icon>
-    <span>About</span>
-  </button>
-</mat-menu>
+</div>
 
-<mat-menu #actions="matMenu">
+<mat-menu #menu="matMenu" xPosition="before" (closed)="this.isMenuOpened = false">
   <button mat-menu-item (click)="refresh()">
     <mat-icon>refresh</mat-icon>
     <span>Refresh</span>
@@ -48,6 +55,10 @@
   <button mat-menu-item (click)="loadAll()">
     <mat-icon>cached</mat-icon>
     <span>Load all</span>
+  </button>
+  <button mat-menu-item (click)="scrollTo(false)">
+    <mat-icon>arrow_downward</mat-icon>
+    <span>Scroll to bottom</span>
   </button>
 </mat-menu>
 

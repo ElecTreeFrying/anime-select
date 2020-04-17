@@ -32,14 +32,25 @@
 
   <div class="dialog-preview">
 
-    <img [src]="about?.image" [alt]="about?.slug">
+    <img
+      [defaultImage]="'assets/images/no-image.png'" 
+      [errorImage]="'assets/images/no-image.png'" 
+      [lazyLoad]="about?.posterImage?.small" 
+      [alt]="about?.slug">
 
     <div class="highlight">
+      <span class="text head"><strong>Information</strong></span>
+      <mat-divider></mat-divider>
       <span class="text key"><strong>Status: </strong></span>
       <span class="text value">{{ about?.status === 'current' ? 'Currently Airing' : 'Finished Airing' }}</span>
       <div class="spacer"></div>
-      <span class="text key"><strong>Start date: </strong></span>
-      <span class="text value">{{ about?.startDate }}</span>
+      <span class="text key"><strong>Aired: </strong></span>
+      <span class="text value">
+        <span>{{ about?.startDate | animeDate }}</span>
+        <span> - </span>
+        <span *ngIf="about?.endDate">{{ about?.endDate | animeDate }}</span>
+        <span *ngIf="!about?.endDate">current</span>
+      </span>
       <div class="spacer"></div>
       <span class="text key"><strong>Show type: </strong></span>
       <span class="text value">{{ about?.subtype }}</span>
@@ -52,12 +63,19 @@
 
   <div class="dialog-info" data-simplebar #simplebar>
     
+    <mat-divider class="header" *ngIf="isShowHeader"></mat-divider>
+
     <div class="content-data" *ngIf="!isEpisode">
       <div class="title" *ngIf="true">
         <p class="en">{{ about?.canonicalTitle }}</p>
         <p class="int">{{ about?.titles?.ja_jp }}</p>
         <p class="head">Synopsis</p>
-        <p class="synopsis">{{ about?.synopsis }}</p>
+        <p class="synopsis">
+          <span class="details"(click)="
+          stringLength = stringLength === 500 ? -1 : about?.synopsis.length < 500 ? -2 : 500" [innerHTML]="about?.synopsis | sliceString: stringLength"></span>
+          <span class="link" (click)="stringLength = about?.synopsis.length < 500 ? -2 : -1" *ngIf="stringLength === 500"> read more</span>
+          <span class="link" (click)="stringLength = about?.synopsis.length < 500 ? -2 : 500" *ngIf="stringLength === -1"> collapse</span>
+        </p>
       </div>
   
       <div class="black">
@@ -69,7 +87,7 @@
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
               <mat-chip-list>
-                <mat-chip *ngFor="let genre of (about?.relationships | relationship: 'genres' | async)">
+                <mat-chip *ngFor="let genre of (about?.links | relationship: 'genres' | async)">
                   {{ genre | async }}
                 </mat-chip>
               </mat-chip-list>
@@ -83,7 +101,7 @@
               <mat-chip-list>
                 <mat-chip 
                   matTooltip="click for more details"
-                  *ngFor="let category of (about?.relationships | relationship: 'categories' | async)"
+                  *ngFor="let category of (about?.links | relationship: 'categories' | async)"
                   (click)="_category(category)">
                   {{ (category | async)?.title }}
                 </mat-chip>
@@ -96,7 +114,7 @@
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
               <div class="episodes" *ngIf="isEpisodeOpen">
-                <div class="episode" *ngFor="let episode of (about?.relationships | relationship: 'episodes' | async | loadMore: episodeCount: 'episodes'); let i = index">
+                <div class="episode" *ngFor="let episode of (about?.links | relationship: 'episodes' | async | loadMore: episodeCount: 'episodes'); let i = index">
                   <button mat-stroked-button (click)="openEpisode(episode)">
                     <span>#{{ i + 1 }}</span>
                   </button>
@@ -115,7 +133,7 @@
               <mat-panel-title>Media Productions</mat-panel-title>
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
-              <div class="media-productions" matRipple *ngFor="let prod of (about?.relationships | relationship: 'productions' | async)">
+              <div class="media-productions" matRipple *ngFor="let prod of (about?.links | relationship: 'productions' | async)">
                 <p><strong>{{ (prod | async)?.role | stringHelper: 'camelcase' }}</strong></p>
                 <p>{{ (prod | async)?.name }}</p>
               </div>
@@ -127,7 +145,7 @@
             </mat-expansion-panel-header>
             <ng-template matExpansionPanelContent>
               <div class="staffs" *ngIf="isStaffOpen">
-                <div class="staff" *ngFor="let staff of (about?.relationships | relationship: 'staff' | async | loadMore: staffCount: 'staff')">
+                <div class="staff" *ngFor="let staff of (about?.links | relationship: 'staff' | async | loadMore: staffCount: 'staff')">
                   <span><strong>{{ (staff | async)?.role }}</strong></span><br>
                   <span>{{ (staff | async)?.name }}</span>
                   <br><br>
@@ -149,18 +167,23 @@
     <div class="episode-data" *ngIf="isEpisode">
 
       <div class="title" *ngIf="(episode | async) !== null">
-        <p>{{ (episode | async)?.canonicalTitle }}</p>
-        <p>( {{ (episode | async)?.titles?.ja_jp }} )</p>
+        <p class="en">{{ (episode | async)?.canonicalTitle }}</p>
+        <p class="int">
+          <span *ngIf="(episode | async)?.titles?.ja_jp">( </span>
+          <span>{{ (episode | async)?.titles?.ja_jp }}</span>
+          <span *ngIf="(episode | async)?.titles?.ja_jp"> )</span>
+      </p>
+
       </div>
 
-      <div class="preview" *ngIf="(episode | async) !== null">
+      <div class="preview" *ngIf="(episode | async)?.thumbnail?.original">
         <img [src]="(episode | async)?.thumbnail?.original">
       </div>
 
       <div class="synopsis" *ngIf="(episode | async) !== null">
         <p class="details"><strong>Episode: </strong>#{{ (episode | async)?.number }}</p>
-        <p class="details"><strong>Air date: </strong>{{ (episode | async)?.airdate }}</p>
-        <p class="head">Synopsis</p>
+        <p class="details"><strong>Air date: </strong>{{ (episode | async)?.airdate | animeDate }}</p>
+        <p class="head" *ngIf="(episode | async)?.synopsis">Synopsis</p>
         <p class="context">{{ (episode | async)?.synopsis }}</p>
       </div>
 

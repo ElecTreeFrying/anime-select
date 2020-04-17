@@ -23,7 +23,6 @@ export class CharacterComponent implements OnInit, OnDestroy {
   media: Observable<any[]>;
   selectedMedia: any;
   stringLength: any[];
-
   
   constructor(
     private ref: MatDialogRef<CharacterComponent>,
@@ -35,6 +34,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._character.unsubscribe();
     this._media.unsubscribe();
+    this.stringLength = [];
     this.shared.updatedMediaSelection = [];
   }
 
@@ -66,6 +66,9 @@ export class CharacterComponent implements OnInit, OnDestroy {
   moreDetails(media: any, route: string) {
     this.previous = this.route;
     this.route = route;
+    media['synopsis'] = media['synopsis']
+      .replace("\r\n", '<br><br>')
+      .replace(".\r\n", '.<br><br>');
     this.selectedMedia = media;
     this.cd.detectChanges();
     console.log(media);

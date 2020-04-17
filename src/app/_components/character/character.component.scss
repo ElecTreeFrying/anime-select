@@ -1,6 +1,8 @@
 
 // GLOBAL
 
+$dialog-height: 637px;
+
 .break {
   flex-basis: 100%;
   height: 0;
@@ -16,18 +18,27 @@
 
 // STYLES
 
+.empty {
+  display: flex;
+
+  .loading {
+    margin: auto;
+  }
+}
+
 // container
 .dialog {
   margin: -24px;
   padding: 24px;
+  width: 707px + 48px;
   display: flex;
   flex-direction: row;
 }
 
 // preview
 .dialog-preview {
-  font-family: 'Rubik', sans-serif;
-  height: 665px;
+  height: $dialog-height;
+  width: 231px + 48px;
   overflow: hidden;
 
   img {
@@ -48,13 +59,13 @@
     margin-top: 8px;
   }
 
-  .body {
-    margin-top: 16px;
-    text-align: center;
-
-    .text {
-      margin-bottom: 4px;
-    }
+  .selection {
+    font-family: 'Manrope', sans-serif;
+    font-size: 1.1em;
+    font-weight: 900;
+    width: 231px;
+    // color: #B6B6B6;
+    margin: 8px 0 12px 8px;
   }
 
   .mat-divider {
@@ -65,7 +76,7 @@
   .media {
     display: flex;
     flex-flow: row;
-    width: 225px;
+    width: 231px;
 
     .individual {
       flex: 1 0 100%;
@@ -96,13 +107,41 @@
   display: flex;
   flex-flow: row wrap;
   // max-height: 665px + 48px;
-  height: 665px + 48px;
+  height: $dialog-height + 48px;
 
   width: 30vw;
   min-width: 500px;
 
   .mat-divider {
     margin: 12px 0;
+  }
+
+  .character  {
+
+    .mat-divider {
+      margin: 0 0 12px 0;
+    }
+
+    .spacer {
+      display: block;
+      margin: 12px 0;
+    }
+
+    p {
+      font-size: 2em;
+      margin-top: 4px;
+
+      &.last {
+        margin-top: 24px;
+      }
+    }
+  
+    .details {
+      font-family: Verdana, Arial;
+      line-height: 16.5px;
+      font-size: 11px;
+      white-space: pre-wrap;
+    }
   }
 }
 
@@ -134,21 +173,34 @@
 
     .en {
       font-size: 1.5em;
+      font-family: 'Manrope', sans-serif;
     }
 
+    .int {
+      font-family: 'Manrope', sans-serif;
+    }
+    
     .head {
-      font-size: 1.1em;
+      font-size: 1.2em;
       margin-top: 16px;
     }
 
+    .synopsis {
+      font-family: Verdana, Arial;
+      line-height: 16.5px;
+      font-size: 11px;
+    }
+    
     .link {
+      font-family: Verdana, Arial;
+      font-size: 11px;
       color: #007bff;
       cursor: pointer;
-    }
 
-    .link:hover {
-      color: #0056b3;
-      text-decoration: underline;
+      &:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -158,6 +210,23 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+
+  .header {
+    flex-basis: 100%;
+    font-family: 'Manrope', sans-serif;
+    margin-bottom: 16px;
+    text-align: center;
+
+    .en {
+      font-size: 1.5em;
+      font-weight: 700;
+    }
+    
+    .int {
+      font-size: 1em;
+      font-weight: 700;
+    }
+  }
 
   .preview {
     flex-grow: 0;
@@ -175,22 +244,35 @@
     max-width: 240px;
     flex-grow: 1;
 
-    .en {
-      font-size: 1.5em;
+    .heading {
+      font-size: 1.6em;
+      margin-top: 4px;
     }
 
-    .int {
-      font-size: 1em;
+    .info {
+      margin: 0 0 4px 0;
+
+      .key {
+        font-weight: 700;
+      }
     }
   }
 
   .synopsis {
     flex-basis: 100%;
-    margin-top: 8px;
+    margin-top: 16px;
 
-    .head {
-      font-size: 1.3em;
+    .heading {
+      font-size: 1.6em;
       margin-top: 16px;
+    }
+
+    .description {
+      font-family: Verdana, Arial;
+      margin-bottom: 20px;
+      line-height: 18px;
+      font-size: 11px;
+      white-space: pre-wrap;
     }
   }
 

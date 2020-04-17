@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, mergeMap, distinct, toArray } from 'rxjs/operators'
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { sortBy } from 'lodash';
 
 import { SharedService } from './shared.service';
@@ -10,8 +10,6 @@ import { SharedService } from './shared.service';
   providedIn: 'root'
 })
 export class ApiService {
-
-  private _id: number = 405;
 
   private dataSource = new BehaviorSubject(false);
   private refreshSource = new BehaviorSubject(false);
@@ -23,12 +21,8 @@ export class ApiService {
     private shared: SharedService
   ) { }
 
-  get id() { return this._id; }
-  set id(id: number) { this._id = id } 
-
-  updatedDataSelection(data: boolean, config: number = 1){
+  updatedDataSelection(data: boolean){
     if (!data) {
-      if (config === 1) return;
       this.refreshSource.next(!data);
     } else {
       this.dataSource.next(data);
@@ -88,69 +82,28 @@ export class ApiService {
       distinct(e => e['attributes']['canonicalTitle']),
       toArray()
     ).subscribe((data) => {
-      this.shared.updatedMediaSelection = data.map((res) => 
-        ({ ...res['attributes'], relationships: res['relationships'] }))
+      this.shared.updatedMediaSelection = data.map((res) => {
+        res['attributes']['synopsis'] = res['attributes']['synopsis']
+          .replace("\r\n", '<br><br>')
+          .replace(".\r\n", '.<br><br>')
+        return ({ ...res['attributes'], relationships: res['relationships'] })
+      });
       pipe.unsubscribe();
     });
     
   }
 
-  characters(option: { next: boolean }) {
-   
-    if (option.next) {
-      const id = this.id + 20;
-      this.id = id < 901 ? id : this.id;
-    }
+  get characters() {
 
-    const offset = this.id < 884 ? 20 : 15;
-    const root = 'https://kitsu.io/api/edge/characters';
-    const config = `?page%5Blimit%5D=${offset}&page%5Boffset%5D=`;
-    const link = `${root}${config}${this.id}`;
+    const start = this.shared.index;
+    const end = this.shared.index + 20;
 
-    return { data: this.http.get(link).pipe(
-      map((offset: any) => 
-        offset['data'].map(e => 
-          ({ id: +e['id'], name: e['attributes']['canonicalName'] })  
-        )
-      )
-    ), id: this.id };
-  }
+    let characters = this.shared.mediaCharacters;
 
-  get freshLoad() {
-    this.id = 405;
-    const link = 'https://kitsu.io/api/edge/characters?page%5Blimit%5D=20&page%5Boffset%5D=405';
-    return this.http.get(link).pipe(
-      map((offset: any) => 
-        offset['data'].map(e => 
-          ({ id: +e['id'], name: e['attributes']['canonicalName'] })  
-        )
-      )
-    )
-  }
+    const result = characters.slice(start, end);
 
-  fileNameCount: number;
-
-  _characters(option: { next: boolean }) {
-
-    let link;
-
-    if (option.next) {
-      const id = this.id + 20;
-      this.id = id < 901 ? id : this.id;
-      link = `assets/load-speed/${this.fileNameCount}.json`;
-      this.fileNameCount++;
-    } else {
-      this.fileNameCount = 0;
-      link = `assets/load-speed/${this.fileNameCount}.json`;
-      this.fileNameCount++;
-    }
-
-    return { data: this.http.get(link), id: this.id };
-  }
-
-  get _freshLoad() {
-    this.id = 405;
-    return this.http.get('assets/load-speed/0.json');
+    this.shared.index = this.shared.index + 20;
+    return result;
   }
 
 }

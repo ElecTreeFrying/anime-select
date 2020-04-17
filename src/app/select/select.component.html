@@ -1,0 +1,32 @@
+
+<div class="featured">
+  
+  <div class="wrap heading">
+    <p class="head">Featured</p>
+  </div>
+
+  <div class="wrap content">
+    <div matRipple *ngFor="let anime of (media | async)" #card [tilt]="card" [cardDetails]="anime" (click)="selectAnime(anime)">
+      <mat-card>
+        <img 
+          mat-card-image 
+          [defaultImage]="'assets/images/no-image.png'" 
+          [errorImage]="'assets/images/no-image.png'" 
+          [lazyLoad]="anime?.posterImage?.small" 
+          [alt]="anime?.slug">
+      </mat-card>
+    </div>
+  </div>
+
+</div>
+
+<ng-template 
+  #overlay
+  cdk-overlay-origin
+  cdk-connected-overlay>
+
+  <div class="overlay-content">
+    <app-loading-box class="loading-box"></app-loading-box>
+  </div>
+
+</ng-template>

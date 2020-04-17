@@ -1,5 +1,5 @@
 {
-  "name": "one-piece-characters",
+  "name": "anime-select",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -27,6 +27,7 @@
     "easy-scroll": "^0.6.0",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.15",
+    "ng-lazyload-image": "^7.1.0",
     "ng-snotify": "^9.0.1",
     "rxjs": "~6.5.4",
     "simplebar": "^5.1.0",

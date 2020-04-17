@@ -2,6 +2,8 @@
 
 # user
 *.spec.ts
+.firebase
+.firebaserc
 
 # environments
 src/environments/**

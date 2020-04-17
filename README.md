@@ -1,21 +1,22 @@
 
-# One Piece Characters
+# Anime Select
 
-Angular Material demo app.
+Angular Material demo app featuring [Kitsu.io] API.
+
+[Kitsu.io]: https://kitsu.io/
 
 [demo]
 
 [demo]: https://anime-select.web.app/
 
-![alt-text](src/assets/preview.png "Hover text")
-
 # Features
 
-- Search character(s)
-- Load all characters
-- Scroll to bottom
-- Scroll to top
-- Character details and more
+- Search anime
+- Search manga titles
+- Searched Anime/Manga details
+- Anime/Manga character details
+- Character media details
+- Scroll
 
 # License
 

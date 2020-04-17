@@ -6,7 +6,8 @@ import { MatButton } from '@angular/material/button';
   selector: '[scrollTop]'
 })
 export class ScrollTopDirective implements OnInit {
-
+  
+  @Input() option: boolean;
   @Input() scrollTop: MatButton;
   @Input() scrollEl: CdkScrollable;
   @Output() reveal = new EventEmitter();
@@ -21,6 +22,8 @@ export class ScrollTopDirective implements OnInit {
     this.scrollEl.elementScrolled().subscribe((res: Event) => {
       const target = <HTMLElement>res.target;
       const scrollValue = target.scrollTop;
+
+      if (this.option) return;
 
       if (scrollValue === 0) { this.reveal.emit(0); }
 
@@ -58,13 +61,13 @@ export class ScrollTopDirective implements OnInit {
     const element = <HTMLElement>this.scrollTop._elementRef.nativeElement;
     this.renderer.removeClass(element, 'bounceIn');
     this.renderer.removeClass(element, 'pulse');
-    this.renderer.addClass(element, 'tada');
+    this.renderer.addClass(element, !this.option ? 'tada' : 'rubberBand');
   }
   
   @HostListener('mouseleave', [ '$event' ])
   mouseleave() {
     const element = <HTMLElement>this.scrollTop._elementRef.nativeElement;
-    this.renderer.removeClass(element, 'tada');
+    this.renderer.removeClass(element, !this.option ? 'tada' : 'rubberBand');
     this.renderer.removeClass(element, 'pulse');
   }
 

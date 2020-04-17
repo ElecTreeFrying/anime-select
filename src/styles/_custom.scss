@@ -17,8 +17,9 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: lighter;
 }
 
-*:focus, 
+.mat-ripple:focus,
 .mat-fab:focus, 
+.mat-button:focus,
 .mat-icon-button:focus,
 .mat-raised-button:focus,
 .mat-stroked-button:focus,

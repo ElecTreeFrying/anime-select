@@ -1,6 +1,6 @@
 
 <div class="empty" *ngIf="!data?.slug">
-  <app-loading-box></app-loading-box>
+  <app-loading-box class="loading"></app-loading-box>
 </div>
 
 <div class="dialog" *ngIf="data?.slug">
@@ -11,14 +11,9 @@
     <p class="heading en">{{ data?.names?.en }}</p>
     <p class="heading int">({{ data?.names?.ja_jp }})</p>
 
-    <div class="body" *ngIf="otherNamesExists">
-      <p class="text"><strong>Other names</strong></p>
-      <span class="names" *ngFor="let name of data?.otherNames; let isLast = last">
-        <em>{{ name }}<span *ngIf="!isLast">,&nbsp;</span></em>
-      </span>
-    </div>
-
     <mat-divider></mat-divider>
+
+    <p class="selection">Media selection</p>
 
     <div class="media">
       <button mat-stroked-button class="individual"
@@ -29,7 +24,7 @@
       </button>
       <div>
         <button mat-stroked-button
-          *ngIf="(media | async) | filterSubtype: 'movie': true"
+          *ngIf="(media | async) | filterSubtype: 'character': false"
           [ngClass]="{ 'selected': route === 'character' }" 
           (click)="route = 'character'">
           Character
@@ -90,7 +85,17 @@
   <div class="dialog-content" data-simplebar data-simplebar-auto-hide="false">
 
     <div class="character" *ngIf="route === 'character'">
-      <span [innerHtml]="data?.description"></span>
+      
+      <p class="heading">Character description</p>
+      <mat-divider></mat-divider>
+      <span class="details"[innerHtml]="data?.description"></span>
+
+      <p class="heading last" *ngIf="data?.otherNames.length !== 0">Other names</p>
+      <mat-divider *ngIf="data?.otherNames.length !== 0"></mat-divider>
+      <span class="names" *ngFor="let name of data?.otherNames; let isLast = last">
+        <span>{{ name }}<span *ngIf="!isLast">,&nbsp;</span></span>
+      </span>
+
     </div>
 
     <div *ngIf="route !== 'character' && route !== 'media'">
@@ -114,14 +119,24 @@
 
             <p class="head">Synopsis</p>
 
-            <p *ngIf="stringLength[i] === 250" (click)="stringLength[i] = -1">
-              {{ anime?.synopsis | sliceString: stringLength[i] }} 
-              <span class="link" (click)="stringLength[i] = -1" *ngIf="anime?.synopsis.length > 250"> read more</span>
-            </p>
-            <p *ngIf="stringLength[i] !== 250" (click)="stringLength[i] = 250">
-              {{ anime?.synopsis | sliceString: stringLength[i] }} 
-              <span class="link" (click)="stringLength[i] = 250" *ngIf="anime?.synopsis.length > 250"> collapse</span>
-            </p>
+            <span class="synopsis" 
+              [innerHTML]="anime?.synopsis | sliceString: stringLength[i]" *ngIf="stringLength[i] === 250" 
+              (click)="stringLength[i] = -1">
+            </span>
+            <span class="synopsis" 
+              [innerHTML]="anime?.synopsis | sliceString: stringLength[i]" *ngIf="stringLength[i] !== 250"
+              (click)="stringLength[i] = 250">
+            </span>
+            <span class="link" 
+              (click)="stringLength[i] = -1" 
+              *ngIf="(anime?.synopsis | sliceString: stringLength[i]).length < 254 && anime?.synopsis.length > 250">
+              <span> read more</span>
+            </span>
+            <span class="link" 
+              (click)="stringLength[i] = 250" 
+              *ngIf="(anime?.synopsis | sliceString: stringLength[i]).length > 253 && anime?.synopsis.length > 250">
+              <span> collapse</span>
+            </span>
           </div>
           
         </div>
@@ -131,34 +146,65 @@
 
     <div class="selected-media" *ngIf="route === 'media'">
 
-      <div class="preview">
-        <img [src]="selectedMedia?.posterImage?.original" [alt]="selectedMedia?.slug">
-      </div>
-
-      <div class="content">
-
+      <div class="header">
         <p class="en">{{ selectedMedia?.titles?.en_jp }}</p>
         <p class="int">
           <span *ngIf="selectedMedia?.titles?.ja_jp">(</span>
           <span>{{ selectedMedia?.titles?.ja_jp }}</span>
           <span *ngIf="selectedMedia?.titles?.ja_jp">)</span>
         </p>
+      </div>
 
-        <p><strong>Rating rank: </strong><span>#{{ selectedMedia?.ratingRank }} </span></p>
-        <p><strong>Popularity rank: </strong><span>#{{ selectedMedia?.popularityRank }} </span></p>
-        <p><strong>Rating: </strong><span>{{ selectedMedia?.averageRating }}%</span></p>
-        <p><strong>Status: </strong><span>{{ selectedMedia?.status }}</span></p>
-        <p><strong>Rating guide: </strong><span>{{ selectedMedia?.ageRating }} - {{ selectedMedia?.ageRatingGuide }}</span></p>
-        <!-- <p><strong>Duration: </strong><span>{{ selectedMedia?.totalLength }} mins</span></p> -->
-        <p><strong>Release date: </strong><span>{{ selectedMedia?.startDate }}</span></p>
+      <div class="preview">
+        <img [src]="selectedMedia?.posterImage?.original" [alt]="selectedMedia?.slug">
+      </div>
+
+      <div class="content">
         
+        <p class="heading">Information</p>
+        <mat-divider></mat-divider>
+        <p class="info" *ngIf="selectedMedia?.ratingRank">
+          <span class="key">Rating rank: </span>
+          <span>#{{ selectedMedia?.ratingRank }}</span>
+        </p>
+        <p class="info" *ngIf="selectedMedia?.popularityRank">
+          <span class="key">Popularity rank: </span>
+          <span>#{{ selectedMedia?.popularityRank }}</span>
+        </p>
+        <p class="info" *ngIf="selectedMedia?.averageRating">
+          <span class="key">Rating: </span>
+          <span>{{ selectedMedia?.averageRating }}%</span>
+        </p>
+        <p class="info" *ngIf="selectedMedia?.status">
+          <span class="key">Status: </span>
+          <span>{{ selectedMedia?.status }}</span>
+        </p>
+        <p class="info" *ngIf="selectedMedia?.ageRating">
+          <span class="key">Age rating: </span>
+          <span>{{ selectedMedia?.ageRating }}</span>
+        </p>
+        <p class="info" *ngIf="selectedMedia?.ageRatingGuide">
+          <span class="key">Age rating guide: </span>
+          <span>{{ selectedMedia?.ageRatingGuide }}</span>
+        </p>
+        <p class="info" *ngIf="selectedMedia?.startDate">
+          <span class="key">Aired: </span>
+          <span>{{ selectedMedia?.startDate | animeDate }}</span>
+        </p>
+        <p class="info">
+          <span class="key">Ended: </span>
+          <span *ngIf="!selectedMedia?.endDate">&nbsp;~ </span>
+          <span>{{ selectedMedia?.endDate | animeDate }}</span>
+        </p>
+
       </div>
       
       <div class="synopsis">
 
-        <p class="head">Synopsis</p>
+        <p class="heading">Synopsis</p>
+        <mat-divider></mat-divider>
+        <p class="description" [innerHTML]="selectedMedia?.synopsis"></p>
 
-        <p>{{ selectedMedia?.synopsis }}</p>
       </div>
 
       <div class="action">

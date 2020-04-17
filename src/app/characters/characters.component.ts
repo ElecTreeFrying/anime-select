@@ -1,25 +1,40 @@
-import { Component, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, ChangeDetectorRef, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { CharacterComponent } from '../_components/character/character.component';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { 
+  Overlay,
+  OverlayRef
+} from '@angular/cdk/overlay';
+import { sortBy, uniqBy } from 'lodash';
 
 import { ApiService } from '../_common/services/api.service';
 import { SharedService } from '../_common/services/shared.service';
 import { SnotifyService } from '../_common/services/snotify.service';
+
+import { CharacterComponent } from '../_components/character/character.component';
+import { AboutComponent } from '../_components/about/about.component';
+
 
 @Component({
   selector: 'app-characters',
   templateUrl: './characters.component.html',
   styleUrls: ['./characters.component.scss'],
 })
-export class CharactersComponent implements OnInit {
+export class CharactersComponent implements OnInit, OnDestroy {
   
+  @ViewChild('overlay') public component: TemplateRef<any>; 
+  overlayRef: OverlayRef;
+
+  _api: any = {};
   filter: FormGroup;
   characters: any[];
   _characters: any[];
 
   constructor(
     @Inject(FormBuilder) public fb: FormBuilder,
+    private viewContainerRef: ViewContainerRef,
+    private overlay: Overlay,
     private dialog: MatDialog,
     private cd: ChangeDetectorRef,
     private api: ApiService,
@@ -30,22 +45,25 @@ export class CharactersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.snotify.loadInitialCharacters();
-    this.shared.updatedLoadingInitialSelection = false;
     
-    this.api._characters({ next: false }).data.subscribe((res: any) => {
-      this.characters = res;
-      this._characters = res;
-      this.filter.get('field').enable();
-      this.shared.updatedLoadingInitialSelection = true;
+    this.snotify.clear();
+    this.freshLoad(true);
+    this.attachOverlay();
+    this.filter.get('field').enable();
+    
+    this.once = 0;
+
+    this._api.shared = this.shared.navigating.subscribe((res) => {
+      this.freshLoad(true);
+      console.log(res);
+      res > 0 ? this.finishInitialLoading() : 0;
     });
 
-    this.api.refresh.subscribe((res) => {
-      if (!res) return;
-      this.freshLoad();
+    this._api.refresh = this.api.refresh.subscribe((res) => {
+      res ? this.freshLoad() : 0;
     });
 
-    this.api.data.subscribe((res) => {
+    this._api.data = this.api.data.subscribe((res) => {
       res ? this.loadNewCharacters() : 0;    
     });
 
@@ -64,39 +82,103 @@ export class CharactersComponent implements OnInit {
     });
   }
 
+  once: number;
+
+  finishInitialLoading() {
+    if (this.once !== 0) return;
+    this.overlayRef.detach();
+    this.overlayRef.dispose();
+    this.once++;
+    setTimeout(() => {
+      this.dialog.open(AboutComponent, {
+        closeOnNavigation: true,
+        autoFocus: false,
+        hasBackdrop: true
+      }).afterClosed().subscribe((res) => {
+        this.shared.updatedSelectRouteSSelection = 'loop';
+      });
+    }, 200);
+  }
+
+  ngOnDestroy() {
+    this._api.shared.unsubscribe();
+    this._api.refresh.unsubscribe();
+    this._api.data.unsubscribe();
+    this.overlayRef.detach();
+    this.overlayRef.dispose();
+    this.snotify.clear();
+  }
+
+  attachOverlay() {
+    
+    const portal = new TemplatePortal(this.component, this.viewContainerRef);
+    this.overlayRef = this.overlay.create({
+      width: '100vw',
+      height: '100vh',
+      disposeOnNavigation: true,
+      hasBackdrop: false
+    });
+
+    this.overlayRef.attach(portal);
+  }
+
   selectCharacter(character: any) {
     this.dialog.open(CharacterComponent, { 
       disableClose: false,
       hasBackdrop: true,
-      id: character.id
+      id: character.id,
+      closeOnNavigation: true
     });
   }
 
-  freshLoad() {
-    this.api._freshLoad.subscribe((res: any) => {
-      this.characters = res; 
-      this._characters = res; 
+  freshLoad(initial: boolean = false) {
+
+    try {
+
+      this.shared.index = 0;
+      const characters = this.api.characters;
+      this.characters = characters; 
+      this._characters = characters; 
       this.cd.detectChanges();
-      this.shared.updatedLoadCountSelection = this.characters.length;
-      this.shared.updatedTriggerRefreshSelection = true;
-    });
-  }
+      this.shared.updatedLoadCountSelection = this.characters.length;  
+    } catch (error) {
 
+      this.reloaded();
+      this.shared.updatedLoadCountSelection = this.characters.length;  
+    }
+
+    if (initial) return;
+    setTimeout(
+      () => (this.shared.updatedTriggerRefreshSelection = true), 750
+    );
+  }
+  
   loadNewCharacters() {
-    const load = this.api._characters({ next: true });
-
-    load.data.subscribe((load: any) => {
-      
-      if (load.id >= 885) return;
-      this.characters = this.characters.concat(load);
-      this._characters = this._characters.concat(load);
-      this.cd.detectChanges();
-      this.shared.updatedLoadCountSelection = this.characters.length;
-    });
+    const characters = this.api.characters;
+    this.characters = this.characters.concat(characters);
+    this._characters = this._characters.concat(characters);
+    this.cd.detectChanges();
+    this.shared.updatedLoadCountSelection = this.characters.length;
   }
 
   trackByID(index: number, item: any) {
     return item ? item.id : null;
+  }
+
+  private reloaded() {
+    const session = sessionStorage.getItem('characters');
+    const parse = JSON.parse(session)
+    const characters = uniqBy(sortBy(parse, [ 'id' ]), 'name');
+    this.shared.ceil = Math.ceil(characters.length/20);
+    this.shared.floor = Math.floor(characters.length/20)*20;
+    this.shared.mediaCharacters = characters;
+    this.characters = characters.slice(0, 20); 
+    this._characters = characters.slice(0, 20);
+    this.cd.detectChanges();
+
+    setTimeout(() => {
+      this.finishInitialLoading();
+    }, 1000);
   }
 
 }

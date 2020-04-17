@@ -1,0 +1,59 @@
+
+<div class="wrap content">
+  
+  <div class="header">
+    
+    <div class="options">
+      <button mat-raised-button [ngClass]="{ 'selected': searchSelection === 'anime' }" (click)="selectOption(true)">Anime</button>
+      <button mat-raised-button [ngClass]="{ 'selected': searchSelection === 'manga title' }" (click)="selectOption(false)">Manga</button>
+    </div>
+
+    <div class="break"></div>
+
+    <div class="search">
+      <button mat-raised-button (click)="searchAnime()">Search</button>
+      <mat-form-field color="accent">
+        <mat-label>Enter {{ searchSelection }}</mat-label>
+        <input matInput type="text" autocomplete="off" [(ngModel)]="text" #input="ngModel" (keypress)="onEnter($event)">
+        <button mat-icon-button matSuffix (click)="text = ''">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="no-content" *ngIf="anime.length === 0">
+    
+    <p>No content available</p>
+
+  </div>
+
+  <div class="cards">
+    <div matRipple *ngFor="let object of anime" (click)="selectAnime(object)" #card [tilt]="card" [cardDetails]="object">
+      <mat-card>
+        <img 
+          mat-card-image 
+          [defaultImage]="'assets/images/no-image.png'" 
+          [errorImage]="'assets/images/no-image.png'" 
+          [lazyLoad]="object?.posterImage?.small" 
+          [alt]="object?.slug">
+      </mat-card>
+    </div>
+  </div>
+
+</div>
+
+<ng-template 
+  #overlay
+  cdk-overlay-origin
+  cdk-connected-overlay>
+
+  <div class="overlay-content">
+    <app-loading-box class="loading-box"></app-loading-box>
+  </div>
+
+</ng-template>

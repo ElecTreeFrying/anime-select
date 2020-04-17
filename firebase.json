@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/one-piece-characters",
+    "public": "dist/anime-select",
     "ignore": [
       "firebase.json",
       "**/.*",

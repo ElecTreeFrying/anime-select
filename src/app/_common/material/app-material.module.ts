@@ -11,6 +11,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   exports: [
@@ -25,7 +26,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatExpansionModule,
     MatTooltipModule,
     
-    ScrollingModule
+    ScrollingModule,
+    OverlayModule
   ]
 })
 export class AppMaterialModule { }

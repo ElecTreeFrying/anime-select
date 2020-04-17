@@ -17,11 +17,91 @@ export class SnotifyService {
     return option;
   }
 
+  loadNotify() {
+    
+    const action = Observable.create(observer => {
+
+      const $ = this.shared.loadingMore.subscribe((res) => {
+      
+        if (res == 1) {
+          
+          observer.next({
+            body: `Loading...`,
+            config: this.config({
+              closeOnClick: true
+            })
+          });
+        } else if (res == 2) {
+  
+          const withSuffix = this.shared.mangaType !== 'anime' ? 's' : '';
+
+          observer.next({
+            body: `Loaded new ${this.shared.mangaType}${withSuffix}!`,
+            config: this.config({
+              closeOnClick: true,
+              pauseOnHover: true,
+              showProgressBar: true,
+              timeout: 5000
+            })
+          });
+          observer.complete();
+          $.unsubscribe();
+        }
+      });
+      
+    });
+
+
+    this.clear();
+    this.snotify.async('', action, {
+      position: SnotifyPosition.leftBottom
+    });
+  }
+
+  searchNotify() {
+    
+    const action = Observable.create(observer => {
+
+      const $ = this.shared.searchCharacter.subscribe((res) => {
+      
+        if (res == 1) {
+          
+          observer.next({
+            body: `Searching...`,
+            config: this.config({
+              closeOnClick: true
+            })
+          });
+        } else if (res == 2) {
+  
+          observer.next({
+            body: 'Search complete!',
+            config: this.config({
+              closeOnClick: true,
+              pauseOnHover: true,
+              showProgressBar: true,
+              timeout: 5000
+            })
+          });
+          observer.complete();
+          $.unsubscribe();
+        }
+      });
+      
+    });
+
+
+    this.clear();
+    this.snotify.async('', action, {
+      position: SnotifyPosition.leftBottom
+    });
+  }
+
   refreshCharactersNotify() {
 
     const action = Observable.create(observer => {
 
-      this.shared.triggerRefresh.subscribe((res) => {
+      const $ = this.shared.triggerRefresh.subscribe((res) => {
 
         if (!res) {
           
@@ -42,48 +122,13 @@ export class SnotifyService {
               timeout: 5000
             })
           });
-          observer.complete();  
+          observer.complete();
+          $.unsubscribe();
         }
       });
     });
 
-    this.closeAllInstance();
-    this.snotify.async('', action, {
-      position: SnotifyPosition.leftBottom
-    });
-  }
-
-  loadInitialCharacters() {
-
-    const action = Observable.create(observer => {
-      
-      this.shared.loadingInitial.subscribe((res) => {
-
-        if (!res) {
-
-          observer.next({
-            title: 'Loading',
-            body: `Please wait...`,
-            config: this.config({ closeOnClick: true })
-          });
-        } else {
-          
-          observer.next({
-            title: 'Successful',
-            body: `Loading complete.`,
-            config: this.config({
-              closeOnClick: true,
-              pauseOnHover: true,
-              showProgressBar: true,
-              timeout: 5000
-            })
-          });
-          observer.complete();
-        }
-      }); 
-    });
-
-    this.closeAllInstance();
+    this.clear();
     this.snotify.async('', action, {
       position: SnotifyPosition.leftBottom
     });
@@ -91,25 +136,27 @@ export class SnotifyService {
 
   loadAllCharactersNotify() {
 
-    var isWait = false;
+    var isWait = false, isMax = false;
 
     const action = Observable.create(observer => {
 
       this.shared.subscription = this.shared.loadCount.subscribe((res: any) => {
 
-        if (res === 480) {
+        if (res === this.shared.floor) {
           
           isWait = true;
           observer.next({
             body: `Please wait...`
           });
-        } else if (res === 495) {
+        } else if (res === this.shared.mediaCharacters.length) {
           
           setTimeout(() => {
+            if (isMax) return;
             observer.complete();
-            this.closeAllInstance();
-            this._notify('Successfully loaded all 495 characters.', 'success')  
+            this.clear();
+            this._notify(`Successfully loaded all ${this.shared.mediaCharacters.length} characters.`, 'success')  
             this.shared.subscription.unsubscribe();
+            isMax = true;
           }, 1000);
         } else {
   
@@ -120,8 +167,9 @@ export class SnotifyService {
       })
     });
 
-    this.closeAllInstance();
+    this.clear();
     this.snotify.async('', action, {
+      position: SnotifyPosition.leftBottom,
       buttons: [
         {
           text: 'CANCEL',
@@ -132,12 +180,16 @@ export class SnotifyService {
             clearInterval(this.shared.interval);
             clearTimeout(this.shared.timeout);
             this.shared.updatedLoadCancelSelection = true;
-            this.closeAllInstance();
+            this.clear();
             this._notify('Load canceled.', "info");
           }
         }
-      ],
-      position: SnotifyPosition.leftBottom
+      ]      
+    }).on('destroyed', () => {
+      this.shared.subscription.unsubscribe();
+      clearInterval(this.shared.interval);
+      clearTimeout(this.shared.timeout);
+      this.shared.updatedLoadCancelSelection = true;
     });
   }
 
@@ -158,7 +210,7 @@ export class SnotifyService {
     })
   }
 
-  private closeAllInstance() {
+  clear() {
     this.snotify.clear();
   }
 

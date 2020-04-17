@@ -1,0 +1,66 @@
+.footer {
+  background-color: #212121;
+  color: white;
+
+  p { margin: 0; }
+
+  .contents {
+    display: flex;
+    flex-flow: row wrap;
+    height: 200px;
+    align-items: center;
+  }
+  
+  .left {
+    flex: 1 0;
+    display: block;
+    height: 20px;
+
+    .credits {
+      display: flex;
+      flex-wrap: row wrap;
+      font-family: 'Staatliches', cursive;
+      transform: translateY(-40px);
+      letter-spacing: 4px;
+      font-size: 3em;
+      height: 37px;
+  
+      .mat-icon {
+        font-size: 40px;
+        margin-right: 28px;
+      }
+  
+      .item .text {
+        transform: translateY(10.5px);
+      }
+    }
+    
+    .dev {
+      transform: translateY(-20px);
+      font-size: 1.5em;
+      margin-left: 49px;
+    }
+  }
+
+  .spacer {
+    flex: 1 0;
+    height: 0;
+  }
+
+  .information {
+    flex: 1 0;
+    font-family: 'Sunflower', sans-serif;
+    transform: translateY(-10px);
+    height: 124px;
+
+    .entry {
+      font-size: 1.5em;
+      margin: 16px 0;
+      cursor: pointer;
+    }
+
+    .entry:hover {
+      text-decoration: underline;
+    }
+  }
+}

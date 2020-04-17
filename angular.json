@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "one-piece-characters": {
+    "anime-select": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/one-piece-characters",
+            "outputPath": "dist/anime-select",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -77,19 +77,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "one-piece-characters:build",
+            "browserTarget": "anime-select:build",
             "port": 7550
           },
           "configurations": {
             "production": {
-              "browserTarget": "one-piece-characters:build:production"
+              "browserTarget": "anime-select:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "one-piece-characters:build"
+            "browserTarget": "anime-select:build"
           }
         },
         "test": {
@@ -128,18 +128,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "one-piece-characters:serve"
+            "devServerTarget": "anime-select:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "one-piece-characters:serve:production"
+              "devServerTarget": "anime-select:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "one-piece-characters",
+  "defaultProject": "anime-select",
   "cli": {
     "analytics": "eabfbaee-1f65-4d13-b800-d5df3c1e0834"
   }

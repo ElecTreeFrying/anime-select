@@ -1,0 +1,57 @@
+
+.overlay-content {
+  display: flex;
+  background-color: rgba(black, 0.5);
+  width: 100vw;
+  height: 100vh;
+  
+  .loading-box {
+    margin: auto;
+  }
+}
+
+.featured {
+  background-color: #101010;
+  padding: 48px 0;
+  min-height: calc(100vh - 64px - 200px);
+
+  .heading {
+    font-family: 'Staatliches', cursive;
+    font-size: 5em;
+    margin-top: 25px;
+    margin-bottom: 50px;
+  }
+
+  .mat-divider {
+    margin: 16px 0;
+  }
+}
+
+.content {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  
+  .mat-ripple {
+    margin: 10px 0;
+  }
+  
+  .mat-card {
+    width: 200px;
+    cursor: pointer;
+    height: 283.09px;
+
+    .mat-card-image {
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      transition: opacity 1s, filter 1s;
+      opacity: 0;
+      filter: blur(10px);
+    }
+    
+    .mat-card-image.ng-lazyloaded {
+      opacity: 1;
+      filter: blur(0px);
+    }
+  }
+}

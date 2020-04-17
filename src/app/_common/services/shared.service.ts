@@ -1,36 +1,77 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, startWith } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
 
-  observable: Observable<any>;
+  private observable: Observable<any>;
 
   private loadCountSource = new BehaviorSubject(false);
   private triggerRefreshSource = new BehaviorSubject(false);
   private loadCancelSource = new BehaviorSubject(false);
-  private loadingInitialSource = new BehaviorSubject(false);
   private characterSource = new BehaviorSubject(this.observable);
   private mediaSource = new BehaviorSubject([]);
+  private navigatingSource = new BehaviorSubject(0);
+  private selectRouteSource = new BehaviorSubject('');
+  private loadMoreSource = new BehaviorSubject(0);
+  private searchCharacterSource = new BehaviorSubject(0);
+  private loadingMoreSource = new BehaviorSubject(0);
 
   loadCount = this.loadCountSource.asObservable();
   triggerRefresh = this.triggerRefreshSource.asObservable();
   loadCancel = this.loadCancelSource.asObservable();
-  loadingInitial = this.loadingInitialSource.asObservable();
   character = this.characterSource.asObservable().pipe( mergeMap(r => r) );
   media = this.mediaSource.asObservable();
-
-  private _episodePrev: any;
-  private _staffPrev: any;
+  navigating = this.navigatingSource.asObservable();
+  selectRoute = this.selectRouteSource.asObservable().pipe( startWith(false) );
+  loadMore = this.loadMoreSource.asObservable();
+  searchCharacter = this.searchCharacterSource.asObservable();
+  loadingMore = this.loadingMoreSource.asObservable();
 
   interval: any;
   timeout: any;
   subscription: Subscription;
+
+  private _count: any;
+  set count(count: any) { this._count = count; }
+  get count() { return this._count; }
+
+  private _episodePrev: any;
+  set episodePrev(prev: any) { this._episodePrev = prev; }
+  get episodePrev() { return this._episodePrev; }
   
+  private _staffPrev: any;
+  set staffPrev(prev: any) { this._staffPrev = prev; }
+  get staffPrev() { return this._staffPrev; }
+
+  private _anime: any;
+  set anime(anime: any) { this._anime = anime; }
+  get anime() { return this._anime }
+
+  private _mediaCharacters: any;
+  set mediaCharacters(mediaCharacters: any) { this._mediaCharacters = mediaCharacters; }
+  get mediaCharacters() { return this._mediaCharacters }
+
+  private _index: number;
+  set index(index: number) { this._index = index; }
+  get index() { return this._index }
+  
+  private _ceil: number;
+  set ceil(ceil: number) { this._ceil = ceil; }
+  get ceil() { return this._ceil }
+
+  private _floor: number;
+  set floor(floor: number) { this._floor = floor; }
+  get floor() { return this._floor }
+
+  private _mangaType: string;
+  set mangaType(mangaType: string) { this._mangaType = mangaType; }
+  get mangaType() { return this._mangaType }
+
   constructor() { }
 
   set updatedLoadCountSelection(data: any){
@@ -45,10 +86,6 @@ export class SharedService {
     this.loadCancelSource.next(data);
   }
 
-  set updatedLoadingInitialSelection(data: any) {
-    this.loadingInitialSource.next(data);
-  }
-
   set updatedCharacterSelection(data: Observable<any>) {
     this.characterSource.next(data);
   }
@@ -57,71 +94,24 @@ export class SharedService {
     this.mediaSource.next(data);
   }
 
-  get episodePrev() {
-    return this._episodePrev;
+  set updatedNavigatingSelection(data: any) {
+    this.navigatingSource.next(data);
   }
 
-  set episodePrev(prev: any) {
-    this._episodePrev = prev;
+  set updatedSelectRouteSSelection(data: any) {
+    this.selectRouteSource.next(data);
   }
 
-  get staffPrev() {
-    return this._staffPrev;
+  set updatedLoadMoreSelection(data: any) {
+    this.loadMoreSource.next(data);
   }
 
-  set staffPrev(prev: any) {
-    this._staffPrev = prev;
+  set updatedSearchCharacterSelection(data: any) {
+    this.searchCharacterSource.next(data);
   }
 
-}
-
-export const ABOUT = {
-  "slug": "one-piece",
-  "synopsis": "Gol D. Roger was known as the \"Pirate King,\" the strongest and most infamous being to have sailed the Grand Line. The capture and death of Roger by the World Government brought a change throughout the world. His last words before his death revealed the existence of the greatest treasure in the world, One Piece. It was this revelation that brought about the Grand Age of Pirates, men who dreamed of finding One Piece—which promises an unlimited amount of riches and fame—and quite possibly the pinnacle of glory and the title of the Pirate King.\r\nEnter Monkey D. Luffy, a 17-year-old boy who defies your standard definition of a pirate. Rather than the popular persona of a wicked, hardened, toothless pirate ransacking villages for fun, Luffy’s reason for being a pirate is one of pure wonder: the thought of an exciting adventure that leads him to intriguing people and ultimately, the promised treasure. Following in the footsteps of his childhood hero, Luffy and his crew travel across the Grand Line, experiencing crazy adventures, unveiling dark mysteries and battling strong enemies, all in order to reach the most coveted of all fortunes—One Piece.\r\n[Written by MAL Rewrite]",
-  "titles": {
-    "ja_jp": "ONE PIECE"
-  },
-  "canonicalTitle": "One Piece",
-  "averageRating": "82.83",
-  "startDate": "1999-10-20",
-  "popularityRank": 16,
-  "ratingRank": 26,
-  "ageRating": "PG",
-  "ageRatingGuide": "Teens 13 or older",
-  "subtype": "TV",
-  "status": "current",
-  "image": "https://media.kitsu.io/anime/poster_images/12/small.jpg?1490541434",
-  "episodeLength": 24,
-  "relationships": {
-    "genres": {
-      "links": {
-        "self": "https://kitsu.io/api/edge/anime/12/relationships/genres"
-      }
-    },
-    "categories": {
-      "links": {
-        "self": "https://kitsu.io/api/edge/anime/12/relationships/categories"
-      }
-    },
-    "castings": {
-      "links": {
-        "self": "https://kitsu.io/api/edge/anime/12/relationships/castings"
-      }
-    },
-    "staff": {
-      "links": {
-        "self": "https://kitsu.io/api/edge/anime/12/relationships/staff"
-      }
-    },
-    "productions": {
-      "links": {
-        "self": "https://kitsu.io/api/edge/anime/12/relationships/productions"
-      }
-    },
-    "episodes": {
-      "links": {
-        "self": "https://kitsu.io/api/edge/anime/12/relationships/episodes"
-      }
-    }
+  set updatedLoadingMoreSelection(data: any) {
+    this.loadingMoreSource.next(data);
   }
+
 }

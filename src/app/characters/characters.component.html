@@ -12,22 +12,38 @@
 
 </div>
 
+<app-loading-box *ngIf="characters.length === 0"></app-loading-box>
+
 <div class="content wrap">
 
   <div matRipple *ngFor="let character of characters; trackBy: trackByID" #card [tilt]="card" (click)="selectCharacter(character)">
     <mat-card>
     
-      <img mat-card-image src="{{ character?.id | idToImage }}" alt="{{ character?.name }}">
+      <img 
+        mat-card-image 
+        offset="300"
+        [defaultImage]="'assets/images/no-image.png'" 
+        [errorImage]="'assets/images/no-image.png'" 
+        [lazyLoad]="character?.id | idToImage" 
+        [alt]="character?.name" #image>
       
-      <mat-card-content class="back">
-        <p>{{ character?.name }}</p>
-      </mat-card-content>
-
-      <mat-card-content class="front">
-        <p>{{ character?.name }}</p>
-      </mat-card-content>
+      <div class="back"></div>
+      <div class="front">
+        <span>{{ character?.name }}</span>
+      </div>
   
     </mat-card>
   </div>
 
 </div>
+
+<ng-template 
+  #overlay
+  cdk-overlay-origin
+  cdk-connected-overlay>
+
+  <div class="overlay-content">
+    <app-loading-box class="loading-box"></app-loading-box>
+  </div>
+
+</ng-template>

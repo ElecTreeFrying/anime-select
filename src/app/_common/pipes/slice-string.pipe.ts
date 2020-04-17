@@ -13,6 +13,8 @@ export class SliceStringPipe implements PipeTransform {
     
     if (length === -1) {
       return value.slice(0);
+    } else if (length === -2) {
+      return value;
     }
 
     if (value.length > length) {

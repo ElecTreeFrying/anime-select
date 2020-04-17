@@ -5,7 +5,8 @@
   right: 0;
   z-index: 500;
 
-  .mat-fab {
+  .mat-fab,
+  .mat-raised-button {
     margin: 0 67px 50px 0;
   }
 }
@@ -21,22 +22,50 @@
     top: 0;
     z-index: 100;
 
-    .wrap {
+    .wrap, .title {
       display: flex;
+      align-items: center;
     }
 
-    .mat-icon {
+    .title {
       cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 4px;
+      transform: translateX(-12px);
     }
 
-    span {
-      transform: translateY(3px);
+    .text {
       cursor: pointer;
       margin-left: 12px;
+      font-family: 'Staatliches', cursive;
+      letter-spacing: 4px;
+      font-size: 1.25em;
+    }
+
+    .break {
+      display: block;
+      margin-left: auto;
+    }
+
+    $vertical: 0px;
+
+    .vertical {
+      transform: translateY($vertical);
+      border: 1px solid white;
+      margin: 0 4px;
+      height: 20px;
+      width: 0.25px;
+    }
+
+    .mat-button {
+      font-family: 'Sunflower', sans-serif;
+      font-size: 0.85em;
+      transform: translateY($vertical + 1px);
+      margin: 0 4px;
     }
 
     .mat-icon-button {
-      margin-left: auto;
+      margin-left: 5px;
     }
   }
 

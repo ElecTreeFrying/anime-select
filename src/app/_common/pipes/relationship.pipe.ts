@@ -13,7 +13,9 @@ export class RelationshipPipe implements PipeTransform {
 
   transform(value: any, relationship: string): any {
 
-    const link = value[relationship]['links']['self'];
+    if (value === null) return;
+
+    const link = value[relationship];
 
     if (relationship === 'genres') {
       return this.genres(link);   
