@@ -56,6 +56,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     
     this.shared.resetSearch.subscribe((res) => {
       if (res !== 1) return;
+      if (this.anime.length > 0) {
+        this.snotify._notify('Reset complete', 'success');
+      } 
       this.anime = [];
       this.text = '';
       this.shared.updatedLoadMoreSelection = -1;
