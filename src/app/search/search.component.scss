@@ -53,6 +53,10 @@
   .mat-raised-button {
     margin-left: 10px;
   }
+
+  .selected {
+    border: 1px solid yellow;
+  }
 }
 
 .no-content {
@@ -68,19 +72,9 @@
 .cards {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   padding-top: 20px;
   padding-bottom: 40px;
-
-  .mat-card {
-    width: 200px;
-  }
-}
-
-.cards {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
   
   .mat-ripple {
     margin: 10px 0;

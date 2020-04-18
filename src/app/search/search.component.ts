@@ -30,6 +30,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   genreText: string;
   next: string;
   searchSelection: string;
+  filters: any[];
   isMenuOpened: any;
   isGenreInputDisabled: boolean;
 
@@ -51,6 +52,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.searchText = '';
     this.genreText = '';
     this.searchSelection = 'anime';
+    this.filters = [];
     this.isMenuOpened = {};
     this.isGenreInputDisabled = true;
     this.shared.mangaType = this.searchSelection;
@@ -113,7 +115,11 @@ export class SearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  searchByGenre(genre: any) {
+  selectedGenreIndex: number;
+
+  searchByGenre(genre: any, index: number) {
+
+    this.selectedGenreIndex = index;
 
     this.snotify.searchNotify();
     this.shared.updatedSearchCharacterSelection = 1;
@@ -192,7 +198,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     if (event.keyCode !== 13) return;
     event.preventDefault();
     this.searchAnime();
-    this.reset();
+    this.reset(false);
   }
 
   genreInputValueChanges(event) {
@@ -211,10 +217,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.overlayRef.attach(portal);
   }
 
-  private reset() {
+  private reset(option: boolean = true) {
     this.isMenuOpened.genre = false;
     this.anime = [];
-    this.searchText = '';
+    this.searchText = option ? '' : this.searchText;
     this.genreText = '';
     this.shared.updatedLoadMoreSelection = -1;
   }

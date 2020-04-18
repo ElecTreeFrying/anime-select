@@ -30,6 +30,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
   filter: FormGroup;
   characters: any[];
   _characters: any[];
+  isShowLoading: boolean;
 
   constructor(
     @Inject(FormBuilder) public fb: FormBuilder,
@@ -57,6 +58,12 @@ export class CharactersComponent implements OnInit, OnDestroy {
       this.freshLoad(true);
       console.log(res);
       res > 0 ? this.finishInitialLoading() : 0;
+
+      if (res === 2) {
+        if (this.characters.length > 20) return;
+        this.shared.updatedLoadMoreSelection = 55;
+        this.isShowLoading = false;
+      }
     });
 
     this._api.refresh = this.api.refresh.subscribe((res) => {
@@ -143,6 +150,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
       this.shared.updatedLoadCountSelection = this.characters.length;  
     } catch (error) {
 
+      this.isShowLoading = true;
       this.reloaded();
       this.shared.updatedLoadCountSelection = this.characters.length;  
     }
@@ -175,8 +183,13 @@ export class CharactersComponent implements OnInit, OnDestroy {
     this.characters = characters.slice(0, 20); 
     this._characters = characters.slice(0, 20);
     this.cd.detectChanges();
-
+    
     setTimeout(() => {
+      if (this.characters.length === 0) {
+        this.shared.updatedLoadMoreSelection = 55;
+        this.isShowLoading = false;
+        this.cd.detectChanges();
+      }
       this.finishInitialLoading();
     }, 1000);
   }

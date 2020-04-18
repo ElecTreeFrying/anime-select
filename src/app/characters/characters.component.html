@@ -12,7 +12,13 @@
 
 </div>
 
-<app-loading-box *ngIf="characters.length === 0"></app-loading-box>
+<app-loading-box *ngIf="characters.length === 0 && isShowLoading"></app-loading-box>
+
+<div class="no-content wrap" *ngIf="characters.length === 0 && !isShowLoading">
+  
+  <p>No characters available</p>
+
+</div>
 
 <div class="content wrap">
 

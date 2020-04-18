@@ -74,6 +74,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.isShowLoadMore = true;
       } else if (res === -1) {
         this.isShowLoadMore = false;
+      } else if (res === 55) {
+        this.isMaxCharacters = false;
       }
     });
   }

@@ -20,10 +20,21 @@
 
 }
 
+.no-content {
+  height: 250px;
+  display: flex;
+
+  p {
+    margin: auto;
+    font-size: 2em;
+  }
+}
+
 .content {
+  margin: auto;
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   margin-bottom: 50px;
   
   .mat-ripple {

@@ -51,7 +51,7 @@
       <span *ngIf="genreText.charCodeAt(0) === 10 || genreText === ''">Show less</span>
     </button>
     <mat-chip-list *ngIf="this.isMenuOpened.genre">
-      <mat-chip *ngFor="let genre of (genres | async) | arrayFilter: genreText" (click)="searchByGenre(genre)">
+      <mat-chip *ngFor="let genre of (genres | async) | arrayFilter: genreText;let i = index" (click)="searchByGenre(genre, i)" [ngClass]="{ 'selected': i === selectedGenreIndex }">
         <span>{{ genre?.name }}</span>
       </mat-chip>
     </mat-chip-list>
