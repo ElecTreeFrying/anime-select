@@ -20,11 +20,16 @@
       display: flex;
       flex-wrap: row wrap;
       font-family: 'Staatliches', cursive;
+      cursor: pointer;
       transform: translateY(-40px);
       letter-spacing: 4px;
       font-size: 3em;
       height: 37px;
   
+      &:focus {
+        outline: none;
+      }
+
       .mat-icon {
         font-size: 40px;
         margin-right: 28px;

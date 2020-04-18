@@ -10,14 +10,15 @@
   }
 }
 
-.featured {
+.featured, .trending {
   background-color: #101010;
   padding: 48px 0;
   min-height: calc(100vh - 64px - 200px);
 
   .heading {
     font-family: 'Staatliches', cursive;
-    font-size: 5em;
+    // font-size: 5em;
+    font-size: 3em;
     margin-top: 25px;
     margin-bottom: 50px;
   }
@@ -25,6 +26,10 @@
   .mat-divider {
     margin: 16px 0;
   }
+}
+
+.trending {
+  padding-bottom: 0;
 }
 
 .content {

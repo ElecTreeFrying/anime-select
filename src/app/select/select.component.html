@@ -1,4 +1,46 @@
 
+<div class="trending anime">
+  
+  <div class="wrap heading">
+    <p class="head">Trending Anime</p>
+  </div>
+
+  <div class="wrap content">
+    <div matRipple *ngFor="let anime of (trendingAnime | async)" #card [tilt]="card" [cardDetails]="anime" (click)="selectAnime(anime)">
+      <mat-card>
+        <img 
+          mat-card-image 
+          [defaultImage]="'assets/images/no-image.png'" 
+          [errorImage]="'assets/images/no-image.png'" 
+          [lazyLoad]="anime?.posterImage?.small" 
+          [alt]="anime?.slug">
+      </mat-card>
+    </div>
+  </div>
+
+</div>
+
+<div class="trending manga">
+  
+  <div class="wrap heading">
+    <p class="head">Trending Manga</p>
+  </div>
+
+  <div class="wrap content">
+    <div matRipple *ngFor="let manga of (trendingManga | async)" #card [tilt]="card" [cardDetails]="manga" (click)="selectAnime(manga)">
+      <mat-card>
+        <img 
+          mat-card-image 
+          [defaultImage]="'assets/images/no-image.png'" 
+          [errorImage]="'assets/images/no-image.png'" 
+          [lazyLoad]="manga?.posterImage?.small" 
+          [alt]="manga?.slug">
+      </mat-card>
+    </div>
+  </div>
+
+</div>
+
 <div class="featured">
   
   <div class="wrap heading">

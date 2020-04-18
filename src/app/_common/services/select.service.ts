@@ -64,7 +64,13 @@ export class SelectService {
     setTimeout(() => this.navigateToCharacters(anime, type), 1000);
   }
 
-  delayed(character: string): Observable<any[]> {
+  trending(type: boolean) {
+    return this.http.get(`https://kitsu.io/api/edge/trending/${type ? 'anime' : 'manga'}`).pipe(
+      map(res => res['data'].map(e => this.clean(e, type)))
+    )
+  }
+
+  private delayed(character: string): Observable<any[]> {
     return merge(
       this.step(character, 0, 20),
       this.step(character, 20, 50).pipe( delay(100) ),
@@ -72,7 +78,7 @@ export class SelectService {
     )
   }
 
-  step(character: string, start: number, end: number) {
+  private step(character: string, start: number, end: number) {
     return this.http.get(character).pipe(
       map((res) =>
         end !== 0 
@@ -91,6 +97,60 @@ export class SelectService {
       mergeMap((e: any) => e),
       toArray()
     );
+  }
+
+  private clean(res: any, type: boolean) {
+
+    delete res['id'];
+    delete res['type'];
+    
+    delete res['attributes']['createdAt'];
+    delete res['attributes']['updatedAt'];
+    delete res['attributes']['coverImageTopOffset'];
+    delete res['attributes']['ratingFrequencies'];
+    delete res['attributes']['userCount'];
+    delete res['attributes']['favoritesCount'];
+    delete res['attributes']['nextRelease'];
+    delete res['attributes']['tba'];
+
+    delete res['attributes']['posterImage']['meta'];
+    delete res['attributes']['coverImage'];
+
+    res['relationships']['genres'] = res['relationships']['genres']['links']['self'];
+    res['relationships']['categories'] = res['relationships']['categories']['links']['self'];
+    res['relationships']['staff'] = res['relationships']['staff']['links']['self'];
+    res['relationships']['productions'] = res['relationships']['productions']['links']['self'];
+    res['relationships']['characters'] = res['relationships']['characters']['links']['self'];
+
+    delete res['relationships']['installments'];
+    delete res['relationships']['mappings'];
+    delete res['relationships']['reviews'];
+    delete res['relationships']['mediaRelationships'];
+    delete res['relationships']['quotes'];
+    delete res['relationships']['castings'];
+
+
+    if (type) {
+      
+      delete res['attributes']['totalLength:'];
+      delete res['attributes']['nsfw'];
+      
+      res['relationships']['episodes'] = res['relationships']['episodes']['links']['self'];
+    
+      delete res['relationships']['animeProductions'];
+      delete res['relationships']['animeCharacters'];
+      delete res['relationships']['animeStaff'];
+      delete res['relationships']['streamingLinks'];
+    } else {
+      
+      res['relationships']['episodes'] = res['relationships']['chapters']['links']['self'];
+      res['relationships']['chapters'] = res['relationships']['chapters']['links']['self'];
+   
+      delete res['relationships']['mangaCharacters'];
+      delete res['relationships']['mangaStaff'];
+    }
+
+    return { ...res['attributes'], links: res['relationships'] };
   }
 
 }

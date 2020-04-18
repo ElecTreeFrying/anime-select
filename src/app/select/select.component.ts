@@ -19,6 +19,8 @@ export class SelectComponent implements OnInit, OnDestroy {
   @ViewChild('overlay') public component: TemplateRef<any>; 
   
   media: any;
+  trendingAnime: any;
+  trendingManga: any;
   overlayRef: OverlayRef;
 
 
@@ -33,6 +35,8 @@ export class SelectComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.media = this.select.media;
+    this.trendingAnime = this.select.trending(true);
+    this.trendingManga = this.select.trending(false);
     this.shared.updatedSelectRouteSSelection = 'select';
     this.normalize();
   }
