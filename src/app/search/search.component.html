@@ -1,4 +1,9 @@
 
+<mat-menu #randomMenu="matMenu" (closed)="this.isMenuOpened.random = false">
+  <button mat-menu-item (click)="searchRandom('anime')">Anime</button>
+  <button mat-menu-item (click)="searchRandom('manga')">Manga</button>
+</mat-menu>
+
 <div class="wrap content">
   
   <div class="header">
@@ -6,6 +11,16 @@
     <div class="options">
       <button mat-raised-button [ngClass]="{ 'selected': searchSelection === 'anime' }" (click)="selectOption(true)">Anime</button>
       <button mat-raised-button [ngClass]="{ 'selected': searchSelection === 'manga title' }" (click)="selectOption(false)">Manga</button>
+      <button mat-raised-button (click)="toggleGenre()">
+        <span>Genre</span>
+        <mat-icon *ngIf="!isMenuOpened.genre">arrow_drop_down</mat-icon>
+        <mat-icon *ngIf="isMenuOpened.genre">arrow_drop_up</mat-icon>
+      </button>
+      <button mat-raised-button [matMenuTriggerFor]="randomMenu" (click)="isMenuOpened.random = true">
+        <span>Random</span>
+        <mat-icon *ngIf="!isMenuOpened.random">arrow_drop_down</mat-icon>
+        <mat-icon *ngIf="isMenuOpened.random">arrow_drop_up</mat-icon>
+      </button>
     </div>
 
     <div class="break"></div>
@@ -14,13 +29,32 @@
       <button mat-raised-button (click)="searchAnime()">Search</button>
       <mat-form-field color="accent">
         <mat-label>Enter {{ searchSelection }}</mat-label>
-        <input matInput type="text" autocomplete="off" [(ngModel)]="text" #input="ngModel" (keypress)="onEnter($event)">
-        <button mat-icon-button matSuffix (click)="text = ''" *ngIf="text.length > 0">
+        <input matInput type="text" autocomplete="off" [(ngModel)]="searchText" #search="ngModel" (keypress)="onEnter($event)">
+        <button mat-icon-button matSuffix (click)="searchText = ''" *ngIf="searchText.length > 0">
           <mat-icon>clear</mat-icon>
         </button>
       </mat-form-field>
     </div>
 
+  </div>
+
+  <div class="genres" [ngStyle]="{ 'margin-bottom': (this.isMenuOpened.genre ? '12px' : '0px') }">
+    <mat-form-field color="accent" *ngIf="this.isMenuOpened.genre">
+      <mat-label>Filter genre</mat-label>
+      <input matInput type="text" autocomplete="off" [(ngModel)]="genreText" [disabled]="isGenreInputDisabled" (ngModelChange)="genreInputValueChanges($event)" #genre="ngModel">
+      <button mat-icon-button matSuffix (click)="genreText = ''" *ngIf="genreText.length > 0 && !(genreText.charCodeAt(0) === 10 || genreText.charCodeAt(0) === 13)">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
+    <button mat-raised-button [disabled]="isGenreInputDisabled" *ngIf="this.isMenuOpened.genre" (click)="toggleShowGenre()">
+      <span *ngIf="genreText.charCodeAt(0) === 13">Show all</span>
+      <span *ngIf="genreText.charCodeAt(0) === 10 || genreText === ''">Show less</span>
+    </button>
+    <mat-chip-list *ngIf="this.isMenuOpened.genre">
+      <mat-chip *ngFor="let genre of (genres | async) | arrayFilter: genreText" (click)="searchByGenre(genre)">
+        <span>{{ genre?.name }}</span>
+      </mat-chip>
+    </mat-chip-list>
   </div>
 
   <mat-divider></mat-divider>

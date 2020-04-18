@@ -9,12 +9,15 @@ import { LoadingBoxComponentModule } from '../_common/modules/loading-box-compon
 import { TiltDirectiveModule } from '../_common/modules/tilt-directive.module';
 import { CardDetailsDirectiveModule } from '../_common/modules/card-details-directive.module';
 
+import { ArrayFilterPipe } from '../_common/pipes/array-filter.pipe';
+
 import { SearchComponent } from './search.component';
 
 
 @NgModule({
   declarations: [
-    SearchComponent
+    SearchComponent,
+    ArrayFilterPipe
   ],
   imports: [
     CommonModule,

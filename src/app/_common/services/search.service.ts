@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, mergeMap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { map, mergeMap, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 
 @Injectable({
@@ -11,6 +12,19 @@ export class SearchService {
   constructor(
     private http: HttpClient
   ) { }
+
+  get genres() {
+    return this.http.get('https://kitsu.io/api/edge/genres?page%5Blimit%5D=62').pipe(
+      map((res) => res['data']),
+      map((genres) => {
+        return genres.map((genre) => ({ 
+          id: genre['id'], 
+          name: genre['attributes']['name'],
+          slug: genre['attributes']['name']
+        }))
+      })
+    )
+  }
 
   searchStart(text: string, selection: string) {
 
@@ -34,6 +48,26 @@ export class SearchService {
     );
   }
 
+  searchByGenre(genre: string, selection: string) {
+
+    const encode = encodeURI(genre).toLowerCase();
+
+    let link; 
+    
+    if (selection.includes('anime')) {
+      link = `https://kitsu.io/api/edge/anime?filter[genres]=${encode}`;
+    } else if (selection.includes('manga')) {
+      link = `https://kitsu.io/api/edge/manga?filter[genres]=${encode}`;
+    }
+
+    return this.http.get(link).pipe(
+      map((search) => ({
+        data: search['data'].map(res => this.clean(res, selection)),
+        next: search['links']['next']
+      }))
+    );
+  }
+
   searchNext(link: string, selection: string) {
     return this.http.get(link).pipe(
       map((search) => ({
@@ -43,7 +77,22 @@ export class SearchService {
     );
   }
 
-  clean(res: any, selection: string) {
+  searchRandom(selection: string) {
+
+    return this.http.get(`https://kitsu.io/api/edge/${selection}`).pipe(
+      map((res) => res['meta']['count']),
+      mergeMap((count) => {
+        const id = this.randomInteger(0, count);
+        return this.http.get(`https://kitsu.io/api/edge/${selection}/${id}`).pipe(
+          map(e => this.clean(e['data'], selection)),
+          catchError((err, caught) => this.handleError(err, selection))
+        )
+      })
+    );
+
+  }
+
+  private clean(res: any, selection: string) {
 
     delete res['id'];
     delete res['type'];
@@ -92,12 +141,17 @@ export class SearchService {
    
       delete res['relationships']['mangaCharacters'];
       delete res['relationships']['mangaStaff'];
-    } else if (selection.includes('character')) {
-
-
     }
 
     return { ...res['attributes'], links: res['relationships'] };
   }
+
+  private randomInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  private handleError(error: HttpErrorResponse, selection: string) {
+    return this.searchRandom(selection);
+  };
 
 }

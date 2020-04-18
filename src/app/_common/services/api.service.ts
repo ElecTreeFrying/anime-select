@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, mergeMap, distinct, toArray } from 'rxjs/operators'
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { sortBy } from 'lodash';
 
 import { SharedService } from './shared.service';

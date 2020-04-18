@@ -31,9 +31,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   isShowLoadMore: boolean;
   exists: boolean;
   isMenuOpened: boolean;
-  isCharLoading: boolean;
   isSelectRoute: string;
   isMaxCharacters: boolean;
+  isFooterPage: boolean;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -53,9 +53,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.isShowScrollTop = false;
     this.exists = false;
     this.isMenuOpened = false;
-    this.isCharLoading = false;
     this.isSelectRoute = 'select';
     this.isMaxCharacters = false;
+    this.isFooterPage = false;
     
     this.shared.count = 0;
   }
@@ -67,10 +67,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (!res) return;
       this.isRunning = false;
       this.isLoadingAll = false;
-    });
-
-    this.shared.navigating.subscribe((res) => {
-      this.isCharLoading = res >= 1;
     });
 
     this.shared.loadMore.subscribe((res) => {
@@ -93,6 +89,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.shared.selectRoute.subscribe((res: string) => {
       this.isSelectRoute = res;
       this.isMaxCharacters = true;
+      this.isFooterPage = res === 'about' || res === 'contact' || res === 'report-issue';
       this.scroll.scrollTo({ top: 0 });
       res === 'loop' ? (this.isMaxCharacters = false) : 0;
       this.cd.detectChanges();

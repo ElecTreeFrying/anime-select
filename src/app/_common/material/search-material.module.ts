@@ -6,6 +6,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
@@ -16,7 +18,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatRippleModule,
     MatDividerModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatMenuModule,
+    MatChipsModule
   ]
 })
 export class SearchMaterialModule { }

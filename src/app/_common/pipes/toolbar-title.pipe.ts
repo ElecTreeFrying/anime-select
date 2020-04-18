@@ -9,7 +9,6 @@ export class ToolbarTitlePipe implements PipeTransform {
     if (value === 'x') {
       return localStorage.getItem('anime') !== '';
     } else if (value === '') {
-      console.log(localStorage.getItem('anime'));
       return localStorage.getItem('anime');
     }
   }

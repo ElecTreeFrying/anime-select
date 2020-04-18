@@ -30,7 +30,7 @@
     
   </div>
 
-  <div class="dialog-preview" [ngStyle]="{ 'height': '508px + 28px' + mediaType === 'anime' ? '' : ' - 26px' }">
+  <div class="dialog-preview" [ngClass]="{ 'anime-height': mediaType === 'anime', 'manga-height': mediaType === 'manga' }">
 
     <img
       [defaultImage]="'assets/images/no-image.png'" 
@@ -61,7 +61,7 @@
 
   </div>
 
-  <div class="dialog-info" [ngStyle]="{ 'height': '508px + 28px' + mediaType === 'anime' ? '' : ' - 26px' }" data-simplebar #simplebar>
+  <div class="dialog-info" [ngClass]="{ 'anime-height': mediaType === 'anime', 'manga-height': mediaType === 'manga' }" data-simplebar #simplebar>
     
     <mat-divider class="header" *ngIf="isShowHeader"></mat-divider>
 

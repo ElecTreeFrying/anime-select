@@ -21,6 +21,7 @@ export class SharedService {
   private searchCharacterSource = new BehaviorSubject(0);
   private loadingMoreSource = new BehaviorSubject(0);
   private resetSearchSource = new BehaviorSubject(0);
+  private loadingGenreSource = new BehaviorSubject(0);
 
   loadCount = this.loadCountSource.asObservable();
   triggerRefresh = this.triggerRefreshSource.asObservable();
@@ -33,6 +34,7 @@ export class SharedService {
   searchCharacter = this.searchCharacterSource.asObservable();
   loadingMore = this.loadingMoreSource.asObservable();
   resetSearch = this.resetSearchSource.asObservable();
+  loadingGenre = this.loadingGenreSource.asObservable();
 
   interval: any;
   timeout: any;
@@ -118,6 +120,10 @@ export class SharedService {
 
   set updatedResetSourceSelection(data: any) {
     this.resetSearchSource.next(data);
+  }
+
+  set updatedLoadingGenreSelection(data: any) {
+    this.loadingGenreSource.next(data);
   }
 
 }

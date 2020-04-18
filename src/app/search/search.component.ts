@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
 import { 
   Overlay,
   OverlayRef
@@ -25,15 +25,20 @@ export class SearchComponent implements OnInit, OnDestroy {
   subscriptions = {};
 
   anime: any[];
-  text: string;
+  genres: any;
+  searchText: string;
+  genreText: string;
   next: string;
   searchSelection: string;
-  
+  isMenuOpened: any;
+  isGenreInputDisabled: boolean;
+
   private _anime: any;
 
   constructor(
     private overlay: Overlay,
     private viewContainerRef: ViewContainerRef,
+    private cd: ChangeDetectorRef, 
 
     private search: SearchService,
     private select: SelectService,
@@ -43,11 +48,15 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.anime = [];
-    this.text = '';
+    this.searchText = '';
+    this.genreText = '';
     this.searchSelection = 'anime';
+    this.isMenuOpened = {};
+    this.isGenreInputDisabled = true;
     this.shared.mangaType = this.searchSelection;
     this.shared.updatedSelectRouteSSelection = 'search';
     this.shared.updatedLoadMoreSelection = -1;
+    this.genres = this.search.genres;
 
     this.subscriptions['loadMore'] = this.shared.loadMore.subscribe((res) => {
       if (res !== 1) return;
@@ -59,9 +68,12 @@ export class SearchComponent implements OnInit, OnDestroy {
       if (this.anime.length > 0) {
         this.snotify._notify('Reset complete', 'success');
       } 
-      this.anime = [];
-      this.text = '';
-      this.shared.updatedLoadMoreSelection = -1;
+      this.reset();
+    });
+
+    this.subscriptions['loadingGenre'] = this.shared.loadingGenre.subscribe((res) => {
+      this.isGenreInputDisabled = res === 2 ? false : true;
+      this.cd.detectChanges();
     });
   }
   
@@ -71,39 +83,78 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.subscriptions['loadMore'] ? this.subscriptions['loadMore'].unsubscribe() : 0;
     this.subscriptions['resetSearch'] ? this.subscriptions['resetSearch'].unsubscribe() : 0;
-    this.subscriptions['_anime'] ? this.subscriptions['_anime'].unsubscribe() : 0;
-    this.subscriptions['searchNext'] ? this.subscriptions['searchNext'].unsubscribe() : 0;
+    this.subscriptions['loadingGenre'] ? this.subscriptions['loadingGenre'].unsubscribe() : 0;
   }
 
   selectAnime(anime: any) {
-    this.select.processSelected(anime, 'manga');
+    const type = this.searchSelection.split(' ')[0];
+    this.select.processSelected(anime, type);
     this.attachOverlay();
   }
 
   searchAnime() {
-    if (this.text === '') {
+    if (this.searchText === '') {
       return this.snotify._notify('Empty search fields.', 'error');
     }
 
-    this._anime = this.search.searchStart(this.text, this.searchSelection);
+    this._anime = this.search.searchStart(this.searchText, this.searchSelection);
     this.snotify.searchNotify();
     this.shared.updatedSearchCharacterSelection = 1;
     
-    this.subscriptions['_anime'] = this._anime.subscribe((res) => {
+    const $ = this._anime.subscribe((res) => {
+
+      // console.log(res);
+
       this.anime = res.data;
       this.next = res.next;
-      this.shared.updatedLoadMoreSelection = 2;
+      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
       this.shared.updatedSearchCharacterSelection = 2;
+      $.unsubscribe();
+    });
+  }
+
+  searchByGenre(genre: any) {
+
+    this.snotify.searchNotify();
+    this.shared.updatedSearchCharacterSelection = 1;
+
+    const $ = this.search.searchByGenre(genre.name, this.searchSelection).subscribe((res) => {
+
+      // console.log(res);
+
+      this.anime = res.data;
+      this.next = res.next;
+      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
+      this.shared.updatedSearchCharacterSelection = 2;
+      $.unsubscribe();
     });
   }
 
   searchNext() {
     
-    console.log(this.next, this.searchSelection);
-    this.subscriptions['searchNext'] = this.search.searchNext(this.next, this.searchSelection).subscribe((res) => {
+    const $ = this.search.searchNext(this.next, this.searchSelection).subscribe((res) => {
+
+      // console.log(res);
+
       this.anime = this.anime.concat(res.data);
       this.next = res.next;
+      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
       this.shared.updatedLoadingMoreSelection = 2;
+      $.unsubscribe();
+    });
+  }
+
+  searchRandom(selection: string) {
+
+    this.snotify.searchNotify();
+    this.shared.updatedSearchCharacterSelection = 1;
+
+    const $ = this.search.searchRandom(selection).subscribe((res) => {
+
+      this.reset();
+      this.anime = [ res ];
+      this.shared.updatedSearchCharacterSelection = 2;
+      $.unsubscribe();
     });
   }
 
@@ -123,11 +174,29 @@ export class SearchComponent implements OnInit, OnDestroy {
     })
   }
 
+  toggleGenre() {
+    this.isMenuOpened.genre = !this.isMenuOpened.genre; 
+    this.genreText = '\r';
+  }
+
+  toggleShowGenre() {
+
+    this.genreText = 
+      this.genreText === '\n' ? '\r'
+      : this.genreText === '\r' ? '\n'
+      : this.genreText === '' ? '\r'
+      : this.genreText;
+  }
+
   onEnter(event: KeyboardEvent) {
-    
     if (event.keyCode !== 13) return;
     event.preventDefault();
     this.searchAnime();
+    this.reset();
+  }
+
+  genreInputValueChanges(event) {
+    this.cd.detectChanges();
   }
 
   private attachOverlay() {
@@ -140,6 +209,14 @@ export class SearchComponent implements OnInit, OnDestroy {
     });
 
     this.overlayRef.attach(portal);
+  }
+
+  private reset() {
+    this.isMenuOpened.genre = false;
+    this.anime = [];
+    this.searchText = '';
+    this.genreText = '';
+    this.shared.updatedLoadMoreSelection = -1;
   }
 
 }

@@ -10,13 +10,13 @@
       <div class="break"></div>
       <button mat-button *ngIf="isSelectRoute === 'select'" routerLink="/search">Search anime</button>
       <button mat-button *ngIf="isSelectRoute === 'search'" routerLink="/">Home</button>
-      <button mat-button *ngIf="anime" routerLink="/">Home</button>
-      <div class="vertical" *ngIf="anime"></div>
-      <button mat-button *ngIf="anime" routerLink="/search">Search anime</button>
+      <button mat-button *ngIf="anime || isFooterPage" routerLink="/search">Search anime</button>
+      <div class="vertical" *ngIf="anime || isFooterPage"></div>
+      <button mat-button *ngIf="anime || isFooterPage" routerLink="/">Home</button>
       <div class="vertical" *ngIf="anime"></div>
       <button mat-button *ngIf="anime" (click)="about()">About</button>
       <button mat-icon-button [matMenuTriggerFor]="menu" (click)="isMenuOpened = true" *ngIf="anime || isSelectRoute === 'search'">
-        <mat-icon *ngIf="!isMenuOpened">arrow_drop_down</mat-icon>
+      <mat-icon *ngIf="!isMenuOpened">arrow_drop_down</mat-icon>
         <mat-icon *ngIf="isMenuOpened">arrow_drop_up</mat-icon>
       </button>
     </div>

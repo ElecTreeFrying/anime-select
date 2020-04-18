@@ -20,6 +20,10 @@
   .mat-raised-button {
     margin: 0 10px 0 0;
     height: 36px;
+
+    .mat-icon {
+      transform: translateX(8px);
+    }
   }
 
   .selected {
@@ -27,7 +31,7 @@
   }
 
   .options {
-    padding-bottom: 12.5px;
+    padding-bottom: 5px;
   }
 
   .break {
@@ -41,6 +45,13 @@
     .mat-form-field {
       width: 300px;
     }
+  }
+}
+
+.genres {
+
+  .mat-raised-button {
+    margin-left: 10px;
   }
 }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SnotifyPosition } from 'ng-snotify';
@@ -34,6 +34,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   stringLength: number;
 
   constructor(
+    private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private shared: SharedService,
     private snotify: SnotifyService
@@ -45,6 +46,7 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     const type = Object.keys(queryParams)[0];
     this.mediaType = type;
     this.mediaTypeString = type === 'anime' ? 'Episodes' : 'Chapters';
+    this.cd.detectChanges();
 
     if (this.shared.anime) {
       const about = this.shared.anime;
@@ -59,8 +61,6 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
         .replace("\r\n", '<br><br>')
         .replace(".\r\n", '.<br><br>');
       this.about = parse;
-
-      console.log(parse);
     }
 
     this.isShowHeader = false;
