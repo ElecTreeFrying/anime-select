@@ -4,7 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { 
   Overlay,
-  OverlayRef
+  OverlayRef,
+  ScrollStrategyOptions
 } from '@angular/cdk/overlay';
 import { sortBy, uniqBy } from 'lodash';
 
@@ -31,6 +32,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
   characters: any[];
   _characters: any[];
   isShowLoading: boolean;
+  interval: any;
 
   constructor(
     @Inject(FormBuilder) public fb: FormBuilder,
@@ -103,6 +105,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
         hasBackdrop: true
       }).afterClosed().subscribe((res) => {
         this.shared.updatedSelectRouteSSelection = 'loop';
+        this.selectCharacter(null, true)
       });
     }, 200);
   }
@@ -114,6 +117,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
     this.overlayRef.detach();
     this.overlayRef.dispose();
     this.snotify.clear();
+    clearInterval(this.interval);
   }
 
   attachOverlay() {
@@ -129,13 +133,21 @@ export class CharactersComponent implements OnInit, OnDestroy {
     this.overlayRef.attach(portal);
   }
 
-  selectCharacter(character: any) {
+  selectCharacter(character: any, type: boolean = false) {
+
+    if (type) {
+      // resolves the weird bug
+      return this.interval = setInterval(() => {}, 500);
+    }
+
     this.dialog.open(CharacterComponent, { 
       disableClose: false,
       hasBackdrop: true,
       id: character.id,
       closeOnNavigation: true
     });
+
+
   }
 
   freshLoad(initial: boolean = false) {

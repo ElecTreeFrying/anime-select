@@ -9,6 +9,7 @@ import { LoadingBoxComponentModule } from '../_common/modules/loading-box-compon
 import { IdToImagePipeModule } from '../_common/modules/id-to-image-pipe.module';
 import { SliceStringPipeModule } from '../_common/modules/slice-string-pipe.module';
 import { AnimeDatePipeModule } from '../_common/modules/anime-date-pipe.module';
+import { ArrayFilterPipeModule } from '../_common/modules/array-filter-pipe.module';
 import { TiltDirectiveModule } from '../_common/modules/tilt-directive.module';
 
 import { CharactersComponent } from './characters.component';
@@ -33,6 +34,7 @@ import { FilterSubtypePipe } from '../_common/pipes/filter-subtype.pipe';
     IdToImagePipeModule,
     SliceStringPipeModule,
     AnimeDatePipeModule,
+    ArrayFilterPipeModule,
     TiltDirectiveModule,
 
     LazyLoadImageModule

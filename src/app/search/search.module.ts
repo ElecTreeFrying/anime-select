@@ -6,18 +6,16 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { SearchRoutingModule } from './search-routing.module';
 import { SearchMaterialModule } from '../_common/material/search-material.module';
 import { LoadingBoxComponentModule } from '../_common/modules/loading-box-component.module';
+import { ArrayFilterPipeModule } from '../_common/modules/array-filter-pipe.module';
 import { TiltDirectiveModule } from '../_common/modules/tilt-directive.module';
 import { CardDetailsDirectiveModule } from '../_common/modules/card-details-directive.module';
-
-import { ArrayFilterPipe } from '../_common/pipes/array-filter.pipe';
 
 import { SearchComponent } from './search.component';
 
 
 @NgModule({
   declarations: [
-    SearchComponent,
-    ArrayFilterPipe
+    SearchComponent
   ],
   imports: [
     CommonModule,
@@ -25,6 +23,7 @@ import { SearchComponent } from './search.component';
     SearchRoutingModule,
     SearchMaterialModule,
     LoadingBoxComponentModule,
+    ArrayFilterPipeModule,
     TiltDirectiveModule,
     CardDetailsDirectiveModule,
 

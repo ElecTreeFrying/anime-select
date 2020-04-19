@@ -76,6 +76,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.isShowLoadMore = false;
       } else if (res === 55) {
         this.isMaxCharacters = false;
+        this.isLoading = false;
+        this.cd.detectChanges();
       }
     });
   }
@@ -85,14 +87,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.toolbarHeight = this.toolbar._elementRef.nativeElement.clientHeight;
     
     this.shared.navigating.subscribe((res: number) => {
+      res === 0 ? this.scroll.scrollTo({ top: 0 }) : 0;
       res === 2 ? (this.isMaxCharacters = false) : 0;
     });
 
-    this.shared.selectRoute.subscribe((res: string) => {
+    this.shared.selectRoute.subscribe((res: any) => {
       this.isSelectRoute = res;
       this.isMaxCharacters = true;
       this.isFooterPage = res === 'about' || res === 'contact' || res === 'report-issue';
-      this.scroll.scrollTo({ top: 0 });
       res === 'loop' ? (this.isMaxCharacters = false) : 0;
       this.cd.detectChanges();
     });
@@ -101,12 +103,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       const target = <HTMLElement>res.target;
       const maxScroll = target.scrollHeight - target.clientHeight;
       const scrollValue = target.scrollTop;
-
-      if (!this.isMaxCharacters) {
-        this.isMaxCharacters = this.shared.count === (this.shared.ceil - 1);
-        this.isMaxCharacters ? (this.shared.updatedSelectRouteSSelection = '') : 0;
-        this.cd.detectChanges();
-      }
 
       if (scrollValue === 0) {
         this.isScrolling = true;
@@ -121,7 +117,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
       
       if (scrollValue === maxScroll && this.exists && !this.isLoadingAll) {
-        if (this.shared.count === this.shared.ceil) return;
+        if (this.shared.count + 1 === this.shared.ceil || this.shared.count === this.shared.ceil) {
+          this.isMaxCharacters = true;
+          this.shared.updatedSelectRouteSSelection = ''
+          return;
+        };
+        console.log(this.shared.count, this.shared.ceil);
         this.loadCharacters();
       }
       
@@ -135,7 +136,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (this.isLoading) return;
         this.isLoading = true;
         this.cd.detectChanges();
-        if (this.isSelectRoute === 'search') return;
+        if (
+          this.isSelectRoute === 'search' ||
+          this.isSelectRoute === 'about' ||
+          this.isSelectRoute === 'contact' ||
+          this.isSelectRoute === 'report-issue'
+        ) return;
         this.shared.count !== this.shared.ceil ? this.scroll.scrollTo({ bottom: 0 }) : 0;
       }
     });    
@@ -176,7 +182,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   refresh() {
-    if (this.isLoadingAll) return;
+    if (this.isLoadingAll || this.shared.mediaCharacters.length < 20) return;
 
     if (this.isSelectRoute === 'search') {
       return this.shared.updatedResetSourceSelection = 1;
@@ -192,10 +198,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   loadAll() {
     
+    if (this.shared.mediaCharacters.length < 20) return;
+
     if (this.isRunning && this.shared.count !== this.shared.ceil) return;
 
     if (!this.isRunning && this.shared.count === this.shared.ceil) {
-      this.snotify._notify('All characters has been loaded.', 'simple');
+      return this.snotify._notify('All characters has been loaded.', 'simple');
     }
     
     if (!this.isLoadingAll && !this.isRunning && this.shared.count !== this.shared.ceil) {
@@ -221,7 +229,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       closeOnNavigation: true,
       autoFocus: false,
       hasBackdrop: true
-    })
+    });
   }
 
   loadCharacters() {

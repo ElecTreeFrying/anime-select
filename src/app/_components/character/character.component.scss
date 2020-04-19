@@ -1,7 +1,7 @@
 
 // GLOBAL
 
-$dialog-height: 637px;
+$dialog-height: 637px + 20px;
 
 .break {
   flex-basis: 100%;
@@ -159,6 +159,14 @@ $dialog-height: 637px;
       width: 200px;
       border-radius: 4px;
       border: 3px solid black;
+      transition: opacity 1s, filter 1s;
+      opacity: 0;
+      filter: blur(10px);
+    }
+    
+    img.ng-lazyloaded {
+      opacity: 1;
+      filter: blur(0px);
     }
 
     .mat-stroked-button {

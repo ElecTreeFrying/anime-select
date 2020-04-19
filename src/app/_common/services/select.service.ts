@@ -51,7 +51,7 @@ export class SelectService {
 
     const $ = this.delayed(charactersLink).subscribe((res) => {
       char = char.concat(res);
-      this.shared.mediaCharacters = uniqBy(sortBy(char, [ 'id' ]), 'name');
+      this.shared.mediaCharacters = sortBy(char, [ 'id' ]);
       this.shared.ceil = Math.ceil(char.length/20);
       this.shared.floor = Math.floor(char.length/20)*20;
       step === 2 ? sessionStorage.setItem('characters', JSON.stringify(char)) : 0;
@@ -116,11 +116,13 @@ export class SelectService {
     delete res['attributes']['posterImage']['meta'];
     delete res['attributes']['coverImage'];
 
-    res['relationships']['genres'] = res['relationships']['genres']['links']['self'];
-    res['relationships']['categories'] = res['relationships']['categories']['links']['self'];
-    res['relationships']['staff'] = res['relationships']['staff']['links']['self'];
-    res['relationships']['productions'] = res['relationships']['productions']['links']['self'];
-    res['relationships']['characters'] = res['relationships']['characters']['links']['self'];
+    const link = 'https://kitsu.io/api/edge';
+
+    res['relationships']['genres'] = link + res['relationships']['genres']['links']['self'];
+    res['relationships']['categories'] = link + res['relationships']['categories']['links']['self'];
+    res['relationships']['staff'] = link + res['relationships']['staff']['links']['self'];
+    res['relationships']['productions'] = link + res['relationships']['productions']['links']['self'];
+    res['relationships']['characters'] = link + res['relationships']['characters']['links']['self'];
 
     delete res['relationships']['installments'];
     delete res['relationships']['mappings'];
@@ -135,7 +137,7 @@ export class SelectService {
       delete res['attributes']['totalLength:'];
       delete res['attributes']['nsfw'];
       
-      res['relationships']['episodes'] = res['relationships']['episodes']['links']['self'];
+      res['relationships']['episodes'] = link + res['relationships']['episodes']['links']['self'];
     
       delete res['relationships']['animeProductions'];
       delete res['relationships']['animeCharacters'];
@@ -143,8 +145,8 @@ export class SelectService {
       delete res['relationships']['streamingLinks'];
     } else {
       
-      res['relationships']['episodes'] = res['relationships']['chapters']['links']['self'];
-      res['relationships']['chapters'] = res['relationships']['chapters']['links']['self'];
+      res['relationships']['episodes'] = link + res['relationships']['chapters']['links']['self'];
+      res['relationships']['chapters'] = link + res['relationships']['chapters']['links']['self'];
    
       delete res['relationships']['mangaCharacters'];
       delete res['relationships']['mangaStaff'];

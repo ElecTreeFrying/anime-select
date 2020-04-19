@@ -3,29 +3,39 @@
 
   <div class="dialog-details">
 
-    <div class="highlight" matRipple>
-      <p class="text key">AVE. Rating</p>
-      <p class="text value">{{ about?.averageRating }}%</p>
+    <div class="highlight">
+      <div matRipple>
+        <p class="text key">AVE. Rating</p>
+        <p class="text value">{{ about?.averageRating }}%</p>
+      </div>
     </div>
 
-    <div class="highlight" matRipple>
-      <p class="text key">Popularity rank</p>
-      <p class="text value">#{{ about?.popularityRank }}</p>
+    <div class="highlight">
+      <div matRipple>
+        <p class="text key">Popularity rank</p>
+        <p class="text value">#{{ about?.popularityRank }}</p>
+      </div>
     </div>
 
-    <div class="highlight" matRipple>
-      <p class="text key">Rating rank</p>
-      <p class="text value">#{{ about?.ratingRank }}</p>
+    <div class="highlight">
+      <div matRipple>
+        <p class="text key">Rating rank</p>
+        <p class="text value">#{{ about?.ratingRank }}</p>
+      </div>
     </div>
 
-    <div class="highlight" matRipple>
-      <p class="text key">Age rating</p>
-      <p class="text value">"{{ about?.ageRating | uppercase }}"</p>
+    <div class="highlight">
+      <div matRipple>
+        <p class="text key">Age rating</p>
+        <p class="text value">"{{ about?.ageRating | uppercase }}"</p>
+      </div>
     </div>
 
-    <div class="highlight" matRipple>
-      <p class="text key">Age rating guide</p>
-      <p class="text value">{{ about?.ageRatingGuide }}</p>
+    <div class="highlight">
+      <div matRipple>
+        <p class="text key">Age rating guide</p>
+        <p class="text value">{{ about?.ageRatingGuide }}</p>
+      </div>
     </div>
     
   </div>
@@ -33,6 +43,7 @@
   <div class="dialog-preview" [ngClass]="{ 'anime-height': mediaType === 'anime', 'manga-height': mediaType === 'manga' }">
 
     <img
+      width="250"
       [defaultImage]="'assets/images/no-image.png'" 
       [errorImage]="'assets/images/no-image.png'" 
       [lazyLoad]="about?.posterImage?.small" 
@@ -166,33 +177,36 @@
 
     <div class="episode-data" *ngIf="isEpisode">
 
-      <div class="title" *ngIf="(episode | async) !== null">
-        <p class="en">{{ (episode | async)?.canonicalTitle }}</p>
+      <div class="title">
+        <p class="en">{{ episode?.canonicalTitle }}</p>
         <p class="int">
-          <span *ngIf="(episode | async)?.titles?.ja_jp">( </span>
-          <span>{{ (episode | async)?.titles?.ja_jp }}</span>
-          <span *ngIf="(episode | async)?.titles?.ja_jp"> )</span>
+          <span>( </span>
+          <span>{{ episode?.titles?.ja_jp }}</span>
+          <span> )</span>
       </p>
 
       </div>
 
-      <div class="preview" *ngIf="(episode | async)?.thumbnail?.original">
-        <img [src]="(episode | async)?.thumbnail?.original">
+      <div class="preview">
+        <img
+          [defaultImage]="'assets/images/no-image-episode.png'" 
+          [errorImage]="'assets/images/no-image-episode.png'" 
+          [lazyLoad]="episode?.thumbnail?.original">
       </div>
 
-      <div class="synopsis" *ngIf="(episode | async) !== null">
+      <div class="synopsis">
         <p class="details">
           <strong *ngIf="mediaType === 'anime'">Episode: </strong>
           <strong *ngIf="mediaType !== 'anime'">Chapter: </strong>
-          <span>#{{ (episode | async)?.number }}</span>
+          <span>#{{ episode?.number }}</span>
         </p>
         <p class="details">
           <strong *ngIf="mediaType === 'anime'">Air date: </strong>
           <strong *ngIf="mediaType !== 'anime'">Release date: </strong>
-          <span>{{ (episode | async)?.airdate | animeDate }}</span>
+          <span>{{ episode?.airdate | animeDate }}</span>
         </p>
-        <p class="head" *ngIf="(episode | async)?.synopsis">Synopsis</p>
-        <p class="context">{{ (episode | async)?.synopsis }}</p>
+        <p class="head">Synopsis</p>
+        <p class="context">{{ episode?.synopsis }}</p>
       </div>
 
       <button mat-stroked-button (click)="isEpisode = false">Back to previous</button>

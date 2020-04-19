@@ -20,18 +20,20 @@
 }
 
 .dialog-details {
-  flex: 1 0 100%;
+  flex-grow: 1;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-  padding: 24px 24px 0 24px;
-  margin-bottom: 20px;
+  padding: 24px 24px 20px 24px;
   
   .highlight {
     border: 1px solid #8A8A8A;
     border-radius: 4px;
-    padding: 12px 19px;
     cursor: pointer;
+
+    .mat-ripple {
+      padding: 12px 19px;
+    }
 
     .text {
       text-align: center;
@@ -64,7 +66,6 @@
   img {
     border-radius: 4px;
     border: 3px solid black;
-    width: 250px;
     transition: opacity 1s;
     opacity: 0;
   }
@@ -238,6 +239,14 @@
     border-radius: 4px;
     border: 3px solid black;
     margin-bottom: 16px;
+    transition: opacity 1s, filter 1s;
+    opacity: 0;
+    filter: blur(10px);
+  }
+
+  .preview img.ng-lazyloaded {
+    opacity: 1;
+    filter: blur(0px);
   }
 
   .details {

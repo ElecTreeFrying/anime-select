@@ -7,7 +7,7 @@
   
   <div class="dialog-preview">
     
-    <img [src]="data?.id | idToImage" [alt]="data?.slug">
+    <img width="231" [src]="data?.id | idToImage" [alt]="data?.slug">
     <p class="heading en">{{ data?.names?.en }}</p>
     <p class="heading int">({{ data?.names?.ja_jp }})</p>
 
@@ -104,7 +104,11 @@
         <div class="anime">
         
           <div class="preview">
-            <img [src]="anime?.posterImage?.original" [alt]="anime?.slug">
+            <img
+              [defaultImage]="'assets/images/no-image.png'" 
+              [errorImage]="'assets/images/no-image.png'" 
+              [lazyLoad]="anime?.posterImage?.original" 
+              [alt]="anime?.slug">
             <button mat-stroked-button (click)="moreDetails(anime, 'media')">More details</button>
           </div>
     

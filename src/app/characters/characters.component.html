@@ -22,7 +22,7 @@
 
 <div class="content wrap">
 
-  <div matRipple *ngFor="let character of characters; trackBy: trackByID" #card [tilt]="card" (click)="selectCharacter(character)">
+  <div matRipple *ngFor="let character of characters | arrayFilter: 'uniqBy'; trackBy: trackByID" #card [tilt]="card" (click)="selectCharacter(character)">
     <mat-card>
     
       <img 

@@ -150,8 +150,10 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openEpisode(episode: any) {
-    this.episode = episode;
-    this.isEpisode = true;
+    episode.subscribe((res) => {
+      this.episode = res;
+      this.isEpisode = true;
+    });
   }
 
   _category(item: any) {

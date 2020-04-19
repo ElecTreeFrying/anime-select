@@ -46,8 +46,8 @@ export class SelectComponent implements OnInit, OnDestroy {
     this.shared.updatedSelectRouteSSelection = '';
   }
 
-  selectAnime(anime: any) {
-    this.select.processSelected(anime);
+  selectAnime(anime: any, type: string = 'anime') {
+    this.select.processSelected(anime, type);
     this.attachOverlay();
   }
 
