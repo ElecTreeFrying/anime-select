@@ -1,9 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { 
   Overlay,
   OverlayRef
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+
+import { SeasonYearComponent } from '../_components/season-year/season-year.component';
 
 import { SearchService } from '../_common/services/search.service';
 import { SelectService } from '../_common/services/select.service';
@@ -25,18 +28,24 @@ export class SearchComponent implements OnInit, OnDestroy {
   subscriptions = {};
 
   anime: any[];
+  searchFilters: any[]
   genres: any;
+  categories: any;
   searchText: string;
-  genreText: string;
+  chipText: any;
+  toggleState: any;
   next: string;
+  count: number;
   searchSelection: string;
   filters: any[];
   isMenuOpened: any;
-  isGenreInputDisabled: boolean;
+  isInputDisabled: any;
+  selectedChipIndex: any;
 
   private _anime: any;
 
   constructor(
+    private dialog: MatDialog,
     private overlay: Overlay,
     private viewContainerRef: ViewContainerRef,
     private cd: ChangeDetectorRef, 
@@ -47,18 +56,35 @@ export class SearchComponent implements OnInit, OnDestroy {
     private snotify: SnotifyService
   ) { }
 
-  ngOnInit(): void {
+  private initialize() {
     this.anime = [];
+    this.searchFilters = [ { type: 'default', name: 'anime' } ];
     this.searchText = '';
-    this.genreText = '';
+    this.chipText = {};
+    this.chipText.genre = '\r';
+    this.chipText.category = '\r';
+    this.toggleState = {};
+    this.toggleState.genre = 'less';
+    this.toggleState.category = 'less';
     this.searchSelection = 'anime';
     this.filters = [];
     this.isMenuOpened = {};
-    this.isGenreInputDisabled = true;
+    this.isMenuOpened.genre = false;
+    this.isMenuOpened.category = false;
+    this.isInputDisabled = {};
+    this.selectedChipIndex = {};
+    this.isInputDisabled.genre = true;
+    this.isInputDisabled.category = true;
+  }
+  
+  ngOnInit(): void {
+    
+    this.initialize();
     this.shared.mangaType = this.searchSelection;
     this.shared.updatedSelectRouteSSelection = 'search';
     this.shared.updatedLoadMoreSelection = -1;
     this.genres = this.search.genres;
+    this.categories = this.search.categories;
 
     this.subscriptions['loadMore'] = this.shared.loadMore.subscribe((res) => {
       if (res !== 1) return;
@@ -74,7 +100,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions['loadingGenre'] = this.shared.loadingGenre.subscribe((res) => {
-      this.isGenreInputDisabled = res === 2 ? false : true;
+      this.isInputDisabled.genre = res === 2 ? false : true;
+      this.isInputDisabled.category = res === 2 ? false : true;
       this.cd.detectChanges();
     });
   }
@@ -86,6 +113,32 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.subscriptions['loadMore'] ? this.subscriptions['loadMore'].unsubscribe() : 0;
     this.subscriptions['resetSearch'] ? this.subscriptions['resetSearch'].unsubscribe() : 0;
     this.subscriptions['loadingGenre'] ? this.subscriptions['loadingGenre'].unsubscribe() : 0;
+  }
+
+  enterSeasonYear() {
+    const ref = this.dialog.open(SeasonYearComponent, {
+      closeOnNavigation: true
+    });
+
+    const $1 = ref.afterClosed().subscribe(() => {
+      this.snotify.searchNotify();
+      this.shared.updatedSearchCharacterSelection = 1;
+      $1.unsubscribe();
+    });
+
+
+    const $2 = this.search.mergeSeasonYearDialogResult(ref.afterClosed()).subscribe((res) => {
+    
+      // console.log(res);
+
+      this.updateSearchFilter(res.year.toString(), 'advanced');
+      this.anime = res.data;
+      this.next = res.next;
+      this.count = +res.count;
+      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
+      this.shared.updatedSearchCharacterSelection = 2;
+      $2.unsubscribe();
+    });
   }
 
   selectAnime(anime: any) {
@@ -109,27 +162,51 @@ export class SearchComponent implements OnInit, OnDestroy {
 
       this.anime = res.data;
       this.next = res.next;
+      this.count = +res.count;
       this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
       this.shared.updatedSearchCharacterSelection = 2;
       $.unsubscribe();
     });
   }
 
-  selectedGenreIndex: number;
+  searchBy(type: string, item: any, index: number) {
 
-  searchByGenre(genre: any, index: number) {
+    const _type = type === 'genres' ? 'genre' : 'category';
 
-    this.selectedGenreIndex = index;
+    this.selectedChipIndex[type] = index;
+    this.chipText[_type] = item.name;
 
     this.snotify.searchNotify();
     this.shared.updatedSearchCharacterSelection = 1;
 
-    const $ = this.search.searchByGenre(genre.name, this.searchSelection).subscribe((res) => {
+    
+    const $ = this.search.searchBy(type, item.name, this.searchSelection).subscribe((res) => {
+      
+      // console.log(res);
+      
+      this.updateSearchFilter(item.name, _type);
+      this.anime = res.data;
+      this.next = res.next;
+      this.count = +res.count;
+      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
+      this.shared.updatedSearchCharacterSelection = 2;
+      $.unsubscribe();
+    });
+  }
+
+  searchBy2(type: string, search: string) {
+
+    this.snotify.searchNotify();
+    this.shared.updatedSearchCharacterSelection = 1;
+
+    const $ = this.search.searchBy2(type, search).subscribe((res) => {
 
       // console.log(res);
 
+      this.updateSearchFilter(search, 'advanced');
       this.anime = res.data;
       this.next = res.next;
+      this.count = +res.count;
       this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
       this.shared.updatedSearchCharacterSelection = 2;
       $.unsubscribe();
@@ -139,8 +216,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchNext() {
     
     const $ = this.search.searchNext(this.next, this.searchSelection).subscribe((res) => {
-
-      // console.log(res);
 
       this.anime = this.anime.concat(res.data);
       this.next = res.next;
@@ -155,10 +230,13 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.snotify.searchNotify();
     this.shared.updatedSearchCharacterSelection = 1;
 
+    
     const $ = this.search.searchRandom(selection).subscribe((res) => {
-
+      
       this.reset();
+      this.updateSearchFilter('random', 'advanced');
       this.anime = [ res ];
+      this.count = 1;
       this.shared.updatedSearchCharacterSelection = 2;
       $.unsubscribe();
     });
@@ -167,6 +245,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   selectOption(option: boolean) {
     this.searchSelection = option ? 'anime' : 'manga title';
     this.shared.mangaType = this.searchSelection;
+
+    this.updateSearchFilter(this.searchSelection.split(' ')[0], 'default');
 
     const message = 'Enter ' + this.searchSelection;
 
@@ -177,21 +257,35 @@ export class SearchComponent implements OnInit, OnDestroy {
       showProgressBar: true,
       timeout: 5000,
       position: SnotifyPosition.leftBottom
-    })
+    });
   }
 
-  toggleGenre() {
-    this.isMenuOpened.genre = !this.isMenuOpened.genre; 
-    this.genreText = '\r';
+  toggle(type: string) {
+
+    Object.keys(this.isMenuOpened).forEach((key) => {
+      if (type === key) return;
+      this.isMenuOpened[key] = false;
+    });
+
+    this.isMenuOpened[type] = !this.isMenuOpened[type];
+    this.isMenuOpened[type] ? this.snotify.clear() : (this.chipText[type] = '\r');
   }
 
-  toggleShowGenre() {
+  toggleShow(type: string, option: boolean = false) {
+    this.chipText[type] = 
+      this.chipText[type] === '\n' ? '\r'
+      : this.chipText[type] === '\r' ? '\n'
+      : this.chipText[type] === '' ? '\r'
+      : this.chipText[type];
 
-    this.genreText = 
-      this.genreText === '\n' ? '\r'
-      : this.genreText === '\r' ? '\n'
-      : this.genreText === '' ? '\r'
-      : this.genreText;
+    if (this.chipText[type] === '\n') {
+      this.toggleState[type] = 'all';
+    } else if (this.chipText[type] === '\r') {
+      this.toggleState[type] = 'less';
+    }
+
+    if (!option) return;
+    this.chipText[type] = '';
   }
 
   onEnter(event: KeyboardEvent) {
@@ -201,8 +295,42 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.reset(false);
   }
 
-  genreInputValueChanges(event) {
+  detectValueChanges(type: string, option: boolean = false) {
+    
+    if (option) {
+      this.chipText[type] = '';
+    }
+
+    if (this.chipText[type] === '' && this.toggleState[type] === 'all') {
+      this.chipText[type] = '\n';
+    } else if (this.chipText[type] === '' && this.toggleState[type] === 'less') {
+      this.chipText[type] = '\r';
+    }
+
     this.cd.detectChanges();
+  }
+
+  updateSearchFilter(name: string, type: string, option: boolean = false) {
+
+    name = name.toLowerCase();
+
+    if (option && (name !== 'anime' && name !== 'manga')) {
+      return (this.searchFilters = this.searchFilters.filter(e => e['name'] !== name));
+    }
+
+    if (type === 'default') {
+      this.searchFilters = []
+      this.searchFilters.push({ type, name });
+    } else if (type === 'genre') {
+      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'advanced' && e['type'] !== 'category');
+      this.searchFilters.push({ type, name });
+    } else if (type === 'category') {
+      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'advanced' && e['type'] !== 'genre');
+      this.searchFilters.push({ type, name });
+    } else if (type === 'advanced') {
+      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'category' && e['type'] !== 'genre');
+      this.searchFilters.push({ type, name });
+    }
   }
 
   private attachOverlay() {
@@ -219,9 +347,10 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   private reset(option: boolean = true) {
     this.isMenuOpened.genre = false;
+    this.isMenuOpened.category = false;
     this.anime = [];
+    this.searchFilters = [ { type: 'default', name: 'anime' } ];
     this.searchText = option ? '' : this.searchText;
-    this.genreText = '';
     this.shared.updatedLoadMoreSelection = -1;
   }
 

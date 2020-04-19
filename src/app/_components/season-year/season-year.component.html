@@ -1,0 +1,10 @@
+
+<div class="content">
+  <mat-form-field color="accent" appearance="outline">
+    <mat-label>Season year</mat-label>
+    <input matInput type="number" autocomplete="off" maxlength="4" #input (keypress)="onEnter($event)">
+    <button matSuffix mat-icon-button (click)="onPostResult()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+</div>

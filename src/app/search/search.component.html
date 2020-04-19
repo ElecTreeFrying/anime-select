@@ -1,7 +1,24 @@
 
-<mat-menu #randomMenu="matMenu" (closed)="this.isMenuOpened.random = false">
-  <button mat-menu-item (click)="searchRandom('anime')">Anime</button>
-  <button mat-menu-item (click)="searchRandom('manga')">Manga</button>
+<mat-menu #seasonMenu="matMenu">
+  <button mat-menu-item (click)="searchBy2('season', 'spring')">Spring</button>
+  <button mat-menu-item (click)="searchBy2('season', 'summer')">Summer</button>
+  <button mat-menu-item (click)="searchBy2('season', 'fall')">Fall</button>
+  <button mat-menu-item (click)="searchBy2('season', 'winter')">Winter</button>
+</mat-menu>
+
+<mat-menu #ageRatingMenu="matMenu">
+  <button mat-menu-item (click)="searchBy2('ageRating', 'G')">G</button>
+  <button mat-menu-item (click)="searchBy2('ageRating', 'PG')">PG</button>
+  <button mat-menu-item (click)="searchBy2('ageRating', 'R')">R</button>
+  <button mat-menu-item (click)="searchBy2('ageRating', 'R18')">R18</button>
+</mat-menu>
+
+<mat-menu #advanceMenu="matMenu" (closed)="this.isMenuOpened.random = false">
+  <button mat-menu-item (click)="searchRandom('anime')" *ngIf="searchSelection.split(' ')[0] === 'anime'">Random</button>
+  <button mat-menu-item (click)="searchRandom('manga')" *ngIf="searchSelection.split(' ')[0] === 'manga'">Random</button>
+  <button mat-menu-item (click)="enterSeasonYear()" *ngIf="searchSelection.split(' ')[0] === 'anime'">Season year</button>
+  <button mat-menu-item [matMenuTriggerFor]="seasonMenu" *ngIf="searchSelection.split(' ')[0] === 'anime'">Season</button>
+  <button mat-menu-item [matMenuTriggerFor]="ageRatingMenu" *ngIf="searchSelection.split(' ')[0] === 'anime'">Age rating</button>
 </mat-menu>
 
 <div class="wrap content">
@@ -11,13 +28,21 @@
     <div class="options">
       <button mat-raised-button [ngClass]="{ 'selected': searchSelection === 'anime' }" (click)="selectOption(true)">Anime</button>
       <button mat-raised-button [ngClass]="{ 'selected': searchSelection === 'manga title' }" (click)="selectOption(false)">Manga</button>
-      <button mat-raised-button (click)="toggleGenre()">
+      <button mat-raised-button (click)="toggle('genre')">
         <span>Genre</span>
         <mat-icon *ngIf="!isMenuOpened.genre">arrow_drop_down</mat-icon>
         <mat-icon *ngIf="isMenuOpened.genre">arrow_drop_up</mat-icon>
       </button>
-      <button mat-raised-button [matMenuTriggerFor]="randomMenu" (click)="isMenuOpened.random = true">
-        <span>Random</span>
+      <button mat-raised-button (click)="toggle('category')">
+        <span>Category</span>
+        <mat-icon *ngIf="!isMenuOpened.category">arrow_drop_down</mat-icon>
+        <mat-icon *ngIf="isMenuOpened.category">arrow_drop_up</mat-icon>
+      </button>
+      <button mat-raised-button [matMenuTriggerFor]="advanceMenu" (click)="isMenuOpened.random = true">
+        <span>
+          <span>Advance </span>
+          <span>({{ searchSelection.split(' ')[0] }})</span>
+        </span>
         <mat-icon *ngIf="!isMenuOpened.random">arrow_drop_down</mat-icon>
         <mat-icon *ngIf="isMenuOpened.random">arrow_drop_up</mat-icon>
       </button>
@@ -38,26 +63,67 @@
 
   </div>
 
-  <div class="genres" [ngStyle]="{ 'margin-bottom': (this.isMenuOpened.genre ? '12px' : '0px') }">
-    <mat-form-field color="accent" *ngIf="this.isMenuOpened.genre">
-      <mat-label>Filter genre</mat-label>
-      <input matInput type="text" autocomplete="off" [(ngModel)]="genreText" [disabled]="isGenreInputDisabled" (ngModelChange)="genreInputValueChanges($event)" #genre="ngModel">
-      <button mat-icon-button matSuffix (click)="genreText = ''" *ngIf="genreText.length > 0 && !(genreText.charCodeAt(0) === 10 || genreText.charCodeAt(0) === 13)">
+  <div class="genres" *ngIf="isMenuOpened.genre" [ngStyle]="{ 'margin-bottom': (isMenuOpened.genre ? '12px' : '0px') }">
+    <mat-form-field color="accent">
+      <mat-label>
+        <span>Filter genre </span>
+        <span>({{ searchSelection.split(' ')[0] }})</span>
+      </mat-label>
+      <input matInput type="text" autocomplete="off" [(ngModel)]="chipText.genre" [disabled]="isInputDisabled.genre" (ngModelChange)="detectValueChanges('genre')" #genre="ngModel">
+      <button mat-icon-button matSuffix (click)="detectValueChanges('genre', true)" *ngIf="chipText.genre.length > 0 && !(chipText.genre.charCodeAt(0) === 10 || chipText.genre.charCodeAt(0) === 13)">
         <mat-icon>clear</mat-icon>
       </button>
     </mat-form-field>
-    <button mat-raised-button [disabled]="isGenreInputDisabled" *ngIf="this.isMenuOpened.genre" (click)="toggleShowGenre()">
-      <span *ngIf="genreText.charCodeAt(0) === 13">Show all</span>
-      <span *ngIf="genreText.charCodeAt(0) === 10 || genreText === ''">Show less</span>
+    <button mat-raised-button [disabled]="isInputDisabled.genre" (click)="toggleShow('genre')">
+      <span *ngIf="chipText.genre.charCodeAt(0) === 13">Show all</span>
+      <span *ngIf="chipText.genre.charCodeAt(0) === 10 || chipText.genre === ''">Show less</span>
     </button>
-    <mat-chip-list *ngIf="this.isMenuOpened.genre">
-      <mat-chip *ngFor="let genre of (genres | async) | arrayFilter: genreText;let i = index" (click)="searchByGenre(genre, i)" [ngClass]="{ 'selected': i === selectedGenreIndex }">
-        <span>{{ genre?.name }}</span>
+    <mat-chip-list>
+      <mat-chip *ngFor="let item of (genres | async) | arrayFilter: chipText.genre: 'genres'; let i = index" (click)="searchBy('genres', item, i)" [ngClass]="{ 'selected': i === selectedChipIndex.genres }">
+        <span>{{ item?.name }}</span>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+
+  <div class="categories" *ngIf="isMenuOpened.category" [ngStyle]="{ 'margin-bottom': (isMenuOpened.category ? '12px' : '0px') }">
+    <mat-form-field color="accent">
+      <mat-label>
+        <span>Filter category </span>
+        <span>({{ searchSelection.split(' ')[0] }})</span>
+      </mat-label>
+      <input matInput type="text" autocomplete="off" [(ngModel)]="chipText.category" [disabled]="isInputDisabled.category" (ngModelChange)="detectValueChanges('category')" #category="ngModel">
+      <button mat-icon-button matSuffix (click)="detectValueChanges('category', true)" *ngIf="chipText.category.length > 0 && !(chipText.category.charCodeAt(0) === 10 || chipText.category.charCodeAt(0) === 13)">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
+    <button mat-raised-button [disabled]="isInputDisabled.category" (click)="toggleShow('category')">
+      <span *ngIf="chipText.category.charCodeAt(0) === 13">Show all</span>
+      <span *ngIf="chipText.category.charCodeAt(0) === 10 || chipText.category === ''">Show less</span>
+    </button>
+    <mat-chip-list>
+      <mat-chip *ngFor="let item of (categories | async) | arrayFilter: chipText.category: 'categories'; let i = index" (click)="searchBy('categories', item, i)" [ngClass]="{ 'selected': i === selectedChipIndex.categories }">
+        <span>{{ item?.name }}</span>
       </mat-chip>
     </mat-chip-list>
   </div>
 
   <mat-divider></mat-divider>
+
+  <div class="filters">
+
+    <p>Search filters</p>
+
+    <mat-chip-list>
+      <mat-chip *ngFor="let item of searchFilters; let i = index">
+        <span>{{ item?.name }}</span>
+        <mat-icon matChipRemove (click)="updateSearchFilter(item?.name, '', true)">clear</mat-icon>
+      </mat-chip>
+      <mat-chip class="primary-chip">
+        <span>Add filter</span>
+        <mat-icon matChipRemove color="primary">add</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
 
   <div class="no-content" *ngIf="anime.length === 0">
     
@@ -65,16 +131,21 @@
 
   </div>
 
-  <div class="cards">
-    <div matRipple *ngFor="let object of anime" (click)="selectAnime(object)" #card [tilt]="card" [cardDetails]="object">
-      <mat-card>
-        <img 
-          mat-card-image 
-          [defaultImage]="'assets/images/no-image.png'" 
-          [errorImage]="'assets/images/no-image.png'" 
-          [lazyLoad]="object?.posterImage?.small" 
-          [alt]="object?.slug">
-      </mat-card>
+  <div class="results">
+
+    <p *ngIf="anime.length > 0">About {{ count }} results.</p>
+
+    <div class="cards">
+      <div matRipple *ngFor="let object of anime" (click)="selectAnime(object)" #card [tilt]="card" [cardDetails]="object">
+        <mat-card>
+          <img 
+            mat-card-image 
+            [defaultImage]="'assets/images/no-image.png'" 
+            [errorImage]="'assets/images/no-image.png'" 
+            [lazyLoad]="object?.posterImage?.small" 
+            [alt]="object?.slug">
+        </mat-card>
+      </div>
     </div>
   </div>
 

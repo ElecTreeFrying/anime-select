@@ -17,7 +17,7 @@ export class SnotifyService {
     return option;
   }
 
-  loadingGenreNotify() {
+  loadingGenreNotify(type: string) {
     
     const action = Observable.create(observer => {
 
@@ -26,7 +26,7 @@ export class SnotifyService {
         if (res == 1) {
           
           observer.next({
-            body: `Loading genre...`,
+            body: `Loading ${type}...`,
             config: this.config({
               closeOnClick: true
             })
@@ -34,7 +34,7 @@ export class SnotifyService {
         } else if (res == 2) {
   
           observer.next({
-            body: `Loaded all genre!`,
+            body: `Loaded all ${type}!`,
             config: this.config({
               closeOnClick: true,
               pauseOnHover: true,

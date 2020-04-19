@@ -4,6 +4,7 @@ import { uniqBy } from 'lodash';
 import { SharedService } from '../services/shared.service';
 import { SnotifyService } from '../services/snotify.service';
 
+
 @Pipe({
   name: 'arrayFilter'
 })
@@ -14,10 +15,10 @@ export class ArrayFilterPipe implements PipeTransform {
     private snotify: SnotifyService
   ) {}
 
-  transform(value: any[], text?: string): any[] {
+  transform(value: any[], text?: string, type?: string): any[] {
 
     if (value === null) {
-      this.snotify.loadingGenreNotify();
+      this.snotify.loadingGenreNotify(type);
       this.shared.updatedLoadingGenreSelection = 1;
       return [];
     } 

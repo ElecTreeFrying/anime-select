@@ -1,4 +1,8 @@
 
+.bottom-sheet-container {
+  width: 150px;
+}
+
 .overlay-content {
   display: flex;
   background-color: rgba(black, 0.5);
@@ -59,6 +63,18 @@
   }
 }
 
+.filters {
+  margin-top: 16px;
+
+  p {
+    font-size: 0.8em;
+  }
+
+  .primary-chip {
+    background-color: #E91E63;
+  }
+}
+
 .no-content {
   height: 250px;
   display: flex;
@@ -69,11 +85,15 @@
   }
 }
 
+.results P {
+  padding: 20px 0 0 12px;
+  margin-bottom: 6px;
+}
+
 .cards {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-around;
-  padding-top: 20px;
   padding-bottom: 40px;
   
   .mat-ripple {

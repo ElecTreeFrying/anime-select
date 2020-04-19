@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { map, mergeMap, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { Observable, merge } from 'rxjs';
 
 
 @Injectable({
@@ -16,7 +16,7 @@ export class SearchService {
   get genres() {
     return this.http.get('https://kitsu.io/api/edge/genres?page%5Blimit%5D=62').pipe(
       map((res) => res['data']),
-      map((genres) => {
+      map((genres: any[]) => {
         return genres.map((genre) => ({ 
           id: genre['id'], 
           name: genre['attributes']['name'],
@@ -29,13 +29,13 @@ export class SearchService {
   get categories() {
     return this.http.get('https://kitsu.io/api/edge/categories?page%5Blimit%5D=217&page%5Boffset%5D=0').pipe(
       map((res) => res['data']),
-      map((genres) => {
-        return genres.map((genre) => ({ 
-          id: genre['id'], 
-          name: genre['attributes']['title'],
-          slug: genre['attributes']['slug'],
-          description: genre['attributes']['description']
-        }))
+      map((categories: any[]) => {
+        return categories.map((category) => ({ 
+          id: category['id'], 
+          name: category['attributes']['title'],
+          slug: category['attributes']['slug'],
+          description: category['attributes']['description']
+        }));
       })
     )
   }
@@ -57,48 +57,44 @@ export class SearchService {
     return this.http.get(link).pipe(
       map((search) => ({
         data: search['data'].map(res => this.clean(res, selection)),
-        next: search['links']['next']
-      }))
+        next: search['links']['next'],
+        count: search['meta']['count']
+      })),
     );
   }
 
-  searchByGenre(genre: string, selection: string) {
+  searchBy(type: string, item: string, selection: string) {
 
-    const encode = encodeURI(genre).toLowerCase();
+    const encode = encodeURI(item).toLowerCase();
 
     let link; 
     
     if (selection.includes('anime')) {
-      link = `https://kitsu.io/api/edge/anime?filter[genres]=${encode}`;
+      link = `https://kitsu.io/api/edge/anime?filter[${type}]=${encode}`;
     } else if (selection.includes('manga')) {
-      link = `https://kitsu.io/api/edge/manga?filter[genres]=${encode}`;
+      link = `https://kitsu.io/api/edge/manga?filter[${type}]=${encode}`;
     }
 
     return this.http.get(link).pipe(
       map((search) => ({
         data: search['data'].map(res => this.clean(res, selection)),
-        next: search['links']['next']
+        next: search['links']['next'],
+        count: search['meta']['count']
       }))
     );
   }
 
-  searchByCategory(category: string, selection: string) {
+  searchBy2(type: string, search: string) {
 
-    const encode = encodeURI(category).toLowerCase();
-
-    let link; 
+    const link = `https://kitsu.io/api/edge/anime?filter[${type}]=${search}`;
     
-    if (selection.includes('anime')) {
-      link = `https://kitsu.io/api/edge/anime?filter[categories]=${encode}`;
-    } else if (selection.includes('manga')) {
-      link = `https://kitsu.io/api/edge/manga?filter[categories]=${encode}`;
-    }
-
     return this.http.get(link).pipe(
-      map((search) => ({
-        data: search['data'].map(res => this.clean(res, selection)),
-        next: search['links']['next']
-      }))
+      map((_search) => ({
+        data: _search['data'].map(res => this.clean(res, 'anime')),
+        next: _search['links']['next'],
+        count: _search['meta']['count'],
+        year: search
+      })),
     );
   }
 
@@ -123,7 +119,13 @@ export class SearchService {
         )
       })
     );
+  }
 
+  mergeSeasonYearDialogResult(result: Observable<any>) {
+
+    return result.pipe(
+      mergeMap((count) => this.searchBy2('seasonYear', count))
+    );
   }
 
   private clean(res: any, selection: string) {
