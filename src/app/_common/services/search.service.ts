@@ -165,11 +165,12 @@ export class SearchService {
       delete res['attributes']['nsfw'];
       
       res['relationships']['episodes'] = res['relationships']['episodes']['links']['self'];
+      res['relationships']['streamingLinks'] = res['relationships']['streamingLinks']['links']['self'];
     
       delete res['relationships']['animeProductions'];
       delete res['relationships']['animeCharacters'];
       delete res['relationships']['animeStaff'];
-      delete res['relationships']['streamingLinks'];
+
     } else if (selection.includes('manga')) {
       
       res['relationships']['episodes'] = res['relationships']['chapters']['links']['self'];

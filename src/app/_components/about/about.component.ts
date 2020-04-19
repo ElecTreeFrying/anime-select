@@ -42,6 +42,8 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
 
+    console.log(this.shared.anime);
+
     const queryParams = this.route.snapshot.queryParams;
     const type = Object.keys(queryParams)[0];
     this.mediaType = type;

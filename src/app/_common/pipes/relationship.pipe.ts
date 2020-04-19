@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, mergeMap, toArray, switchMap, flatMap } from 'rxjs/operators';
 
 @Pipe({
   name: 'relationship'
@@ -27,6 +27,8 @@ export class RelationshipPipe implements PipeTransform {
       return this.productions(link);   
     } else if (relationship === 'episodes') {
       return this.episodes(link);   
+    } else if (relationship === 'streamingLinks') {
+      return this.streamingLinks(link);
     }
   }
 
@@ -144,6 +146,38 @@ export class RelationshipPipe implements PipeTransform {
           );
         })
       })
+    );
+  }
+
+  streamingLinks(link: string) {
+
+    const streamingLinks = this._streamingLinks(link);
+    const streamers = this._streamingLinks(link, 'streamer')
+
+    return streamingLinks.pipe(
+      flatMap((_streamingLinks: any[]) => streamers.pipe(
+        map((_streamers: any[]) => _streamingLinks
+          .map((value) => ({ url: value['url'] }))
+          .map((value, i) => {
+            const siteName = _streamers[i]['siteName'];
+            return { ...value, siteName };
+        }))
+      ))
+    );
+  }
+
+  private _streamingLinks(link: string, suffix: string = '') {
+    return this.http.get(link).pipe(
+      map((streamingLinks) => streamingLinks['data']),
+      map((data) => data.map(e => +e['id'])),
+      flatMap((data) => {
+        return data.map((id: number) => {
+          return this.http.get(`https://kitsu.io/api/edge/streaming-links/${id}/${suffix}`)
+          .pipe( map(e => e['data']['attributes']) )
+        })
+      }),
+      flatMap((e: any) => e),
+      toArray()
     );
   }
 

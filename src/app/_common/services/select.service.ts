@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { map, mergeMap, toArray, delay } from 'rxjs/operators';
-import { sortBy, uniqBy } from 'lodash';
+import { sortBy } from 'lodash';
 
 import { SharedService } from './shared.service';
 import { Observable, merge } from 'rxjs';
@@ -138,11 +138,11 @@ export class SelectService {
       delete res['attributes']['nsfw'];
       
       res['relationships']['episodes'] = link + res['relationships']['episodes']['links']['self'];
+      res['relationships']['streamingLinks'] = link + res['relationships']['streamingLinks']['links']['self'];
     
       delete res['relationships']['animeProductions'];
       delete res['relationships']['animeCharacters'];
       delete res['relationships']['animeStaff'];
-      delete res['relationships']['streamingLinks'];
     } else {
       
       res['relationships']['episodes'] = link + res['relationships']['chapters']['links']['self'];

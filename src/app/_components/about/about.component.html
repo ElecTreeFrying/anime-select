@@ -170,6 +170,29 @@
               </div>
             </ng-template>
           </mat-expansion-panel>
+          <mat-expansion-panel #links *ngIf="mediaType === 'anime'">
+            <mat-expansion-panel-header (click)="resetLoadMore()">
+              <mat-panel-title>Streaming links</mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              
+              <p *ngIf="!(about?.links | relationship: 'streamingLinks' | async)">
+                Loading...
+              </p>
+              
+              <p *ngIf="(about?.links | relationship: 'streamingLinks' | async)?.length === 0">
+                No streaming links found.
+              </p>
+
+
+              <div *ngFor="let link of (about?.links | relationship: 'streamingLinks' | async)">
+                <a [href]="link?.url" target="_blank">
+                  <span>{{ link?.siteName }}</span>
+                </a>
+              </div>
+
+            </ng-template>
+          </mat-expansion-panel>
         </mat-accordion>
   
       </div>

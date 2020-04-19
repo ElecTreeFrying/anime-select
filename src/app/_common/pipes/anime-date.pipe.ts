@@ -6,8 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class AnimeDatePipe implements PipeTransform {
 
   months = [
-    'Jan', 'Feb', 'Mar', 'April', 'May', 'June', 
-    'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' 
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' 
   ];
 
   transform(value: string): string {
