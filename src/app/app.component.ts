@@ -97,6 +97,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.isFooterPage = res === 'about' || res === 'contact' || res === 'report-issue';
       res === 'loop' ? (this.isMaxCharacters = false) : 0;
       this.cd.detectChanges();
+
+      if (!this.isFooterPage) return;
+      this.scroll.scrollTo({ top: 0 });
     });
 
     this.scroll.elementScrolled().subscribe((res: Event) => {
@@ -122,7 +125,6 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.shared.updatedSelectRouteSSelection = ''
           return;
         };
-        console.log(this.shared.count, this.shared.ceil);
         this.loadCharacters();
       }
       

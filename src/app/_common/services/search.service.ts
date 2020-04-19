@@ -20,7 +20,21 @@ export class SearchService {
         return genres.map((genre) => ({ 
           id: genre['id'], 
           name: genre['attributes']['name'],
-          slug: genre['attributes']['name']
+          slug: genre['attributes']['slug']
+        }))
+      })
+    )
+  }
+
+  get categories() {
+    return this.http.get('https://kitsu.io/api/edge/categories?page%5Blimit%5D=217&page%5Boffset%5D=0').pipe(
+      map((res) => res['data']),
+      map((genres) => {
+        return genres.map((genre) => ({ 
+          id: genre['id'], 
+          name: genre['attributes']['title'],
+          slug: genre['attributes']['slug'],
+          description: genre['attributes']['description']
         }))
       })
     )
@@ -58,6 +72,26 @@ export class SearchService {
       link = `https://kitsu.io/api/edge/anime?filter[genres]=${encode}`;
     } else if (selection.includes('manga')) {
       link = `https://kitsu.io/api/edge/manga?filter[genres]=${encode}`;
+    }
+
+    return this.http.get(link).pipe(
+      map((search) => ({
+        data: search['data'].map(res => this.clean(res, selection)),
+        next: search['links']['next']
+      }))
+    );
+  }
+
+  searchByCategory(category: string, selection: string) {
+
+    const encode = encodeURI(category).toLowerCase();
+
+    let link; 
+    
+    if (selection.includes('anime')) {
+      link = `https://kitsu.io/api/edge/anime?filter[categories]=${encode}`;
+    } else if (selection.includes('manga')) {
+      link = `https://kitsu.io/api/edge/manga?filter[categories]=${encode}`;
     }
 
     return this.http.get(link).pipe(
