@@ -56,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.isSelectRoute = 'select';
     this.isMaxCharacters = false;
     this.isFooterPage = false;
-    
+
     this.shared.count = 0;
   }
 
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
 
     this.toolbarHeight = this.toolbar._elementRef.nativeElement.clientHeight;
-    
+
     this.shared.navigating.subscribe((res: number) => {
       res === 0 ? this.scroll.scrollTo({ top: 0 }) : 0;
       res === 2 ? (this.isMaxCharacters = false) : 0;
@@ -105,7 +105,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.scroll.elementScrolled().subscribe((res: Event) => {
       const target = <HTMLElement>res.target;
       const maxScroll = target.scrollHeight - target.clientHeight;
-      const scrollValue = target.scrollTop;
+      let scrollValue = target.scrollTop;
+
+      if (scrollValue < maxScroll) {
+        scrollValue = Math.ceil(scrollValue);
+      } else if (scrollValue === maxScroll) {
+        scrollValue = target.scrollTop;
+      } else {
+        scrollValue =Math.floor(scrollValue);
+      }
 
       if (scrollValue === 0) {
         this.isScrolling = true;
@@ -113,12 +121,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.isShowScrollTop = false;
       } else {
         this.isScrolling = false;
-      } 
-      
+      }
+
       if (scrollValue > 170) {
         this.isShowScrollTop = true;
       }
-      
+
       if (scrollValue === maxScroll && this.exists && !this.isLoadingAll) {
         if (this.shared.count + 1 === this.shared.ceil || this.shared.count === this.shared.ceil) {
           this.isMaxCharacters = true;
@@ -127,7 +135,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         };
         this.loadCharacters();
       }
-      
+
       if (scrollValue < (maxScroll - 185 - 200)) {
         if (!this.isLoading) return;
         this.isLoading = false;
@@ -142,11 +150,12 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.isSelectRoute === 'search' ||
           this.isSelectRoute === 'about' ||
           this.isSelectRoute === 'contact' ||
-          this.isSelectRoute === 'report-issue'
+          this.isSelectRoute === 'report-issue' ||
+          this.shared.mediaCharacters.length < 20
         ) return;
         this.shared.count !== this.shared.ceil ? this.scroll.scrollTo({ bottom: 0 }) : 0;
       }
-    });    
+    });
   }
 
   reveal(emit: any) {
@@ -200,7 +209,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   loadAll() {
-    
+
     if (this.shared.mediaCharacters.length < 20) return;
 
     if (this.isRunning && this.shared.count !== this.shared.ceil) return;
@@ -208,23 +217,23 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (!this.isRunning && this.shared.count === this.shared.ceil) {
       return this.snotify._notify('All characters has been loaded.', 'simple');
     }
-    
+
     if (!this.isLoadingAll && !this.isRunning && this.shared.count !== this.shared.ceil) {
 
       this.snotify.loadAllCharactersNotify();
-      
+
       this.isLoadingAll = true;
       this.shared.interval = setInterval(() => {
         this.isRunning = true;
         this.loadCharacters();
       }, 500);
-      
+
       this.shared.timeout = setTimeout(() => {
         clearInterval(this.shared.interval);
         this.isRunning = false;
         this.isLoadingAll = false;
       }, (this.shared.ceil - this.shared.count) * 500);
-    } 
+    }
   }
 
   about() {

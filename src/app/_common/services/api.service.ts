@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, mergeMap, distinct, toArray } from 'rxjs/operators'
+import { map, mergeMap, distinct, toArray, filter } from 'rxjs/operators'
 import { BehaviorSubject, Observable } from 'rxjs';
 import { sortBy } from 'lodash';
 
@@ -79,6 +79,7 @@ export class ApiService {
     const pipe = observable.pipe(
       mergeMap((e: any) => e),
       map(e => e['data']),
+      filter(Boolean),
       distinct(e => e['attributes']['canonicalTitle']),
       toArray()
     ).subscribe((data) => {

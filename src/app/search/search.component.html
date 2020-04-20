@@ -48,12 +48,14 @@
   <button mat-menu-item (click)="enterSeasonYear()" *ngIf="searchSelection.split(' ')[0] === 'anime'">Season year</button>
   <button mat-menu-item [matMenuTriggerFor]="seasonMenu" *ngIf="searchSelection.split(' ')[0] === 'anime'">Season</button>
   <button mat-menu-item [matMenuTriggerFor]="ageRatingMenu" *ngIf="searchSelection.split(' ')[0] === 'anime'">Age rating</button>
+  <button mat-menu-item (click)="all('manga')" *ngIf="searchSelection.split(' ')[0] === 'manga'">All</button>
+  <button mat-menu-item (click)="all('anime')" *ngIf="searchSelection.split(' ')[0] === 'anime'">All</button>
 </mat-menu>
 
 <div class="wrap content">
-  
+
   <div class="header">
-    
+
     <div class="options">
       <button mat-raised-button [ngClass]="{ 'selected': searchSelection === 'anime' }" (click)="selectOption(true)">Anime</button>
       <button mat-raised-button [ngClass]="{ 'selected': searchSelection === 'manga title' }" (click)="selectOption(false)">Manga</button>
@@ -159,7 +161,7 @@
   </div>
 
   <div class="no-content" *ngIf="anime.length === 0">
-    
+
     <p>No content available</p>
 
   </div>
@@ -171,11 +173,11 @@
     <div class="cards">
       <div matRipple *ngFor="let object of anime" (click)="selectAnime(object)" #card [tilt]="card" [cardDetails]="object">
         <mat-card>
-          <img 
-            mat-card-image 
-            [defaultImage]="'assets/images/no-image.png'" 
-            [errorImage]="'assets/images/no-image.png'" 
-            [lazyLoad]="object?.posterImage?.small" 
+          <img
+            mat-card-image
+            [defaultImage]="'assets/images/no-image.png'"
+            [errorImage]="'assets/images/no-image.png'"
+            [lazyLoad]="object?.posterImage?.small"
             [alt]="object?.slug">
         </mat-card>
       </div>
@@ -184,7 +186,7 @@
 
 </div>
 
-<ng-template 
+<ng-template
   #overlay
   cdk-overlay-origin
   cdk-connected-overlay>

@@ -158,6 +158,17 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.attachOverlay();
   }
 
+  all(type: string) {
+    this.snotify.searchNotify();
+    this.shared.updatedSearchCharacterSelection = 1;
+    
+    const $ = this.search.all(type).subscribe((res) => {
+      this.updateSearchFilter('all', 'advanced');
+      this.setView(res);
+      $.unsubscribe();
+    });
+  }
+
   searchAnime() {
     if (this.searchText === '') {
       return this.snotify._notify('Empty search fields.', 'error');
@@ -167,6 +178,10 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.shared.updatedSearchCharacterSelection = 1;
     
     const $ = this.search.searchStart(this.searchText, this.searchSelection).subscribe((res) => {
+
+      const name = this.searchText.toLowerCase();
+      this.searchFilters.push({ type: 'search', name });
+      
       this.setView(res);
       $.unsubscribe();
     });
@@ -218,7 +233,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   enterSeasonYear() {
     const ref = this.dialog.open(SeasonYearComponent, {
-      closeOnNavigation: true
+      closeOnNavigation: true,
+      disableClose: true
     });
 
     const $1 = ref.beforeClosed().subscribe(() => {
@@ -237,7 +253,8 @@ export class SearchComponent implements OnInit, OnDestroy {
   addSort() {
     
     const ref = this.dialog.open(SearchChipsComponent, {
-      closeOnNavigation: true
+      closeOnNavigation: true,
+      disableClose: true
     });
 
     const $1 = ref.beforeClosed().subscribe((res: any) => {
@@ -328,6 +345,10 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.isMenuOpened[type] = !this.isMenuOpened[type];
     this.isMenuOpened[type] ? this.snotify.clear() : (this.chipText[type] = '\r');
+
+    if (!this.isMenuOpened[type]) {
+      this.snotify.clear()      
+    }
   }
 
   toggleShow(type: string, option: boolean = false) {
@@ -371,29 +392,36 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   updateSearchFilter(name: string, type: string, option: boolean = false) {
 
+    if (this.sortFilters.length > 0) {
+      this.sortFilters = [];
+      this.anime = [];
+    }
+
     if (type !== 'sort') {
       name = name.toLowerCase();
     }
 
-    if (option && (type === 'genre' || type === 'category' || type === 'advanced')) {
+    if (option && (type === 'genre' || type === 'category' || type === 'advanced' || type === 'search')) {
       this.anime = [];
     } 
 
-    if (option && (name !== 'anime' && name !== 'manga')) {
-      return (this.searchFilters = this.searchFilters.filter(e => e['name'] !== name));
+    if (option && (type !== 'default')) {
+      this.searchFilters = this.searchFilters.filter(e => e['name'] !== name);
+      this.searchFilters.length === 0 ? this.searchFilters.push({ type: 'default', name: this.searchSelection.split(' ')[0] }) : 0; 
+      return;
     }
 
     if (type === 'default') {
       this.searchFilters = []
       this.searchFilters.push({ type, name });
     } else if (type === 'genre') {
-      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'advanced' && e['type'] !== 'category');
+      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'search' && e['type'] !== 'advanced' && e['type'] !== 'category');
       this.searchFilters.push({ type, name });
     } else if (type === 'category') {
-      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'advanced' && e['type'] !== 'genre');
+      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'search' && e['type'] !== 'advanced' && e['type'] !== 'genre');
       this.searchFilters.push({ type, name });
     } else if (type === 'advanced') {
-      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'category' && e['type'] !== 'genre');
+      this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'search' && e['type'] !== 'category' && e['type'] !== 'genre');
       this.searchFilters.push({ type, name });
     } else if (type === 'sort') {
       this.searchFilters.push({ type, name });
@@ -416,7 +444,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.isMenuOpened.genre = false;
     this.isMenuOpened.category = false;
     this.anime = [];
-    this.searchFilters = [ { type: 'default', name: 'anime' } ];
+    this.searchFilters = [ { type: 'default', name: this.searchSelection.split(' ')[0] } ];
     this.sortFilters = [];
     this.searchText = option ? '' : this.searchText;
     this.search._sort = '';

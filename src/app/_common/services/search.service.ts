@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { map, mergeMap, catchError, delay } from 'rxjs/operators';
+import { map, mergeMap, catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { camelCase } from 'lodash';
+
+import { SharedService } from './shared.service';
 
 
 @Injectable({
@@ -11,15 +12,28 @@ import { camelCase } from 'lodash';
 export class SearchService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private shared: SharedService
   ) { }
 
+  all(type: string) {
+    const link = `https://kitsu.io/api/edge/${type}?`;
+    return this.http.get(link, this.shared.body).pipe(
+      map((search) => ({
+        data: search['data'].map(res => this.clean(res, type)),
+        next: search['links']['next'],
+        count: search['meta']['count'],
+        link
+      })),
+    );
+  }
+
   get genres() {
-    return this.http.get('https://kitsu.io/api/edge/genres?page%5Blimit%5D=62').pipe(
+    return this.http.get('https://kitsu.io/api/edge/genres?page%5Blimit%5D=62', this.shared.body).pipe(
       map((res) => res['data']),
       map((genres: any[]) => {
-        return genres.map((genre) => ({ 
-          id: genre['id'], 
+        return genres.map((genre) => ({
+          id: genre['id'],
           name: genre['attributes']['name'],
           slug: genre['attributes']['slug']
         }))
@@ -28,11 +42,11 @@ export class SearchService {
   }
 
   get categories() {
-    return this.http.get('https://kitsu.io/api/edge/categories?page%5Blimit%5D=217&page%5Boffset%5D=0').pipe(
+    return this.http.get('https://kitsu.io/api/edge/categories?page%5Blimit%5D=217&page%5Boffset%5D=0', this.shared.body).pipe(
       map((res) => res['data']),
       map((categories: any[]) => {
-        return categories.map((category) => ({ 
-          id: category['id'], 
+        return categories.map((category) => ({
+          id: category['id'],
           name: category['attributes']['title'],
           slug: category['attributes']['slug'],
           description: category['attributes']['description']
@@ -46,7 +60,7 @@ export class SearchService {
     const encode = encodeURI(text);
 
     let link;
-   
+
     if (selection.includes('anime')) {
       link = `https://kitsu.io/api/edge/anime?filter[text]=${encode}`;
     } else if (selection.includes('manga')) {
@@ -55,7 +69,7 @@ export class SearchService {
       link = `https://kitsu.io/api/edge/character?filter[slug]=${encode}`;
     }
 
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((search) => ({
         data: search['data'].map(res => this.clean(res, selection)),
         next: search['links']['next'],
@@ -69,15 +83,15 @@ export class SearchService {
 
     const encode = encodeURI(item).toLowerCase();
 
-    let link; 
-    
+    let link;
+
     if (selection.includes('anime')) {
       link = `https://kitsu.io/api/edge/anime?filter[${type}]=${encode}`;
     } else if (selection.includes('manga')) {
       link = `https://kitsu.io/api/edge/manga?filter[${type}]=${encode}`;
     }
 
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((search) => ({
         data: search['data'].map(res => this.clean(res, selection)),
         next: search['links']['next'],
@@ -99,7 +113,7 @@ export class SearchService {
 
     console.log(link);
 
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((_search) => ({
         data: _search['data'].map(res => this.clean(res, selection)),
         next: _search['links']['next'],
@@ -112,7 +126,7 @@ export class SearchService {
 
   searchRandom(selection: string) {
 
-    return this.http.get(`https://kitsu.io/api/edge/${selection}`).pipe(
+    return this.http.get(`https://kitsu.io/api/edge/${selection}`, this.shared.body).pipe(
       map((res) => res['meta']['count']),
       mergeMap((count) => {
         const id = this.randomInteger(0, count);
@@ -135,7 +149,7 @@ export class SearchService {
 
     console.log(link);
 
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((_search) => ({
         data: _search['data'].map(res => this.clean(res, selection)),
         next: _search['links']['next'],
@@ -145,7 +159,7 @@ export class SearchService {
   }
 
   searchNext(link: string, selection: string) {
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((search) => ({
         data: search['data'].map(res => this.clean(res, selection)),
         next: search['links']['next']
@@ -180,7 +194,7 @@ export class SearchService {
 
     delete res['id'];
     delete res['type'];
-    
+
     delete res['attributes']['createdAt'];
     delete res['attributes']['updatedAt'];
     delete res['attributes']['coverImageTopOffset'];
@@ -190,7 +204,7 @@ export class SearchService {
     delete res['attributes']['nextRelease'];
     delete res['attributes']['tba'];
 
-    delete res['attributes']['posterImage']['meta'];
+    // delete res['attributes']['posterImage']['meta'];
     delete res['attributes']['coverImage'];
 
     res['relationships']['genres'] = res['relationships']['genres']['links']['self'];
@@ -208,22 +222,22 @@ export class SearchService {
 
 
     if (selection.includes('anime')) {
-      
+
       delete res['attributes']['totalLength:'];
       delete res['attributes']['nsfw'];
-      
+
       res['relationships']['episodes'] = res['relationships']['episodes']['links']['self'];
       res['relationships']['streamingLinks'] = res['relationships']['streamingLinks']['links']['self'];
-    
+
       delete res['relationships']['animeProductions'];
       delete res['relationships']['animeCharacters'];
       delete res['relationships']['animeStaff'];
 
     } else if (selection.includes('manga')) {
-      
+
       res['relationships']['episodes'] = res['relationships']['chapters']['links']['self'];
       res['relationships']['chapters'] = res['relationships']['chapters']['links']['self'];
-   
+
       delete res['relationships']['mangaCharacters'];
       delete res['relationships']['mangaStaff'];
     }

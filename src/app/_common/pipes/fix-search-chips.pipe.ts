@@ -18,6 +18,15 @@ export class FixSearchChipsPipe implements PipeTransform {
       return value;
     }
 
+    if (value === 'ratingRank (highest)' || value === 'ratingRank (lowest)') {
+
+      value = value === 'ratingRank (lowest)' ? 'ratingRank (highest)'  : 'ratingRank (lowest)';
+
+      value = `${lowerCase(value.split(' ')[0])} ${value.split(' ')[1]}`;
+      
+      return value;
+    }
+
     value = `${lowerCase(value.split(' ')[0])} ${value.split(' ')[1]}`;
 
     return value;

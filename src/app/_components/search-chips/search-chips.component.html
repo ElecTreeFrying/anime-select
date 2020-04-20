@@ -14,8 +14,8 @@
     <button mat-menu-item (click)="close('-popularityRank (highest)', 'highestLowest')">Lowest</button>
   </mat-menu>
   <mat-menu #ratingRankMenu="matMenu">
-    <button mat-menu-item disabled (click)="close('-ratingRank (highest)', 'highestLowest')">Highest</button>
-    <button mat-menu-item disabled (click)="close('ratingRank (lowest)', 'highestLowest')">Lowest</button>
+    <button mat-menu-item (click)="close('ratingRank (lowest)', 'highestLowest')">Highest</button>
+    <button mat-menu-item (click)="close('-ratingRank (highest)', 'highestLowest')">Lowest</button>
   </mat-menu>
   <mat-menu #averageRankMenu="matMenu">
     <button mat-menu-item (click)="close('-averageRating (highest)', 'highestLowest')">Highest</button>
@@ -26,8 +26,8 @@
     <button mat-menu-item (click)="close('episodeCount (lowest)', 'highestLowest')">Lowest</button>
   </mat-menu>
   <mat-menu #episodeLengthMenu="matMenu">
-    <button mat-menu-item disabled (click)="close('-episodeLength (highest)', 'highestLowest')">Highest</button>
-    <button mat-menu-item disabled (click)="close('episodeLength (lowest)', 'highestLowest')">Lowest</button>
+    <button mat-menu-item (click)="close('-episodeLength (highest)', 'highestLowest')">Highest</button>
+    <button mat-menu-item (click)="close('episodeLength (lowest)', 'highestLowest')">Lowest</button>
   </mat-menu>
 
   <div class="buttons top">

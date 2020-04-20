@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { mergeMap, startWith } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -76,7 +79,45 @@ export class SharedService {
   set mangaType(mangaType: string) { this._mangaType = mangaType; }
   get mangaType() { return this._mangaType }
 
-  constructor() { }
+  private _body: any;
+  set body(body: any) { this._body = body; }
+  get body() { return this._body; }
+
+  constructor(private http: HttpClient) { 
+    const access_token = environment.access_token;
+    this.body = {
+      headers: {
+        'Authorization': `Bearer ${access_token}`,
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json'
+      }
+    };
+
+    if (true) return;
+
+    const username = environment.username;
+    const password = environment.password;
+
+    const body = { grant_type: 'password', username, password };
+    const url = 'https://kitsu.io/api/oauth/token/';
+
+    this.http.post(url, body, {
+      headers: {
+        'Accept': 'application/vnd.api+json',
+        'Content-Type': 'application/vnd.api+json'
+      }
+    }
+    ).subscribe((res: any) => {
+      console.log(res);
+      this.body = {
+        headers: {
+          'Authorization': `Bearer ${res.access_token}`,
+          'Accept': 'application/vnd.api+json',
+          'Content-Type': 'application/vnd.api+json'
+        }
+      };
+    });
+  }
 
   set updatedLoadCountSelection(data: any){
     this.loadCountSource.next(data)
