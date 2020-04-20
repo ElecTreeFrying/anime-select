@@ -4,8 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { 
   Overlay,
-  OverlayRef,
-  ScrollStrategyOptions
+  OverlayRef
 } from '@angular/cdk/overlay';
 import { sortBy, uniqBy } from 'lodash';
 

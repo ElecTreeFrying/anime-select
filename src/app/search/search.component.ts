@@ -7,6 +7,7 @@ import {
 import { TemplatePortal } from '@angular/cdk/portal';
 
 import { SeasonYearComponent } from '../_components/season-year/season-year.component';
+import { SearchChipsComponent } from '../_components/search-chips/search-chips.component';
 
 import { SearchService } from '../_common/services/search.service';
 import { SelectService } from '../_common/services/select.service';
@@ -29,20 +30,20 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   anime: any[];
   searchFilters: any[]
+  sortFilters: any[];
   genres: any;
   categories: any;
   searchText: string;
   chipText: any;
   toggleState: any;
   next: string;
+  link: string;
   count: number;
   searchSelection: string;
   filters: any[];
   isMenuOpened: any;
   isInputDisabled: any;
   selectedChipIndex: any;
-
-  private _anime: any;
 
   constructor(
     private dialog: MatDialog,
@@ -59,6 +60,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   private initialize() {
     this.anime = [];
     this.searchFilters = [ { type: 'default', name: 'anime' } ];
+    this.sortFilters = [];
     this.searchText = '';
     this.chipText = {};
     this.chipText.genre = '\r';
@@ -75,6 +77,41 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.selectedChipIndex = {};
     this.isInputDisabled.genre = true;
     this.isInputDisabled.category = true;
+    this.search._sort = '';
+  }
+
+  private setView(res: any, option: string = 'default') {
+
+    console.log(res);
+
+    switch (option) {
+      case 'default': {
+        this.anime = res.data;
+        this.next = res.next;
+        this.count = +res.count;
+        this.link = res.link;
+        this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
+        this.shared.updatedSearchCharacterSelection = 2;        
+        break;
+      } case 'next': {
+        this.next = res.next;
+        this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
+        this.shared.updatedLoadingMoreSelection = 2;        
+        break;
+      } case 'random': {
+        this.anime = [ res ];
+        this.count = 1;
+        this.shared.updatedSearchCharacterSelection = 2;        
+        break;
+      } case 'sort': {
+        this.anime = res.data;
+        this.next = res.next;
+        this.count = +res.count;
+        this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
+        this.shared.updatedSearchCharacterSelection = 2;        
+        break;
+      }
+    }
   }
   
   ngOnInit(): void {
@@ -115,32 +152,6 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.subscriptions['loadingGenre'] ? this.subscriptions['loadingGenre'].unsubscribe() : 0;
   }
 
-  enterSeasonYear() {
-    const ref = this.dialog.open(SeasonYearComponent, {
-      closeOnNavigation: true
-    });
-
-    const $1 = ref.afterClosed().subscribe(() => {
-      this.snotify.searchNotify();
-      this.shared.updatedSearchCharacterSelection = 1;
-      $1.unsubscribe();
-    });
-
-
-    const $2 = this.search.mergeSeasonYearDialogResult(ref.afterClosed()).subscribe((res) => {
-    
-      // console.log(res);
-
-      this.updateSearchFilter(res.year.toString(), 'advanced');
-      this.anime = res.data;
-      this.next = res.next;
-      this.count = +res.count;
-      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
-      this.shared.updatedSearchCharacterSelection = 2;
-      $2.unsubscribe();
-    });
-  }
-
   selectAnime(anime: any) {
     const type = this.searchSelection.split(' ')[0];
     this.select.processSelected(anime, type);
@@ -152,19 +163,11 @@ export class SearchComponent implements OnInit, OnDestroy {
       return this.snotify._notify('Empty search fields.', 'error');
     }
 
-    this._anime = this.search.searchStart(this.searchText, this.searchSelection);
     this.snotify.searchNotify();
     this.shared.updatedSearchCharacterSelection = 1;
     
-    const $ = this._anime.subscribe((res) => {
-
-      // console.log(res);
-
-      this.anime = res.data;
-      this.next = res.next;
-      this.count = +res.count;
-      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
-      this.shared.updatedSearchCharacterSelection = 2;
+    const $ = this.search.searchStart(this.searchText, this.searchSelection).subscribe((res) => {
+      this.setView(res);
       $.unsubscribe();
     });
   }
@@ -181,15 +184,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     
     const $ = this.search.searchBy(type, item.name, this.searchSelection).subscribe((res) => {
-      
-      // console.log(res);
-      
       this.updateSearchFilter(item.name, _type);
-      this.anime = res.data;
-      this.next = res.next;
-      this.count = +res.count;
-      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
-      this.shared.updatedSearchCharacterSelection = 2;
+      this.setView(res);
       $.unsubscribe();
     });
   }
@@ -199,18 +195,100 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.snotify.searchNotify();
     this.shared.updatedSearchCharacterSelection = 1;
 
-    const $ = this.search.searchBy2(type, search).subscribe((res) => {
-
-      // console.log(res);
-
+    const $ = this.search.searchBy2(type, search, this.searchSelection).subscribe((res) => {
       this.updateSearchFilter(search, 'advanced');
-      this.anime = res.data;
-      this.next = res.next;
-      this.count = +res.count;
-      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
-      this.shared.updatedSearchCharacterSelection = 2;
+      this.setView(res);
       $.unsubscribe();
     });
+  }
+ 
+  searchRandom(selection: string) {
+    
+    this.snotify.searchNotify();
+    this.shared.updatedSearchCharacterSelection = 1;
+
+    
+    const $ = this.search.searchRandom(selection).subscribe((res) => {
+      this.reset();
+      this.updateSearchFilter('random', 'advanced');
+      this.setView(res, 'random');
+      $.unsubscribe();
+    });
+  }
+
+  enterSeasonYear() {
+    const ref = this.dialog.open(SeasonYearComponent, {
+      closeOnNavigation: true
+    });
+
+    const $1 = ref.beforeClosed().subscribe(() => {
+      this.snotify.searchNotify();
+      this.shared.updatedSearchCharacterSelection = 1;
+      $1.unsubscribe();
+    });
+
+    const $2 = this.search.mergeSeasonYearDialogResult(ref.afterClosed()).subscribe((res: any) => {
+      this.updateSearchFilter(res.year.toString(), 'advanced');
+      this.setView(res);
+      $2.unsubscribe();
+    });
+  }
+
+  addSort() {
+    
+    const ref = this.dialog.open(SearchChipsComponent, {
+      closeOnNavigation: true
+    });
+
+    const $1 = ref.beforeClosed().subscribe((res: any) => {
+        
+      this.snotify.searchNotify();
+      this.shared.updatedSearchCharacterSelection = 1;
+  
+      const invalid = this.sortFilters.filter(e => 
+        res['sort'].split(' ')[0].includes(e['name'].split(' ')[0])
+      ).length !== 0
+
+      let clean = res.sort.replace('-', '');
+
+      if (invalid) {
+        res['sort'] = res['sort'].replace('-', '')
+        const newSF = this.sortFilters.filter(e => 
+          e['name'].split(' ')[0] !== res['sort'].split(' ')[0]
+        );
+
+        newSF.push({ type: 'sort', name: res.sort });
+        this.sortFilters = newSF;
+      } else {
+
+        this.sortFilters.push({ type: 'sort', name: clean })
+      }
+      
+      const sort = this.sortFilters.filter(e => e['type'] === 'sort');
+
+      const $2 = this.search.addSort(this.link, sort, this.searchSelection).subscribe((res) => {
+        this.setView(res, 'sort');
+        $2.unsubscribe();
+      });
+      
+      $1.unsubscribe();
+    });
+  }
+
+  removeSort(name: string) {
+
+    this.snotify.searchNotify();
+    this.shared.updatedSearchCharacterSelection = 1;
+
+    this.sortFilters = this.sortFilters.filter(e => e['name'] !== name);
+
+    const sort = this.sortFilters.filter(e => e['type'] === 'sort');
+
+    const $2 = this.search.addSort(this.link, sort, this.searchSelection).subscribe((res) => {
+      this.setView(res, 'sort');
+      $2.unsubscribe();
+    });
+
   }
 
   searchNext() {
@@ -218,26 +296,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     const $ = this.search.searchNext(this.next, this.searchSelection).subscribe((res) => {
 
       this.anime = this.anime.concat(res.data);
-      this.next = res.next;
-      this.shared.updatedLoadMoreSelection = res.next ? 2 : -1;
-      this.shared.updatedLoadingMoreSelection = 2;
-      $.unsubscribe();
-    });
-  }
-
-  searchRandom(selection: string) {
-
-    this.snotify.searchNotify();
-    this.shared.updatedSearchCharacterSelection = 1;
-
-    
-    const $ = this.search.searchRandom(selection).subscribe((res) => {
-      
-      this.reset();
-      this.updateSearchFilter('random', 'advanced');
-      this.anime = [ res ];
-      this.count = 1;
-      this.shared.updatedSearchCharacterSelection = 2;
+      this.setView(res, 'next');
       $.unsubscribe();
     });
   }
@@ -312,7 +371,13 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   updateSearchFilter(name: string, type: string, option: boolean = false) {
 
-    name = name.toLowerCase();
+    if (type !== 'sort') {
+      name = name.toLowerCase();
+    }
+
+    if (option && (type === 'genre' || type === 'category' || type === 'advanced')) {
+      this.anime = [];
+    } 
 
     if (option && (name !== 'anime' && name !== 'manga')) {
       return (this.searchFilters = this.searchFilters.filter(e => e['name'] !== name));
@@ -329,6 +394,8 @@ export class SearchComponent implements OnInit, OnDestroy {
       this.searchFilters.push({ type, name });
     } else if (type === 'advanced') {
       this.searchFilters = this.searchFilters.filter(e => e['type'] !== type && e['type'] !== 'category' && e['type'] !== 'genre');
+      this.searchFilters.push({ type, name });
+    } else if (type === 'sort') {
       this.searchFilters.push({ type, name });
     }
   }
@@ -350,7 +417,9 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.isMenuOpened.category = false;
     this.anime = [];
     this.searchFilters = [ { type: 'default', name: 'anime' } ];
+    this.sortFilters = [];
     this.searchText = option ? '' : this.searchText;
+    this.search._sort = '';
     this.shared.updatedLoadMoreSelection = -1;
   }
 

@@ -1,0 +1,49 @@
+
+<div>
+
+  <mat-menu #startDateMenu="matMenu">
+    <button mat-menu-item (click)="close('-startDate (newest)', 'newestOldest')">Newest</button>
+    <button mat-menu-item (click)="close('startDate (oldest)', 'newestOldest')">Oldest</button>
+  </mat-menu>
+  <mat-menu #endDateMenu="matMenu">
+    <button mat-menu-item (click)="close('-endDate (newest)', 'newestOldest')">Newest</button>
+    <button mat-menu-item (click)="close('endDate (oldest)', 'newestOldest')">Oldest</button>
+  </mat-menu>
+  <mat-menu #popularityRankMenu="matMenu">
+    <button mat-menu-item (click)="close('popularityRank (lowest)', 'highestLowest')">Highest</button>
+    <button mat-menu-item (click)="close('-popularityRank (highest)', 'highestLowest')">Lowest</button>
+  </mat-menu>
+  <mat-menu #ratingRankMenu="matMenu">
+    <button mat-menu-item disabled (click)="close('-ratingRank (highest)', 'highestLowest')">Highest</button>
+    <button mat-menu-item disabled (click)="close('ratingRank (lowest)', 'highestLowest')">Lowest</button>
+  </mat-menu>
+  <mat-menu #averageRankMenu="matMenu">
+    <button mat-menu-item (click)="close('-averageRating (highest)', 'highestLowest')">Highest</button>
+    <button mat-menu-item (click)="close('averageRating (lowest)', 'highestLowest')">Lowest</button>
+  </mat-menu>
+  <mat-menu #episodeCountMenu="matMenu">
+    <button mat-menu-item (click)="close('-episodeCount (highest)', 'highestLowest')">Highest</button>
+    <button mat-menu-item (click)="close('episodeCount (lowest)', 'highestLowest')">Lowest</button>
+  </mat-menu>
+  <mat-menu #episodeLengthMenu="matMenu">
+    <button mat-menu-item disabled (click)="close('-episodeLength (highest)', 'highestLowest')">Highest</button>
+    <button mat-menu-item disabled (click)="close('episodeLength (lowest)', 'highestLowest')">Lowest</button>
+  </mat-menu>
+
+  <div class="buttons top">
+    <button mat-raised-button style="margin-left: 0" color="primary" [matMenuTriggerFor]="startDateMenu">Start date</button>
+    <button mat-raised-button style="margin-right: 0" color="primary" [matMenuTriggerFor]="endDateMenu">End date</button>
+  </div>
+  <div class="buttons middle">
+    <button mat-raised-button style="margin-left: 0" color="primary" [matMenuTriggerFor]="popularityRankMenu">Popularity rank</button>
+    <button mat-raised-button color="primary" [matMenuTriggerFor]="ratingRankMenu">Rating rank</button>
+    <button mat-raised-button style="margin-right: 0" color="primary" [matMenuTriggerFor]="averageRankMenu">Average rank</button>
+  </div>
+  <div class="buttons bottom">
+    <button mat-raised-button style="margin-left: 0" color="primary" [matMenuTriggerFor]="episodeCountMenu">Episode count</button>
+    <button mat-raised-button style="margin-right: 0" color="primary" [matMenuTriggerFor]="episodeLengthMenu">Episode length</button>
+  </div>
+
+</div>
+
+

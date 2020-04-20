@@ -184,11 +184,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   refresh() {
-    if (this.isLoadingAll || this.shared.mediaCharacters.length < 20) return;
 
     if (this.isSelectRoute === 'search') {
       return this.shared.updatedResetSourceSelection = 1;
     }
+
+    if (this.isLoadingAll || this.shared.mediaCharacters.length < 20) return;
 
     this.shared.count = 0;
     this.isLoadingAll = false;

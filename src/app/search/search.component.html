@@ -1,4 +1,30 @@
 
+<mat-menu #statusMenu="matMenu">
+  <button mat-menu-item (click)="searchBy2('status', 'current')">Current</button>
+  <button mat-menu-item (click)="searchBy2('status', 'finished')">Finished</button>
+  <button mat-menu-item (click)="searchBy2('status', 'tba')">TBA</button>
+  <button mat-menu-item (click)="searchBy2('status', 'unreleased')">Unreleased</button>
+  <button mat-menu-item (click)="searchBy2('status', 'upcoming')">Upcoming</button>
+</mat-menu>
+
+<mat-menu #showTypeMenu="matMenu">
+  <button mat-menu-item (click)="searchBy2('subtype', 'ONA')">ONA</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'OVA')">OVA</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'TV')">TV</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'movie')">Movie</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'music')">Music</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'special')">Special</button>
+</mat-menu>
+
+<mat-menu #mangaShowTypeMenu="matMenu">
+  <button mat-menu-item (click)="searchBy2('subtype', 'doujin')">Doujin</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'manga')">Manga</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'manhua')">Manhua</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'novel')">Novel</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'oel')">OEL manga</button>
+  <button mat-menu-item (click)="searchBy2('subtype', 'oneshot')">Oneshot manga</button>
+</mat-menu>
+
 <mat-menu #seasonMenu="matMenu">
   <button mat-menu-item (click)="searchBy2('season', 'spring')">Spring</button>
   <button mat-menu-item (click)="searchBy2('season', 'summer')">Summer</button>
@@ -14,8 +40,11 @@
 </mat-menu>
 
 <mat-menu #advanceMenu="matMenu" (closed)="this.isMenuOpened.random = false">
-  <button mat-menu-item (click)="searchRandom('anime')" *ngIf="searchSelection.split(' ')[0] === 'anime'">Random</button>
   <button mat-menu-item (click)="searchRandom('manga')" *ngIf="searchSelection.split(' ')[0] === 'manga'">Random</button>
+  <button mat-menu-item (click)="searchRandom('anime')" *ngIf="searchSelection.split(' ')[0] === 'anime'">Random</button>
+  <button mat-menu-item [matMenuTriggerFor]="statusMenu">Status</button>
+  <button mat-menu-item [matMenuTriggerFor]="mangaShowTypeMenu" *ngIf="searchSelection.split(' ')[0] === 'manga'">Show type</button>
+  <button mat-menu-item [matMenuTriggerFor]="showTypeMenu" *ngIf="searchSelection.split(' ')[0] === 'anime'">Show type</button>
   <button mat-menu-item (click)="enterSeasonYear()" *ngIf="searchSelection.split(' ')[0] === 'anime'">Season year</button>
   <button mat-menu-item [matMenuTriggerFor]="seasonMenu" *ngIf="searchSelection.split(' ')[0] === 'anime'">Season</button>
   <button mat-menu-item [matMenuTriggerFor]="ageRatingMenu" *ngIf="searchSelection.split(' ')[0] === 'anime'">Age rating</button>
@@ -116,11 +145,15 @@
     <mat-chip-list>
       <mat-chip *ngFor="let item of searchFilters; let i = index">
         <span>{{ item?.name }}</span>
-        <mat-icon matChipRemove (click)="updateSearchFilter(item?.name, '', true)">clear</mat-icon>
+        <mat-icon matChipRemove (click)="updateSearchFilter(item?.name, item?.type, true)">clear</mat-icon>
       </mat-chip>
-      <mat-chip class="primary-chip">
-        <span>Add filter</span>
-        <mat-icon matChipRemove color="primary">add</mat-icon>
+      <mat-chip class="primary-chip" *ngFor="let item of sortFilters; let i = index">
+        <span>{{ item?.name | fixSearchChips }}</span>
+        <mat-icon matChipRemove (click)="removeSort(item?.name)">clear</mat-icon>
+      </mat-chip>
+      <mat-chip class="primary-chip" [disabled]="anime.length < 2">
+        <span>add sort</span>
+        <mat-icon matChipRemove (click)="addSort()">add</mat-icon>
       </mat-chip>
     </mat-chip-list>
   </div>

@@ -12,15 +12,20 @@ import { CardDetailsDirectiveModule } from '../_common/modules/card-details-dire
 
 import { SearchComponent } from './search.component';
 import { SeasonYearComponent } from '../_components/season-year/season-year.component';
+import { SearchChipsComponent } from '../_components/search-chips/search-chips.component';
+import { FixSearchChipsPipe } from '../_common/pipes/fix-search-chips.pipe';
 
 
 @NgModule({
   declarations: [
     SearchComponent,
-    SeasonYearComponent
+    SeasonYearComponent,
+    SearchChipsComponent,
+    FixSearchChipsPipe
   ],
   entryComponents: [
-    SeasonYearComponent
+    SeasonYearComponent,
+    SearchChipsComponent
   ],
   imports: [
     CommonModule,

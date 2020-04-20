@@ -46,8 +46,12 @@
   }
 }
 
-.trending {
+.featured, .trending {
   padding-bottom: 0;
+}
+
+.manga {
+  padding-bottom: 48px + 36px;
 }
 
 .content {

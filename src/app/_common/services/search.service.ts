@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { map, mergeMap, catchError } from 'rxjs/operators';
-import { Observable, merge } from 'rxjs';
+import { map, mergeMap, catchError, delay } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { camelCase } from 'lodash';
 
 
 @Injectable({
@@ -58,7 +59,8 @@ export class SearchService {
       map((search) => ({
         data: search['data'].map(res => this.clean(res, selection)),
         next: search['links']['next'],
-        count: search['meta']['count']
+        count: search['meta']['count'],
+        link
       })),
     );
   }
@@ -79,31 +81,32 @@ export class SearchService {
       map((search) => ({
         data: search['data'].map(res => this.clean(res, selection)),
         next: search['links']['next'],
-        count: search['meta']['count']
+        count: search['meta']['count'],
+        link
       }))
     );
   }
 
-  searchBy2(type: string, search: string) {
+  searchBy2(type: string, search: string, selection: string) {
 
-    const link = `https://kitsu.io/api/edge/anime?filter[${type}]=${search}`;
-    
+    let link;
+
+    if (selection.includes('anime')) {
+      link = `https://kitsu.io/api/edge/anime?filter[${type}]=${search}`;
+    } else if (selection.includes('manga')) {
+      link = `https://kitsu.io/api/edge/manga?filter[${type}]=${search}`;
+    }
+
+    console.log(link);
+
     return this.http.get(link).pipe(
       map((_search) => ({
-        data: _search['data'].map(res => this.clean(res, 'anime')),
+        data: _search['data'].map(res => this.clean(res, selection)),
         next: _search['links']['next'],
         count: _search['meta']['count'],
+        link,
         year: search
       })),
-    );
-  }
-
-  searchNext(link: string, selection: string) {
-    return this.http.get(link).pipe(
-      map((search) => ({
-        data: search['data'].map(res => this.clean(res, selection)),
-        next: search['links']['next']
-      }))
     );
   }
 
@@ -121,11 +124,56 @@ export class SearchService {
     );
   }
 
+  private _sort_: string;
+  get _sort() { return this._sort_ }
+  set _sort(sort: string) { this._sort_ = sort }
+
+  addSort(link: string, sorts: string[], selection: string) {
+
+    const sort = sorts.map((sort: any) => this.sortName(sort.name)).join(',');
+    link = `${link}&[sort]=${sort}`;
+
+    console.log(link);
+
+    return this.http.get(link).pipe(
+      map((_search) => ({
+        data: _search['data'].map(res => this.clean(res, selection)),
+        next: _search['links']['next'],
+        count: _search['meta']['count']
+      })),
+    );
+  }
+
+  searchNext(link: string, selection: string) {
+    return this.http.get(link).pipe(
+      map((search) => ({
+        data: search['data'].map(res => this.clean(res, selection)),
+        next: search['links']['next']
+      }))
+    );
+  }
+
   mergeSeasonYearDialogResult(result: Observable<any>) {
 
     return result.pipe(
-      mergeMap((count) => this.searchBy2('seasonYear', count))
+      mergeMap((count) => this.searchBy2('seasonYear', count, 'anime'))
     );
+  }
+
+  private randomInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  private handleError(error: HttpErrorResponse, selection: string) {
+    return this.searchRandom(selection);
+  };
+
+  private sortName(name: string) {
+    if (name.includes('newest') || name.includes('highest')) {
+      return '-' + name.split(' ')[0];
+    } else {
+      return name.split(' ')[0];
+    }
   }
 
   private clean(res: any, selection: string) {
@@ -182,13 +230,5 @@ export class SearchService {
 
     return { ...res['attributes'], links: res['relationships'] };
   }
-
-  private randomInteger(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  private handleError(error: HttpErrorResponse, selection: string) {
-    return this.searchRandom(selection);
-  };
 
 }
