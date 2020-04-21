@@ -14,16 +14,7 @@ export class SearchService {
   constructor(
     private http: HttpClient,
     private shared: SharedService
-  ) { 
-
-
-    this.http.get('https://kitsu.io/api/edge/anime?filter[nsfw]=false', shared.body).subscribe((res) => {
-    
-      console.log(res);
-
-    });
-
-  }
+  ) { }
 
   all(type: string) {
     const link = `https://kitsu.io/api/edge/${type}?`;
@@ -51,7 +42,7 @@ export class SearchService {
   }
 
   get categories() {
-    return this.http.get('https://kitsu.io/api/edge/categories?page%5Blimit%5D=217&page%5Boffset%5D=0', this.shared.body).pipe(
+    return this.http.get('https://kitsu.io/api/edge/categories?page%5Blimit%5D=243&page%5Boffset%5D=0', this.shared.body).pipe(
       map((res) => res['data']),
       map((categories: any[]) => {
         return categories.map((category) => ({
@@ -69,6 +60,15 @@ export class SearchService {
     const encode = encodeURI(text);
 
     let link;
+
+    console.log(text.split(' ').join('-'));
+
+    this.http.get(
+      `https://kitsu.io/api/edge/characters?filter[slug]=${text.split(' ').join('-')}`,
+      this.shared.body
+    ).subscribe((res) => {
+      console.log(res);
+    });
 
     if (selection.includes('anime')) {
       link = `https://kitsu.io/api/edge/anime?filter[text]=${encode}`;
@@ -137,7 +137,7 @@ export class SearchService {
       map((res) => res['meta']['count']),
       mergeMap((count) => {
         const id = this.randomInteger(0, count);
-        return this.http.get(`https://kitsu.io/api/edge/${selection}/${id}`).pipe(
+        return this.http.get(`https://kitsu.io/api/edge/${selection}/${id}`, this.shared.body).pipe(
           map(e => this.clean(e['data'], selection)),
           catchError((err, caught) => this.handleError(err, selection))
         )

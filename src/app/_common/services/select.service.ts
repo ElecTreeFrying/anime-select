@@ -58,7 +58,7 @@ export class SelectService {
       step === 2 ? $.unsubscribe() : 0;
       this.shared.updatedNavigatingSelection = step;
       step++;
-      console.log(char);
+      console.log(step, char);
     });
 
     setTimeout(() => this.navigateToCharacters(anime, type), 1000);
