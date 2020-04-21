@@ -82,7 +82,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   private setView(res: any, option: string = 'default') {
 
-    console.log(res);
+    // console.log(res);
 
     switch (option) {
       case 'default': {

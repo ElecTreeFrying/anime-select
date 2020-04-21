@@ -2,13 +2,17 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, mergeMap, toArray, switchMap, flatMap } from 'rxjs/operators';
 
+import { SharedService } from '../services/shared.service';
+
+
 @Pipe({
   name: 'relationship'
 })
 export class RelationshipPipe implements PipeTransform {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private shared: SharedService
   ) {}
 
   transform(value: any, relationship: string): any {
@@ -33,12 +37,12 @@ export class RelationshipPipe implements PipeTransform {
   }
 
   genres(link: string) {
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((genre) => genre['data']),
       map((data) => data.map(e => +e['id'])),
       map((data) => {
         return data.map((id: number) => {
-          return this.http.get(`https://kitsu.io/api/edge/genres/${id}`)
+          return this.http.get(`https://kitsu.io/api/edge/genres/${id}`, this.shared.body)
         })
       }),
       map((genre) => {
@@ -53,12 +57,12 @@ export class RelationshipPipe implements PipeTransform {
   }
 
   categories(link: string) {
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((category) => category['data']),
       map((data) => data.map(e => +e['id'])),
       map((data) => {
         return data.map((id: number) => {
-          return this.http.get(`https://kitsu.io/api/edge/categories/${id}`)
+          return this.http.get(`https://kitsu.io/api/edge/categories/${id}`, this.shared.body)
         })
       }),
       map((category) => {
@@ -79,12 +83,12 @@ export class RelationshipPipe implements PipeTransform {
   }
 
   staff(link: string) {
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((staff) => staff['data']),
       map((data) => data.map(e => +e['id'])),
       map((data) => {
         return data.map((id: number) => {
-          return this.http.get(`https://kitsu.io/api/edge/media-staff/${id}`)
+          return this.http.get(`https://kitsu.io/api/edge/media-staff/${id}`, this.shared.body)
         })
       }),
       map((staff) => {
@@ -93,7 +97,7 @@ export class RelationshipPipe implements PipeTransform {
             mergeMap((e) => {
               const role = e['data']['attributes']['role']
               const link = e['data']['relationships']['person']['links']['related'];
-              return this.http.get(link).pipe( 
+              return this.http.get(link, this.shared.body).pipe( 
                 map(e => e['data']['attributes']['name']),
                 map((name) => ({ name, role })) 
               )
@@ -105,12 +109,12 @@ export class RelationshipPipe implements PipeTransform {
   }
 
   productions(link: string) {
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((production) => production['data']),
       map((data) => data.map(e => +e['id'])),
       map((data) => {
         return data.map((id: number) => {
-          return this.http.get(`https://kitsu.io/api/edge/media-productions/${id}`)
+          return this.http.get(`https://kitsu.io/api/edge/media-productions/${id}`, this.shared.body)
         })
       }),
       map((production) => {
@@ -119,7 +123,7 @@ export class RelationshipPipe implements PipeTransform {
             mergeMap((e) => {
               const role = e['data']['attributes']['role']
               const link = e['data']['relationships']['company']['links']['related'];
-              return this.http.get(link).pipe( 
+              return this.http.get(link, this.shared.body).pipe( 
                 map(e => e['data']['attributes']['name']),
                 map((name) => ({ name, role })) 
               )
@@ -131,12 +135,12 @@ export class RelationshipPipe implements PipeTransform {
   }
 
   episodes(link: string) {
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((episode) => episode['data']),
       map((data) => data.map(e => +e['id'])),
       map((data) => {
         return data.map((id: number) => {
-          return this.http.get(`https://kitsu.io/api/edge/episodes/${id}`)
+          return this.http.get(`https://kitsu.io/api/edge/episodes/${id}`, this.shared.body)
         })
       }),
       map((episode) => {
@@ -167,12 +171,12 @@ export class RelationshipPipe implements PipeTransform {
   }
 
   private _streamingLinks(link: string, suffix: string = '') {
-    return this.http.get(link).pipe(
+    return this.http.get(link, this.shared.body).pipe(
       map((streamingLinks) => streamingLinks['data']),
       map((data) => data.map(e => +e['id'])),
       flatMap((data) => {
         return data.map((id: number) => {
-          return this.http.get(`https://kitsu.io/api/edge/streaming-links/${id}/${suffix}`)
+          return this.http.get(`https://kitsu.io/api/edge/streaming-links/${id}/${suffix}`, this.shared.body)
           .pipe( map(e => e['data']['attributes']) )
         })
       }),

@@ -14,7 +14,16 @@ export class SearchService {
   constructor(
     private http: HttpClient,
     private shared: SharedService
-  ) { }
+  ) { 
+
+
+    this.http.get('https://kitsu.io/api/edge/anime?filter[nsfw]=false', shared.body).subscribe((res) => {
+    
+      console.log(res);
+
+    });
+
+  }
 
   all(type: string) {
     const link = `https://kitsu.io/api/edge/${type}?`;
@@ -65,8 +74,6 @@ export class SearchService {
       link = `https://kitsu.io/api/edge/anime?filter[text]=${encode}`;
     } else if (selection.includes('manga')) {
       link = `https://kitsu.io/api/edge/manga?filter[text]=${encode}`;
-    } else if (selection.includes('character')) {
-      link = `https://kitsu.io/api/edge/character?filter[slug]=${encode}`;
     }
 
     return this.http.get(link, this.shared.body).pipe(
@@ -192,7 +199,8 @@ export class SearchService {
 
   private clean(res: any, selection: string) {
 
-    delete res['id'];
+    res['attributes']['id'] = res['id'];
+    
     delete res['type'];
 
     delete res['attributes']['createdAt'];

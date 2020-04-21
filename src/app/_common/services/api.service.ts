@@ -30,7 +30,7 @@ export class ApiService {
   }
 
   character(id: number) {
-    return this.http.get(`https://kitsu.io/api/edge/characters/${id}`).pipe(
+    return this.http.get(`https://kitsu.io/api/edge/characters/${id}`, this.shared.body).pipe(
       map((res) => res['data']),
       map((res) => {
         return { 
@@ -41,7 +41,7 @@ export class ApiService {
         };
       }),
       mergeMap((res) => {
-        return this.http.get(res['manga']).pipe(
+        return this.http.get(res['manga'], this.shared.body).pipe(
           map((d) => {
             return sortBy(d['data'].map((a) => {
               a['id'] = +a['id'];
@@ -49,12 +49,12 @@ export class ApiService {
             }), [ 'id' ])
           }),
           map((d) => d.map((e) => 
-            this.http.get(`https://kitsu.io/api/edge/castings/${e['id']}/media`) )),
+            this.http.get(`https://kitsu.io/api/edge/castings/${e['id']}/media`, this.shared.body) )),
           map((manga) => ({ ...res, manga })),
         )
       }),
       mergeMap((res) => {
-        return this.http.get(res['anime']).pipe(
+        return this.http.get(res['anime'], this.shared.body).pipe(
           map((d) => {
             return sortBy(d['data'].map((a) => {
               a['id'] = +a['id'];
@@ -62,7 +62,7 @@ export class ApiService {
             }), [ 'id' ]).reverse()
           }), 
           map((d) => d.map((e) =>
-            this.http.get(`https://kitsu.io/api/edge/media-characters/${e['id']}/media`))),
+            this.http.get(`https://kitsu.io/api/edge/media-characters/${e['id']}/media`, this.shared.body))),
           map((anime) => ({ ...res, anime })),
         )
       })

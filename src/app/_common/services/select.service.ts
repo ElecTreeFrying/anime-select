@@ -20,7 +20,7 @@ export class SelectService {
   ) { }
 
   get media() {
-    return this.http.get('assets/api/supported-anime.json');
+    return this.http.get('assets/api/supported-anime.json', this.shared.body);
   }
 
   private navigateToCharacters(anime: any, type: string = 'anime') {
@@ -65,7 +65,10 @@ export class SelectService {
   }
 
   trending(type: boolean) {
-    return this.http.get(`https://kitsu.io/api/edge/trending/${type ? 'anime' : 'manga'}`).pipe(
+    return this.http.get(
+      `https://kitsu.io/api/edge/trending/${type ? 'anime' : 'manga'}`,
+      this.shared.body
+    ).pipe(
       map(res => res['data'].map(e => this.clean(e, type)))
     )
   }
@@ -79,7 +82,7 @@ export class SelectService {
   }
 
   private step(character: string, start: number, end: number) {
-    return this.http.get(character).pipe(
+    return this.http.get(character, this.shared.body).pipe(
       map((res) =>
         end !== 0 
           ? res['data'].slice(start, end).map(e => +e['id'])
@@ -88,7 +91,8 @@ export class SelectService {
       mergeMap((data) => 
         data.map((id: number) => 
           this.http.get(
-            `https://kitsu.io/api/edge/media-characters/${id}/character`
+            `https://kitsu.io/api/edge/media-characters/${id}/character`,
+            this.shared.body
           ).pipe( 
             map(e => ({ id: +e['data']['id'], name: e['data']['attributes']['canonicalName'] })) 
           )
@@ -101,7 +105,8 @@ export class SelectService {
 
   private clean(res: any, type: boolean) {
 
-    delete res['id'];
+    res['attributes']['id'] = res['id'];
+
     delete res['type'];
     
     delete res['attributes']['createdAt'];
@@ -113,7 +118,7 @@ export class SelectService {
     delete res['attributes']['nextRelease'];
     delete res['attributes']['tba'];
 
-    delete res['attributes']['posterImage']['meta'];
+    // delete res['attributes']['posterImage']['meta'];
     delete res['attributes']['coverImage'];
 
     const link = 'https://kitsu.io/api/edge';
