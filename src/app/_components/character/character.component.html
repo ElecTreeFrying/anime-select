@@ -9,7 +9,7 @@
     
     <img width="231" [src]="data?.id | idToImage" [alt]="data?.slug">
     <p class="heading en">{{ data?.names?.en }}</p>
-    <p class="heading int">({{ data?.names?.ja_jp }})</p>
+    <p class="heading int">{{ data?.names?.ja_jp ? '('+data?.names?.ja_jp+')' : '' }}</p>
 
     <mat-divider></mat-divider>
 
@@ -116,9 +116,7 @@
 
             <p class="en">{{ anime?.titles?.en_jp }}</p>
             <p class="int">
-              <span *ngIf="anime?.titles?.ja_jp">(</span>
-              <span>{{ anime?.titles?.ja_jp }}</span>
-              <span *ngIf="anime?.titles?.ja_jp">)</span>
+              <span>{{ '('+anime?.titles?.ja_jp+')' }}</span>
             </p>
 
             <p class="head">Synopsis</p>
@@ -153,9 +151,7 @@
       <div class="header">
         <p class="en">{{ selectedMedia?.titles?.en_jp }}</p>
         <p class="int">
-          <span *ngIf="selectedMedia?.titles?.ja_jp">(</span>
-          <span>{{ selectedMedia?.titles?.ja_jp }}</span>
-          <span *ngIf="selectedMedia?.titles?.ja_jp">)</span>
+          <span>{{ '('+selectedMedia?.titles?.ja_jp+')' }}</span>
         </p>
       </div>
 
@@ -169,15 +165,15 @@
         <mat-divider></mat-divider>
         <p class="info" *ngIf="selectedMedia?.ratingRank">
           <span class="key">Rating rank: </span>
-          <span>#{{ selectedMedia?.ratingRank }}</span>
+          <span>{{ '#'+selectedMedia?.ratingRank }}</span>
         </p>
         <p class="info" *ngIf="selectedMedia?.popularityRank">
           <span class="key">Popularity rank: </span>
-          <span>#{{ selectedMedia?.popularityRank }}</span>
+          <span>{{ '#'+selectedMedia?.popularityRank }}</span>
         </p>
         <p class="info" *ngIf="selectedMedia?.averageRating">
           <span class="key">Rating: </span>
-          <span>{{ selectedMedia?.averageRating }}%</span>
+          <span>{{ selectedMedia?.averageRating+'%' }}</span>
         </p>
         <p class="info" *ngIf="selectedMedia?.status">
           <span class="key">Status: </span>
@@ -195,9 +191,8 @@
           <span class="key">Aired: </span>
           <span>{{ selectedMedia?.startDate | animeDate }}</span>
         </p>
-        <p class="info">
+        <p class="info" *ngIf="selectedMedia?.endDate">
           <span class="key">Ended: </span>
-          <span *ngIf="!selectedMedia?.endDate">&nbsp;~ </span>
           <span>{{ selectedMedia?.endDate | animeDate }}</span>
         </p>
 

@@ -6,28 +6,28 @@
     <div class="highlight">
       <div matRipple>
         <p class="text key">AVE. Rating</p>
-        <p class="text value">{{ about?.averageRating }}%</p>
+        <p class="text value">{{ (about?.averageRating ? about?.averageRating+'%' : '') }}</p>
       </div>
     </div>
 
     <div class="highlight">
       <div matRipple>
         <p class="text key">Popularity rank</p>
-        <p class="text value">#{{ about?.popularityRank }}</p>
+        <p class="text value">{{ about?.popularityRank ? '#'+about?.popularityRank : '' }}</p>
       </div>
     </div>
 
     <div class="highlight">
       <div matRipple>
         <p class="text key">Rating rank</p>
-        <p class="text value">#{{ about?.ratingRank }}</p>
+        <p class="text value">{{ about?.ratingRank ? '#'+about?.ratingRank : '' }}</p>
       </div>
     </div>
 
     <div class="highlight">
       <div matRipple>
         <p class="text key">Age rating</p>
-        <p class="text value">"{{ about?.ageRating | uppercase }}"</p>
+        <p class="text value">{{ about?.ageRating ? (about?.ageRating | uppercase) : '' }}</p>
       </div>
     </div>
 
