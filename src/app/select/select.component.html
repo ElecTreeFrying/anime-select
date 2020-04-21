@@ -12,7 +12,7 @@
   </div>
 
   <div class="wrap content">
-    <div matRipple *ngFor="let anime of (media | async)" #card [tilt]="card" [cardDetails]="anime" (click)="selectAnime(anime)">
+    <div matRipple *ngFor="let anime of (media | async)" #card [tilt]="card" [mediaDetails]="anime" (click)="selectAnime(anime)">
       <mat-card>
         <img 
           mat-card-image 
@@ -33,7 +33,7 @@
   </div>
 
   <div class="wrap content">
-    <div matRipple *ngFor="let anime of (trendingAnime | async)" #card [tilt]="card" [cardDetails]="anime" (click)="selectAnime(anime)">
+    <div matRipple *ngFor="let anime of (trendingAnime | async)" #card [tilt]="card" [mediaDetails]="anime" (click)="selectAnime(anime)">
       <mat-card>
         <img 
           mat-card-image 
@@ -54,7 +54,7 @@
   </div>
 
   <div class="wrap content">
-    <div matRipple *ngFor="let manga of (trendingManga | async)" #card [tilt]="card" [cardDetails]="manga" (click)="selectAnime(manga, 'manga')">
+    <div matRipple *ngFor="let manga of (trendingManga | async)" #card [tilt]="card" [mediaDetails]="manga" (click)="selectAnime(manga, 'manga')">
       <mat-card>
         <img 
           mat-card-image 

@@ -6,9 +6,12 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { SearchRoutingModule } from './search-routing.module';
 import { SearchMaterialModule } from '../_common/material/search-material.module';
 import { LoadingBoxComponentModule } from '../_common/modules/loading-box-component.module';
+import { MoreDetailsComponentModule } from '../_common/modules/more-details-component.module';
 import { ArrayFilterPipeModule } from '../_common/modules/array-filter-pipe.module';
+import { AnimeDatePipeModule } from '../_common/modules/anime-date-pipe.module';
+import { SliceStringPipeModule } from '../_common/modules/slice-string-pipe.module';
 import { TiltDirectiveModule } from '../_common/modules/tilt-directive.module';
-import { CardDetailsDirectiveModule } from '../_common/modules/card-details-directive.module';
+import { MediaDetailsDirectiveModule } from '../_common/modules/media-details-directive.module';
 
 import { SearchComponent } from './search.component';
 import { SeasonYearComponent } from '../_components/season-year/season-year.component';
@@ -34,9 +37,12 @@ import { FixSearchChipsPipe } from '../_common/pipes/fix-search-chips.pipe';
     SearchRoutingModule,
     SearchMaterialModule,
     LoadingBoxComponentModule,
+    MoreDetailsComponentModule,
     ArrayFilterPipeModule,
+    AnimeDatePipeModule,
+    SliceStringPipeModule,
     TiltDirectiveModule,
-    CardDetailsDirectiveModule,
+    MediaDetailsDirectiveModule,
 
     LazyLoadImageModule
   ]

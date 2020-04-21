@@ -1,0 +1,12 @@
+
+<div class="mode-details-content animated faster" [ngClass]="{ 'fadeInRight': onEnter }">
+  
+  <div class="rating">
+    <span *ngIf="details?.popularityRank">{{ '#'+details?.popularityRank+' Popularity' }}</span>
+    <span *ngIf="details?.ratingRank">{{ details?.averageRating+'% Rating' }}</span>
+  </div>
+  <p class="title">{{ details?.canonicalTitle }}</p>
+  <p class="year">{{ details?.startDate | animeDate: 'short-complete' }}</p>
+  <p class="synopsis">{{ details?.synopsis | sliceString: 180 }}</p>
+
+</div>

@@ -171,7 +171,7 @@
     <p *ngIf="anime.length > 0">About {{ count }} results.</p>
 
     <div class="cards">
-      <div matRipple *ngFor="let object of anime" (click)="selectAnime(object)" #card [tilt]="card" [cardDetails]="object">
+      <div matRipple *ngFor="let object of anime" (click)="selectAnime(object)" #card [tilt]="card" [mediaDetails]="object">
         <mat-card>
           <img
             mat-card-image

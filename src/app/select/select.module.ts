@@ -5,9 +5,10 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { SelectRoutingModule } from './select-routing.module';
 import { SelectMaterialModule } from '../_common/material/select-material.module';
 import { LoadingBoxComponentModule } from '../_common/modules/loading-box-component.module';
+import { MoreDetailsComponentModule } from '../_common/modules/more-details-component.module';
 import { IdToImagePipeModule } from '../_common/modules/id-to-image-pipe.module';
 import { TiltDirectiveModule } from '../_common/modules/tilt-directive.module';
-import { CardDetailsDirectiveModule } from '../_common/modules/card-details-directive.module';
+import { MediaDetailsDirectiveModule } from '../_common/modules/media-details-directive.module';
 
 import { SelectComponent } from './select.component';
 
@@ -22,9 +23,10 @@ import { SelectComponent } from './select.component';
     SelectRoutingModule,
     SelectMaterialModule,
     LoadingBoxComponentModule,
+    MoreDetailsComponentModule,
     IdToImagePipeModule,
     TiltDirectiveModule,
-    CardDetailsDirectiveModule
+    MediaDetailsDirectiveModule
   ]
 })
 export class SelectModule { }
