@@ -2,8 +2,14 @@
 <div class="mode-details-content animated faster" [ngClass]="{ 'fadeInRight': onEnter }">
   
   <div class="rating">
-    <span *ngIf="details?.popularityRank">{{ '#'+details?.popularityRank+' Popularity' }}</span>
-    <span *ngIf="details?.ratingRank">{{ details?.averageRating+'% Rating' }}</span>
+    <span *ngIf="details?.popularityRank">
+      <mat-icon class="heart">favorite</mat-icon>
+      <span>{{ '#'+details?.popularityRank+' Popularity' }}</span>
+    </span>
+    <span *ngIf="details?.ratingRank">
+      <mat-icon class="star">star</mat-icon>
+      <span>{{ details?.averageRating+'% Rating' }}</span>
+    </span>
   </div>
   <p class="title">{{ details?.canonicalTitle }}</p>
   <p class="year">{{ details?.startDate | animeDate: 'short-complete' }}</p>

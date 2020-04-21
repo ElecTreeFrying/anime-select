@@ -15,6 +15,20 @@
     justify-content: space-between;
     margin-bottom: 8px;
 
+    .mat-icon {
+      font-size: 14px;
+      margin-right: -6px;
+      transform: translateY(2px);
+
+      &.heart {
+        color: rgb(172, 0, 0);
+      }
+
+      &.star {
+        color: #c7c703;
+      }
+    }
+
     span {
       font-family: 'Baloo Bhaina 2', cursive;
     }
