@@ -112,7 +112,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       } else if (scrollValue === maxScroll) {
         scrollValue = target.scrollTop;
       } else {
-        scrollValue =Math.floor(scrollValue);
+        scrollValue = Math.floor(scrollValue);
       }
 
       if (scrollValue === 0) {
