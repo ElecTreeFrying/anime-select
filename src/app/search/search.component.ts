@@ -348,6 +348,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.isMenuOpened[type] = !this.isMenuOpened[type];
     this.isMenuOpened[type] ? this.snotify.clear() : (this.chipText[type] = '\r');
 
+    this.isNSFW = false;
+
     if (!this.isMenuOpened[type]) {
       this.snotify.clear()      
     }

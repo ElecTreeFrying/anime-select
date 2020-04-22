@@ -54,7 +54,7 @@ export class ContactUsComponent implements OnInit, OnDestroy {
     
     const formValue = this.form.value;
     
-    this.snotify.submitMessageNotify();
+    this.snotify.submitMessageNotify('Message');
     this.shared.updatedLoadingGenreSelection = 1;
     
     this.fire.submitMessage(formValue).then(() => {
