@@ -5,7 +5,6 @@ import {
   OverlayRef
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { MatCheckbox } from '@angular/material/checkbox';
 
 import { SeasonYearComponent } from '../_components/season-year/season-year.component';
 import { SearchChipsComponent } from '../_components/search-chips/search-chips.component';
@@ -304,9 +303,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     const sort = this.sortFilters.filter(e => e['type'] === 'sort');
 
-    const $2 = this.search.addSort(this.link, sort, this.searchSelection).subscribe((res) => {
+    const $ = this.search.addSort(this.link, sort, this.searchSelection).subscribe((res) => {
       this.setView(res, 'sort');
-      $2.unsubscribe();
+      $.unsubscribe();
     });
 
   }

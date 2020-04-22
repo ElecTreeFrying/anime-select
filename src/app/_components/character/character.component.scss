@@ -286,9 +286,18 @@ $dialog-height: 637px + 20px;
 
   .action {
     flex-basis: 100%;
+    display: flex;
 
     .mat-stroked-button {
       width: 100%;
+
+      &:first-child {
+        margin-right: 4px;
+      }
+
+      &:last-child {
+        margin-left: 4px;
+      }
     }
   }
 }

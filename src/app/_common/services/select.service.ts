@@ -103,6 +103,59 @@ export class SelectService {
     );
   }
 
+  _clean(res: any, type: boolean) {
+
+    delete res['type'];
+    
+    delete res['createdAt'];
+    delete res['updatedAt'];
+    delete res['coverImageTopOffset'];
+    delete res['ratingFrequencies'];
+    delete res['userCount'];
+    delete res['favoritesCount'];
+    delete res['nextRelease'];
+    delete res['tba'];
+
+    // delete res['posterImage']['meta'];
+    delete res['coverImage'];
+
+    res['relationships']['genres'] = res['relationships']['genres']['links']['self'];
+    res['relationships']['categories'] = res['relationships']['categories']['links']['self'];
+    res['relationships']['staff'] = res['relationships']['staff']['links']['self'];
+    res['relationships']['productions'] = res['relationships']['productions']['links']['self'];
+    res['relationships']['characters'] = res['relationships']['characters']['links']['self'];
+
+    delete res['relationships']['installments'];
+    delete res['relationships']['mappings'];
+    delete res['relationships']['reviews'];
+    delete res['relationships']['mediaRelationships'];
+    delete res['relationships']['quotes'];
+    delete res['relationships']['castings'];
+
+
+    if (type) {
+      
+      delete res['totalLength:'];
+      delete res['nsfw'];
+      
+      res['relationships']['episodes'] = res['relationships']['episodes']['links']['self'];
+      res['relationships']['streamingLinks'] = res['relationships']['streamingLinks']['links']['self'];
+    
+      delete res['relationships']['animeProductions'];
+      delete res['relationships']['animeCharacters'];
+      delete res['relationships']['animeStaff'];
+    } else {
+      
+      res['relationships']['episodes'] = res['relationships']['chapters']['links']['self'];
+      res['relationships']['chapters'] = res['relationships']['chapters']['links']['self'];
+   
+      delete res['relationships']['mangaCharacters'];
+      delete res['relationships']['mangaStaff'];
+    }
+
+    return { ...res, links: res['relationships'] };
+  }
+
   private clean(res: any, type: boolean) {
 
     res['attributes']['id'] = res['id'];

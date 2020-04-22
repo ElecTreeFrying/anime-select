@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 
 import { ApiService } from '../../_common/services/api.service';
+import { SelectService } from '../../_common/services/select.service';
 import { SharedService } from '../../_common/services/shared.service';
 
 
@@ -28,6 +29,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
     private ref: MatDialogRef<CharacterComponent>,
     private cd: ChangeDetectorRef,
     private api: ApiService,
+    private select: SelectService,
     private shared: SharedService
   ) { }
 
@@ -47,6 +49,14 @@ export class CharacterComponent implements OnInit, OnDestroy {
       this.stringLength = [ ...Array(res.length).keys() ].map(() => 250);
     });
     this.cd.detectChanges();
+  }
+
+  selectMedia(media: any) {
+    const subtype = this.selectedMedia.subtype;
+    const isAnime = subtype === 'ONA' || subtype === 'OVA' || subtype === 'TV' || subtype === 'movie' || subtype === 'music' || subtype === 'special';
+    const clean = this.select._clean(media, isAnime);
+    this.select.processSelected(clean, isAnime ? 'anime' : 'manga');
+    this.ref.close();
   }
 
   setDetails() {

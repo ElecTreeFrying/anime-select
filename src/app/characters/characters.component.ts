@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Inject, ChangeDetectorRef, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { 
   Overlay,
@@ -32,6 +32,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
   _characters: any[];
   isShowLoading: boolean;
   interval: any;
+  isOpened: boolean;
 
   constructor(
     @Inject(FormBuilder) public fb: FormBuilder,
@@ -49,6 +50,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     
     this.snotify.clear();
+    this.isOpened = false;
     this.freshLoad(true);
     this.attachOverlay();
     this.filter.get('field').enable();
@@ -61,6 +63,18 @@ export class CharactersComponent implements OnInit, OnDestroy {
       res > 0 ? this.finishInitialLoading() : 0;
 
       if (res === 2) {
+        if (!this.isOpened) {
+          this.overlayRef.detach();
+          this.overlayRef.dispose();
+          this.dialog.open(AboutComponent, {
+            closeOnNavigation: true,
+            autoFocus: false,
+            hasBackdrop: true
+          }).afterClosed().subscribe((res) => {
+            this.isOpened = false;
+          });
+        }
+
         if (this.characters.length > 20) return;
         this.shared.updatedLoadMoreSelection = 55;
         this.isShowLoading = false;
@@ -98,11 +112,13 @@ export class CharactersComponent implements OnInit, OnDestroy {
     this.overlayRef.dispose();
     this.once++;
     setTimeout(() => {
+      this.isOpened = true;
       this.dialog.open(AboutComponent, {
         closeOnNavigation: true,
         autoFocus: false,
         hasBackdrop: true
       }).afterClosed().subscribe((res) => {
+        this.isOpened = false;
         this.shared.updatedSelectRouteSSelection = 'loop';
         this.selectCharacter(null, true)
       });
@@ -134,8 +150,6 @@ export class CharactersComponent implements OnInit, OnDestroy {
 
   selectCharacter(character: any, type: boolean = false) {
 
-    console.log(character);    
-
     if (type) {
       // resolves the weird bug
       return this.interval = setInterval(() => {}, 500);
@@ -146,9 +160,9 @@ export class CharactersComponent implements OnInit, OnDestroy {
       hasBackdrop: true,
       id: character.id,
       closeOnNavigation: true
+    }).beforeClosed().subscribe((res) => {
+      this.attachOverlay();
     });
-
-
   }
 
   freshLoad(initial: boolean = false) {
