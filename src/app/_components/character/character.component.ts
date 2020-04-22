@@ -56,7 +56,7 @@ export class CharacterComponent implements OnInit, OnDestroy {
     const isAnime = subtype === 'ONA' || subtype === 'OVA' || subtype === 'TV' || subtype === 'movie' || subtype === 'music' || subtype === 'special';
     const clean = this.select._clean(media, isAnime);
     this.select.processSelected(clean, isAnime ? 'anime' : 'manga');
-    this.ref.close();
+    this.ref.close('to-media');
   }
 
   setDetails() {

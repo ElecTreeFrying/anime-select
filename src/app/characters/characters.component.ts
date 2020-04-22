@@ -110,9 +110,9 @@ export class CharactersComponent implements OnInit, OnDestroy {
     if (this.once !== 0) return;
     this.overlayRef.detach();
     this.overlayRef.dispose();
+    this.isOpened = true;
     this.once++;
     setTimeout(() => {
-      this.isOpened = true;
       this.dialog.open(AboutComponent, {
         closeOnNavigation: true,
         autoFocus: false,
@@ -161,6 +161,7 @@ export class CharactersComponent implements OnInit, OnDestroy {
       id: character.id,
       closeOnNavigation: true
     }).beforeClosed().subscribe((res) => {
+      if (res !== 'to-media') return;
       this.attachOverlay();
     });
   }
