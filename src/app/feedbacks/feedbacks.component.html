@@ -1,0 +1,78 @@
+
+<div class="content">
+  <div class="wrap">
+    
+    <p class="head">Feedback</p>
+  
+    <form class="main" [formGroup]="form">
+  
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon>bug_report</mat-icon>
+            <span>Bug report</span>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <form class="group bug" (ngSubmit)="submitBugs()" formGroupName="bug">
+          
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>Issue</mat-label>
+                <textarea matInput type="text" rows="6" maxlength="500"  formControlName="issue"></textarea>
+                <mat-hint *ngIf="form.value.bug.issue.length > 0" align="end">{{ form.value.bug.issue.length }}/500</mat-hint>
+              </mat-form-field>
+           
+              <button mat-stroked-button type="button" [disabled]="isSubmitting" (click)="submitBugs()">Submit</button>
+        
+            </form>
+          </ng-template>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon>star</mat-icon>
+            <span>Feature request</span>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <form class="group feature" (ngSubmit)="submitFeatures()" formGroupName="feature">
+      
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>Feature</mat-label>
+                <input matInput type="text" formControlName="name">
+              </mat-form-field>
+          
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>Description</mat-label>
+                <textarea matInput type="text" rows="6" maxlength="500"  formControlName="description"></textarea>
+                <mat-hint *ngIf="form.value.feature.description.length > 0" align="end">{{ form.value.feature.description.length }}/500</mat-hint>
+              </mat-form-field>
+          
+              <button mat-stroked-button type="button" [disabled]="isSubmitting" (click)="submitFeatures()">Submit</button>
+        
+            </form>
+          </ng-template>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-icon>feedback</mat-icon>
+            <span>Feedback</span>
+          </mat-expansion-panel-header>
+          <ng-template matExpansionPanelContent>
+            <form class="group feedback" (ngSubmit)="submitFeedback()" formGroupName="feedback">
+          
+              <mat-form-field color="accent" appearance="outline">
+                <mat-label>Message</mat-label>
+                <textarea matInput type="text" rows="6" maxlength="500"  formControlName="message"></textarea>
+                <mat-hint *ngIf="form.value.feedback.message.length > 0" align="end">{{ form.value.feedback.message.length }}/500</mat-hint>
+              </mat-form-field>
+           
+              <button mat-stroked-button type="button" [disabled]="isSubmitting" (click)="submitFeedback()">Submit</button>
+        
+            </form>
+          </ng-template>
+        </mat-expansion-panel>
+      </mat-accordion>
+  
+    </form>
+  
+  </div>
+</div>
+

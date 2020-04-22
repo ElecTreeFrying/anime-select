@@ -17,7 +17,7 @@ export class SnotifyService {
     return option;
   }
 
-  submitMessageNotify() {
+  submitMessageNotify(message: string) {
     
     const action = Observable.create(observer => {
 
@@ -34,7 +34,7 @@ export class SnotifyService {
         } else if (res == 2) {
   
           observer.next({
-            body: `Message submitted!`,
+            body: `${message} submitted!`,
             config: this.config({
               closeOnClick: true,
               pauseOnHover: true,

@@ -18,9 +18,10 @@ const routes: Routes = [
     path: 'contact', 
     loadChildren: () => import('./contact-us/contact-us.module').then(m => m.ContactUsModule) 
   }, { 
-    path: 'report-issue', 
-    loadChildren: () => import('./report-issue/report-issue.module').then(m => m.ReportIssueModule) 
-  }
+    path: 'feedback', 
+    loadChildren: () => import('./feedbacks/feedbacks.module').then(m => m.FeedbacksModule) 
+  },
+  { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
 @NgModule({

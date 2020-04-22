@@ -1,0 +1,37 @@
+
+.content {
+  position: absolute;
+  width: 100vw;
+
+  .head {
+    font-size: 3em;
+    margin-top: 70px;
+    margin-bottom: 40px;
+  }
+  
+  .main {
+    display: flex;
+    flex-flow: column wrap;
+    padding: 25px 0;
+  }
+  
+  .mat-accordion {
+    width: 500px;
+    
+    span {
+      margin-left: 16px;
+      transform: translateY(1px);
+    }
+    
+    .mat-form-field {
+      display: block;
+      width: 100%;
+    }
+  
+    .mat-stroked-button {
+      width: 100%;
+    }
+  }
+}
+
+

@@ -94,7 +94,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.shared.selectRoute.subscribe((res: any) => {
       this.isSelectRoute = res;
       this.isMaxCharacters = true;
-      this.isFooterPage = res === 'about' || res === 'contact' || res === 'report-issue';
+      this.isFooterPage = res === 'about' || res === 'contact' || res === 'feedbacks';
       res === 'loop' ? (this.isMaxCharacters = false) : 0;
       this.cd.detectChanges();
 
@@ -150,7 +150,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.isSelectRoute === 'search' ||
           this.isSelectRoute === 'about' ||
           this.isSelectRoute === 'contact' ||
-          this.isSelectRoute === 'report-issue' ||
+          this.isSelectRoute === 'feedbacks' ||
           this.shared.mediaCharacters.length < 20
         ) return;
         this.shared.count !== this.shared.ceil ? this.scroll.scrollTo({ bottom: 0 }) : 0;
