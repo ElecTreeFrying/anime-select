@@ -1,15 +1,6 @@
 
 // global
 
-.no-content {
-  margin: 10px 0;
-  
-  .mat-card {
-    width: 200px;
-    height: 283.09px;
-  }
-} 
-
 .mat-card-image {
   border: 1px solid white;
 }
@@ -67,6 +58,7 @@
     width: 200px;
     cursor: pointer;
     height: 283.09px;
+    background: url('../../assets/images/no-image-grey.png') center center no-repeat;
 
     .mat-card-image {
       border-bottom-left-radius: 4px;

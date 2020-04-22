@@ -17,6 +17,45 @@ export class SnotifyService {
     return option;
   }
 
+  submitMessageNotify() {
+    
+    const action = Observable.create(observer => {
+
+      const $ = this.shared.loadingGenre.subscribe((res) => {
+      
+        if (res == 1) {
+          
+          observer.next({
+            body: `Please wait...`,
+            config: this.config({
+              closeOnClick: true
+            })
+          });
+        } else if (res == 2) {
+  
+          observer.next({
+            body: `Message submitted!`,
+            config: this.config({
+              closeOnClick: true,
+              pauseOnHover: true,
+              showProgressBar: true,
+              timeout: 5000
+            })
+          });
+          observer.complete();
+          $.unsubscribe();
+        }
+      });
+      
+    });
+
+
+    this.clear();
+    this.snotify.async('', action, {
+      position: SnotifyPosition.leftBottom
+    });
+  }
+
   loadingGenreNotify(type: string) {
     
     const action = Observable.create(observer => {

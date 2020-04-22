@@ -1,6 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+
 
 import { SharedService } from '../_common/services/shared.service';
+import { FirestoreService } from '../_common/services/firestore.service';
+import { SnotifyService } from '../_common/services/snotify.service';
 
 @Component({
   selector: 'app-contact-us',
@@ -8,16 +12,22 @@ import { SharedService } from '../_common/services/shared.service';
   styleUrls: ['./contact-us.component.scss']
 })
 export class ContactUsComponent implements OnInit, OnDestroy {
-
-  email: string;
-  message: string;
+  
+  form: FormGroup;
 
   constructor(
-    private shared: SharedService
-  ) { }
+    @Inject(FormBuilder) public fb: FormBuilder,
+    private shared: SharedService,
+    private fire: FirestoreService,
+    private snotify: SnotifyService
+  ) { 
+    this.form = fb.group({
+      'email': [ '' ],
+      'message': [ '' ],
+    })
+  }
 
   ngOnInit(): void {
-    this.reset();
     this.shared.updatedSelectRouteSSelection = 'contact';
   }
   
@@ -26,13 +36,31 @@ export class ContactUsComponent implements OnInit, OnDestroy {
   }
   
   submit() {
-    this.reset();
 
-  }
+    const form = this.form.value;
+    const email = form.email;
+    const message = form.message;
 
-  private reset() {
-    this.email = '';
-    this.message = '';
+    const isEmailValid = email.length > 5;
+    const isMessageValid = message.length > 5
+
+    if (email.length === 0 || message.length === 0) {
+      return this.snotify._notify('Empty fields.', 'error');
+    }
+
+    if (!isEmailValid || !isMessageValid) {
+      return this.snotify._notify('Please try again.', 'error');
+    };
+    
+    const formValue = this.form.value;
+    
+    this.snotify.submitMessageNotify();
+    this.shared.updatedLoadingGenreSelection = 1;
+    
+    this.fire.submitMessage(formValue).then(() => {
+      this.shared.updatedLoadingGenreSelection = 2;
+      this.form.patchValue({ email: '', message: '' });
+    });
   }
 
 }

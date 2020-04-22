@@ -1,8 +1,10 @@
+import { NgModule } from '@angular/core';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { SnotifyModule, SnotifyService, ToastDefaults } from 'ng-snotify';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 
@@ -44,6 +46,8 @@ import { environment } from '../environments/environment';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule.enablePersistence(),
     AppRoutingModule,
     AppMaterialModule,
     LoadingBoxComponentModule,

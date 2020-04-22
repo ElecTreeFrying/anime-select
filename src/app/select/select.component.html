@@ -5,12 +5,6 @@
     <p class="head">Featured</p>
   </div>
 
-  <div class="wrap content" *ngIf="!(media | async)">
-    <div class="no-content" *ngFor="let i of [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]">
-      <mat-card></mat-card>
-    </div>
-  </div>
-
   <div class="wrap content">
     <div matRipple *ngFor="let anime of (media | async)" #card [tilt]="card" [mediaDetails]="anime" (click)="selectAnime(anime)">
       <mat-card>
