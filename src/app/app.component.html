@@ -1,5 +1,5 @@
 
-<cdk-virtual-scroll-viewport class="scrollable-viewport" itemSize="50" keyboardDefaults #scroll>
+<cdk-virtual-scroll-viewport class="scrollable-viewport" itemSize="50" keyboardDefaults #scroll *ngIf="isAllowed">
 
   <mat-toolbar class="toolbar" #toolbar>
     <div class="wrap">
@@ -35,16 +35,20 @@
 
 </cdk-virtual-scroll-viewport>
 
-<div class="scroll-top" *ngIf="anime">
+<div class="scroll-top" *ngIf="anime || isAllowed">
   <button mat-fab color="primary" *ngIf="isShowScrollTop" #fab [scrollTop]="fab" [scrollEl]="scroll" option="false" (reveal)="reveal($event)" (click)="scrollTo(true)">
     <mat-icon>arrow_upward</mat-icon>
   </button>
 </div>
 
-<div class="scroll-top" *ngIf="isSelectRoute === 'search'">
+<div class="scroll-top" *ngIf="isSelectRoute === 'search' || isAllowed">
   <button mat-raised-button color="primary" *ngIf="isShowLoadMore" #fab [scrollTop]="fab" [scrollEl]="scroll" option="true" (click)="loadMore()">
     <span>Load more</span>
   </button>
+</div>
+
+<div class="no-content" *ngIf="isAllowed">
+
 </div>
 
 <mat-menu #menu="matMenu" xPosition="before" (closed)="this.isMenuOpened = false">

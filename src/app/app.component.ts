@@ -34,6 +34,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   isSelectRoute: string;
   isMaxCharacters: boolean;
   isFooterPage: boolean;
+  isAllowed: boolean;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -56,6 +57,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.isSelectRoute = 'select';
     this.isMaxCharacters = false;
     this.isFooterPage = false;
+    this.isAllowed = true;
 
     this.shared.count = 0;
   }
@@ -156,6 +158,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.shared.count !== this.shared.ceil ? this.scroll.scrollTo({ bottom: 0 }) : 0;
       }
     });
+
+    this.isAllowed = this.scroll.getElementRef().nativeElement.clientWidth > 1200;
+    this.cd.detectChanges();
   }
 
   reveal(emit: any) {
