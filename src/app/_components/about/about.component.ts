@@ -82,6 +82,10 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     this._item.unsubscribe()
   }
 
+  iframeLoaded() {
+    console.log('loaded');
+  }
+
   moreEpisode(option: boolean) {
 
     setTimeout(() => {

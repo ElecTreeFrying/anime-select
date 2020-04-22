@@ -17,6 +17,7 @@ import { SearchComponent } from './search.component';
 import { SeasonYearComponent } from '../_components/season-year/season-year.component';
 import { SearchChipsComponent } from '../_components/search-chips/search-chips.component';
 import { FixSearchChipsPipe } from '../_common/pipes/fix-search-chips.pipe';
+import { FilterNsfwPipe } from '../_common/pipes/filter-nsfw.pipe';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { FixSearchChipsPipe } from '../_common/pipes/fix-search-chips.pipe';
     SearchComponent,
     SeasonYearComponent,
     SearchChipsComponent,
-    FixSearchChipsPipe
+    FixSearchChipsPipe,
+    FilterNsfwPipe
   ],
   entryComponents: [
     SeasonYearComponent,

@@ -5,6 +5,7 @@ import {
   OverlayRef
 } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 import { SeasonYearComponent } from '../_components/season-year/season-year.component';
 import { SearchChipsComponent } from '../_components/search-chips/search-chips.component';
@@ -44,6 +45,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   isMenuOpened: any;
   isInputDisabled: any;
   selectedChipIndex: any;
+  isNSFW: boolean;
 
   constructor(
     private dialog: MatDialog,
@@ -77,6 +79,7 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.selectedChipIndex = {};
     this.isInputDisabled.genre = true;
     this.isInputDisabled.category = true;
+    this.isNSFW = false;
     this.search._sort = '';
   }
 

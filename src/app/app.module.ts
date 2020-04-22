@@ -14,25 +14,27 @@ import { AnimeDatePipeModule } from './_common/modules/anime-date-pipe.module';
 
 import { AppComponent } from './app.component';
 import { AboutComponent } from './_components/about/about.component';
+import { FooterComponent } from './_components/footer/footer.component';
 import { ScrollTopDirective } from './_common/directives/scroll-top.directive';
 import { RelationshipPipe } from './_common/pipes/relationship.pipe';
 import { StringHelperPipe } from './_common/pipes/string-helper.pipe';
 import { LoadMorePipe } from './_common/pipes/load-more.pipe';
 import { ToolbarTitlePipe } from './_common/pipes/toolbar-title.pipe';
+import { UrlSanitizePipe } from './_common/pipes/url-sanitize.pipe';
 
 import { environment } from '../environments/environment';
-import { FooterComponent } from './_components/footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AboutComponent,
+    FooterComponent,
     ScrollTopDirective,
     RelationshipPipe,
     StringHelperPipe,
     LoadMorePipe,
     ToolbarTitlePipe,
-    FooterComponent
+    UrlSanitizePipe
   ],
   entryComponents: [
     AboutComponent,

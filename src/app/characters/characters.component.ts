@@ -134,6 +134,8 @@ export class CharactersComponent implements OnInit, OnDestroy {
 
   selectCharacter(character: any, type: boolean = false) {
 
+    console.log(character);    
+
     if (type) {
       // resolves the weird bug
       return this.interval = setInterval(() => {}, 500);

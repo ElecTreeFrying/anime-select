@@ -88,7 +88,11 @@
           <span class="link" (click)="stringLength = about?.synopsis.length < 500 ? -2 : 500" *ngIf="stringLength === -1"> collapse</span>
         </p>
       </div>
-  
+
+      <div class="iframe" *ngIf="about?.youtubeVideoId" [innerHTML]="about?.youtubeVideoId | urlSanitize"></div>
+
+      <mat-divider *ngIf="about?.youtubeVideoId"></mat-divider>
+
       <div class="black">
   
         <mat-accordion>

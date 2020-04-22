@@ -97,7 +97,7 @@
   <div class="genres" *ngIf="isMenuOpened.genre" [ngStyle]="{ 'margin-bottom': (isMenuOpened.genre ? '12px' : '0px') }">
     <mat-form-field color="accent">
       <mat-label>
-        <span>Filter genre </span>
+        <span>Search genre </span>
         <span>({{ searchSelection.split(' ')[0] }})</span>
       </mat-label>
       <input matInput type="text" autocomplete="off" [(ngModel)]="chipText.genre" [disabled]="isInputDisabled.genre" (ngModelChange)="detectValueChanges('genre')" #genre="ngModel">
@@ -119,7 +119,7 @@
   <div class="categories" *ngIf="isMenuOpened.category" [ngStyle]="{ 'margin-bottom': (isMenuOpened.category ? '12px' : '0px') }">
     <mat-form-field color="accent">
       <mat-label>
-        <span>Filter category </span>
+        <span>Search category </span>
         <span>({{ searchSelection.split(' ')[0] }})</span>
       </mat-label>
       <input matInput type="text" autocomplete="off" [(ngModel)]="chipText.category" [disabled]="isInputDisabled.category" (ngModelChange)="detectValueChanges('category')" #category="ngModel">
@@ -131,8 +131,9 @@
       <span *ngIf="chipText.category.charCodeAt(0) === 13">Show all</span>
       <span *ngIf="chipText.category.charCodeAt(0) === 10 || chipText.category === ''">Show less</span>
     </button>
+    <mat-checkbox [(ngModel)]="isNSFW" (change)="selectedChipIndex.categories = -1" [disabled]="isInputDisabled.category" *ngIf="chipText.category.charCodeAt(0) === 13 || chipText.category.charCodeAt(0) === 10 || chipText.category === ''">NSFW</mat-checkbox>
     <mat-chip-list>
-      <mat-chip *ngFor="let item of (categories | async) | arrayFilter: chipText.category: 'categories'; let i = index" (click)="searchBy('categories', item, i)" [ngClass]="{ 'selected': i === selectedChipIndex.categories }">
+      <mat-chip *ngFor="let item of (categories | async) | arrayFilter: chipText.category: 'categories' | filterNsfw: isNSFW; let i = index" (click)="searchBy('categories', item, i)" [ngClass]="{ 'selected': i === selectedChipIndex.categories }">
         <span>{{ item?.name }}</span>
       </mat-chip>
     </mat-chip-list>

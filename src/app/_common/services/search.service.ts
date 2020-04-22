@@ -48,6 +48,7 @@ export class SearchService {
         return categories.map((category) => ({
           id: category['id'],
           name: category['attributes']['title'],
+          nsfw: category['attributes']['nsfw'],
           slug: category['attributes']['slug'],
           description: category['attributes']['description']
         }));
@@ -200,7 +201,7 @@ export class SearchService {
   private clean(res: any, selection: string) {
 
     res['attributes']['id'] = res['id'];
-    
+
     delete res['type'];
 
     delete res['attributes']['createdAt'];

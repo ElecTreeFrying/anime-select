@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatIconModule,
     MatMenuModule,
     MatChipsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatCheckboxModule
   ]
 })
 export class SearchMaterialModule { }
